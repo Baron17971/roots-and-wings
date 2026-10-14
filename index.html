@@ -141,6 +141,15 @@ body.home-page .mobile-hero-actions,body.home-page .journey-shortcut{display:non
 .about-heading-divider{padding:0 7px;color:#8db9c0}
 @media(min-width:901px){.about-clean .about-lead.about-strip-demo{height:455px!important;min-height:455px!important}.about-lead.about-strip-demo::before{height:455px!important}}
 @media(max-width:720px){.about-clean .about-chapter-heading{padding:25px 22px 12px;font-size:16px}}
+
+/* Tighten the editorial heading-to-image rhythm without touching approved image/text composition. */
+@media(min-width:901px){
+.about-clean .about-chapter-heading{font-size:clamp(22px,1.9vw,29px)!important;padding-top:15px!important;padding-bottom:5px!important;line-height:1.25!important}
+.about-clean .about-lead.about-strip-demo{margin-top:0!important;padding-top:9px!important;padding-bottom:9px!important}
+}
+@media(min-width:721px) and (max-width:900px){
+.about-clean .about-chapter-heading{font-size:22px!important;padding-top:15px!important;padding-bottom:6px!important}
+}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">אודות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
