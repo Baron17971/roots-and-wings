@@ -228,6 +228,69 @@ body.home-page .mobile-hero-actions,body.home-page .journey-shortcut{display:non
 .about-clean .about-art-copy p{font-size:clamp(12px,1.45vw,14px)!important;line-height:1.4!important;margin-bottom:7px!important}
 .about-clean .about-art-copy .about-art-highlight{font-size:15px!important;margin-top:7px!important}
 }
+
+/* ABOUT FINAL STRUCTURE: zero transparency under text, natural image aspect, no overlap. */
+@media(min-width:721px){
+.about-clean .about-art-band,.about-clean .about-art-band.art-left,.about-clean .about-art-band.art-right{
+  box-sizing:border-box!important;display:grid!important;grid-template-columns:1fr!important;
+  position:relative!important;isolation:isolate!important;
+  width:100%!important;max-width:none!important;aspect-ratio:3/1!important;
+  height:auto!important;min-height:0!important;max-height:none!important;
+  padding:0!important;margin:0!important;border:0!important;overflow:hidden!important;
+  align-items:stretch!important;background:#fff!important;
+}
+.about-clean .about-art-band::before{
+  content:""!important;z-index:-2!important;position:absolute!important;inset:0!important;
+  background:var(--strip) center center / contain no-repeat!important;
+  opacity:1!important;mask-image:none!important;
+}
+.about-clean .about-art-band .about-art-copy{
+  box-sizing:border-box!important;position:absolute!important;z-index:2!important;
+  top:0!important;bottom:0!important;transform:none!important;
+  width:43%!important;max-width:none!important;height:100%!important;
+  background:#fff!important;display:flex!important;flex-direction:column!important;
+  justify-content:center!important;align-items:stretch!important;
+  direction:rtl!important;text-align:right!important;
+  padding:12px clamp(22px,3.5vw,60px)!important;margin:0!important;
+}
+.about-clean .about-art-band.art-left .about-art-copy{
+  right:0!important;left:auto!important;
+}
+.about-clean .about-art-band.art-right .about-art-copy{
+  left:0!important;right:auto!important;
+}
+.about-clean .about-art-copy h2{
+  font-size:clamp(23px,2.2vw,33px)!important;
+  line-height:1.18!important;margin:0 0 13px!important;color:#073850!important;
+}
+.about-clean .about-art-copy p{
+  font-size:clamp(13px,1.02vw,16px)!important;line-height:1.47!important;
+  margin:0 0 9px!important;max-width:none!important;color:#17394d!important;
+}
+.about-clean .about-art-copy .about-art-highlight{
+  font-size:clamp(15px,1.25vw,19px)!important;line-height:1.3!important;
+  margin:9px 0 0!important;color:#187c8b!important;
+}
+.about-clean .about-art-copy .about-years{margin-top:9px!important;gap:6px!important}
+.about-clean .about-art-copy .about-years span{width:33px;height:33px;font-size:12px}
+.about-clean .about-art-copy button{align-self:flex-start;margin-top:9px!important;font-size:14px;padding:8px 18px}
+.about-clean .about-chapter-heading{margin-bottom:0!important;padding-bottom:5px!important}
+.about-clean .about-lead.about-strip-demo{margin-bottom:0!important;border-bottom:0!important}
+}
+@media(min-width:721px) and (max-width:1100px){
+.about-clean .about-art-band .about-art-copy{width:44%!important;padding:8px 20px!important}
+.about-clean .about-art-copy h2{font-size:clamp(19px,2.25vw,25px)!important;margin-bottom:7px!important}
+.about-clean .about-art-copy p{font-size:clamp(11px,1.15vw,13px)!important;line-height:1.35!important;margin-bottom:5px!important}
+.about-clean .about-art-copy .about-art-highlight{font-size:clamp(13px,1.5vw,16px)!important;margin-top:5px!important}
+.about-clean .about-art-copy button{margin-top:4px!important;font-size:12px;padding:6px 12px}
+}
+@media(max-width:720px){
+.about-clean .about-art-band{display:flex!important;flex-direction:column!important;max-width:none!important;height:auto!important;min-height:0!important;aspect-ratio:auto!important;padding:0!important;margin:0!important;overflow:visible!important}
+.about-clean .about-art-band::before{display:none!important}
+.about-clean .about-art-band::after{content:"";display:block;order:0;width:100%;aspect-ratio:3/1;background:var(--strip) center/contain no-repeat}
+.about-clean .about-art-band .about-art-copy{order:1;position:relative!important;transform:none!important;top:auto!important;left:auto!important;right:auto!important;z-index:1!important;box-sizing:border-box;background:#fff!important;width:100%!important;max-width:none!important;padding:20px 24px 28px!important}
+.about-clean .about-art-copy h2{font-size:26px!important}.about-clean .about-art-copy p{font-size:16px!important;line-height:1.65!important}
+}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">אודות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
