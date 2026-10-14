@@ -91,6 +91,42 @@ body.home-page .mobile-hero-actions,body.home-page .journey-shortcut{display:non
 .about-strip-demo h1{font-size:32px!important}
 .about-strip-demo p{font-size:16px!important;line-height:1.7!important}
 }
+
+/* Desktop-first art direction: genuine white reading zone, separately cropped image, no text overlap. */
+@media(min-width:901px){
+.about-clean .about-lead.about-strip-demo{
+  background:#fff!important;
+  min-height:575px!important;
+  padding:60px 6.5% 65px 0!important;
+  display:flex!important;
+  align-items:flex-start!important;
+  justify-content:center!important;
+  overflow:hidden;
+}
+.about-lead.about-strip-demo::before{
+  content:"";position:absolute;z-index:0;left:0;top:0;bottom:0;width:57%;
+  background-image:url('/about-strip-1.png');background-repeat:no-repeat;
+  background-position:left center;background-size:185% auto;
+  -webkit-mask-image:linear-gradient(to right,#000 0%,#000 79%,transparent 100%);
+  mask-image:linear-gradient(to right,#000 0%,#000 79%,transparent 100%);
+  pointer-events:none;
+}
+.about-strip-demo>*{
+  max-width:min(40%,560px)!important;width:40%!important;
+  margin-left:auto!important;margin-right:0!important;
+  align-self:flex-start!important;text-align:right!important;
+}
+.about-strip-demo h1{font-size:clamp(30px,3.3vw,45px)!important;line-height:1.17!important;margin:13px 0 16px!important}
+.about-strip-demo .about-tagline{font-size:clamp(19px,1.7vw,25px)!important;line-height:1.45!important;margin-bottom:22px!important}
+.about-strip-demo p:not(.about-tagline){font-size:clamp(15px,1.2vw,17px)!important;line-height:1.72!important;margin-bottom:14px!important}
+}
+@media(min-width:721px) and (max-width:900px){
+.about-clean .about-lead.about-strip-demo{background:#fff!important;min-height:520px!important;padding:35px 4%!important}
+.about-lead.about-strip-demo::before{content:"";position:absolute;left:0;top:0;bottom:0;width:53%;background:url('/about-strip-1.png') no-repeat left center;background-size:190% auto;mask-image:linear-gradient(to right,#000 77%,transparent 100%);pointer-events:none}
+.about-strip-demo>*{max-width:44%!important;width:44%!important;margin-left:auto!important;margin-right:0!important;font-size:16px!important}
+.about-strip-demo h1{font-size:31px!important}
+.about-strip-demo p{font-size:15px!important;line-height:1.65!important}
+}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">אודות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
