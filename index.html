@@ -1089,6 +1089,10 @@ function opportunityRecommendations(result){
  const top=result.interests.filter(x=>x.score>0);
  const scoreOf=c=>result.interests.find(x=>x.code===c)?.score||0;
  const goalOf=c=>result.goals.find(x=>x.code===c)?.score||0;
+ // Specialist sports teams require an explicit sports choice, not generic
+ // teamwork, perseverance or competition answers.
+ const explicitSportChoices=[[0,3],[2,3],[4,3],[7,6],[9,4],[16,3],[19,5]];
+ const choseSport=explicitSportChoices.some(([q,i])=>Array.isArray(state.answers[q])&&state.answers[q].includes(i));
  const candidates=programDetails.map((p,i)=>{
   const tags=PROGRAM_TAGS[p.id]||[];
   const match=tags.reduce((v,c)=>v+scoreOf(c),0);
@@ -1102,7 +1106,7 @@ function opportunityRecommendations(result){
    "מדע וטכנולוגיה":["M","T"],
    "אמנות ויצירה":["A","E"]
   }[p.category];
-  const coreMatch=!coreTags||coreTags.some(c=>scoreOf(c)>0||goalOf(c)>0);
+  const coreMatch=(p.category==="ספורט ואתגר"&&!choseSport)?false:(!coreTags||coreTags.some(c=>scoreOf(c)>0||goalOf(c)>0));
   return {p,i,tags,score,match,growth,coreMatch};
  }).filter(x=>gradeEligibility(x.p)&&x.coreMatch).sort((a,b)=>b.score-a.score||a.i-b.i);
  const selected=[];
