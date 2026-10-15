@@ -1125,17 +1125,29 @@ function opportunityRecommendations(result){
  if(explore)selected.push({...explore,kind:"explore"});
  return selected;
 }
+const COMMON_FEMALE_NAMES=new Set("ענת,נועה,מיה,מאיה,יעל,רוני,שירה,תמר,דנה,דניאלית,ליה,ליאן,אגם,נויה,נוגה,איילה,אלה,אילה,אביגיל,אורית,הילה,הדרית,רחל,שרה,רבקה,רות,אסתר,אפרת,טליה,יובלית,ליאורית,יסמין,מורן,שני,סתיוית,עדיָה,אדוה,אדווה,רעות,אביטל,שחרית,מיכל,מירב,מירה,מיכאלה,מיכאלה,נטלי,נטע,נגה,סיון,סיוון,אורלי,אורטל,לירוןית,מיטל,יפעת,יפית,אביבה,רותםית,אלינור,אליה,אלינע,לינוי,ליטל,בר,ברית,גאיה,גילי,גלית,אלונה,מיקה,תהל,תהילה,הודיה,מרים,מלכה,נעמה,רונה,אמה,אמילי,אדל,אופירית,אופירה,אלמוגית,אבישג,שילת,שי-לי,שירלי,שיר,רותי,אורנה,יפה,דפנה,הדס,עדןית,מירית,נורית".split(","));
+const COMMON_MALE_NAMES=new Set("איתי,אורי,דוד,דניאל,יונתן,יואב,יוסף,משה,אברהם,יצחק,ישראל,עמית,אמיר,איתן,עומר,עידו,גיא,רועי,רון,אילן,אלון,אריאל,נועם,עילאי,מתן,אופק,נבו,אדם,אורן,רפאל,שמואל,ניר,אביב,ברק,אבי,אריק,יובל,מיכאל,מנחם,יהונתן,טל,תומר,ישי,יהודה,אופיר,עוז,יובל,שלומי,שלמה,חיים,מאור,דביר,עידן,דור,אור,אייל,יוסף,איליי,אליהו".split(","));
+function profileLanguage(){
+ const first=String(state.name||"").trim().split(/\s+/)[0].replace(/[^\u0590-\u05ff-]/g,"");
+ // No gender inference for arbitrary nicknames or unrecognized/ambiguous names.
+ return COMMON_FEMALE_NAMES.has(first)&&!COMMON_MALE_NAMES.has(first)?"female":"male";
+}
+function profilePhrase(text){
+ if(profileLanguage()!=="female")return text;
+ return String(text).replace(/אתה /g,"את ").replace(/אותך /g,"אותך ").replace(/מסקרן אותך/g,"מסקרן אותך").replace(/מתעניין/g,"מתעניינת").replace(/נוטה לבחור/g,"נוטה לבחור");
+}
 function profile(){
  if(!hasIntroduction()){location.hash="#start";return;}
  const result=analyzeGrowth();
  if(!result.complete){location.hash="#quiz";return;}
  const esc=escapeHtml;
+ const female=profileLanguage()==="female";
  const main=result.interests.filter(x=>x.score>.05).slice(0,3);
  const aspiration=result.goals.filter(x=>x.score>0).slice(0,3);
  const rec=opportunityRecommendations(result);
  const social=result.social>=1.5||result.interests.find(x=>x.code==="P")?.score>=1.5;
  const title=main.map(x=>x.name).join(" · ");
- const pillars=main.map(x=>'<article class="growth-story-item"><h3>'+esc(x.name)+'</h3><p>'+esc(PROFILE_PHRASES[x.code])+'</p></article>').join("");
+ const pillars=main.map(x=>'<article class="growth-story-item"><h3>'+esc(x.name)+'</h3><p>'+esc(profilePhrase(PROFILE_PHRASES[x.code]))+'</p></article>').join("");
  const proof=main.flatMap(x=>(result.evidence[x.code]||[]).slice(0,2)).filter((x,i,a)=>a.findIndex(y=>y.q===x.q&&y.label===x.label)===i).slice(0,5);
  const proofHtml=proof.map(x=>'<li>בשאלה ״'+esc(Q[x.q][0])+'״ בחרת: <strong>״'+esc(x.label)+'״</strong></li>').join("");
  const aspirationText=aspiration.length?'כיוונים שסימנת כמשהו שהיית רוצה ללמוד, להתנסות בו או לפתוח אליו דלת: '+aspiration.map(x=>x.name).join(" ו־")+'.':'השנה הקרובה היא הזדמנות לבחור כיוון חדש להתנסות.';
@@ -1158,7 +1170,7 @@ function profile(){
  ];
  const html='<div class="shell growth-results">'+stepper(3)+
  '<header class="growth-intro"><span class="growth-label">שורשים וכנפיים · מפת הצמיחה האישית</span><h2>'+esc(state.name)+', זו מפת הצמיחה האישית שלך!</h2><p>המפה נבנתה מתוך התשובות שבחרת. אפשר לחזור לשאלון בכל שלב, לשנות תשובות, לגלות כיוונים חדשים ולעדכן את המפה בהתאם.</p></header>'+
- '<section class="growth-feature growth-story-feature"><div><span class="growth-label">01 · מה למדנו מהבחירות שלך</span><h3>'+esc(title||"לגלות אפשרויות")+'</h3><p>'+esc(main.map(x=>PROFILE_PHRASES[x.code]).join(" " ))+'</p></div><aside class="growth-proof"><h3>כך ענית בשאלון</h3><ul class="growth-proof-list">'+proofHtml+'</ul></aside></section>'+
+ '<section class="growth-feature growth-story-feature"><div><span class="growth-label">01 · מה ניתן ללמוד מהבחירות שלך</span><h3>'+esc(title||"לגלות אפשרויות")+'</h3><p>'+esc(main.map(x=>profilePhrase(PROFILE_PHRASES[x.code])).join(" " ))+'</p></div><aside class="growth-proof"><h3>כך ענית בשאלון</h3><ul class="growth-proof-list">'+proofHtml+'</ul></aside></section>'+
  '<section class="growth-story-section"><span class="growth-label">02 · מה כבר מסקרן אותי?</span><h2>התחומים שמעניינים אותך</h2><div class="growth-story-grid">'+pillars+'</div></section>'+
  '<div class="growth-pair"><section class="growth-panel"><span class="growth-label">03 · החיבור המיוחד שלי</span><h3>כשעולמות נפגשים</h3><p>'+esc(link)+'</p></section><section class="growth-panel"><span class="growth-label">04 · הדלת שאני רוצה לפתוח</span><h3>מה הייתי רוצה לפתח?</h3><p>'+esc(aspirationText)+'</p></section></div>'+
  socialText+
