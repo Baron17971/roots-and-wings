@@ -1144,7 +1144,7 @@ function profile(){
   const proof=x.evidence.slice(0,2).map(ref=>{
    const [q,i]=ref.split(":").map(Number);return Q[q][1].split("|")[i];
   });
-  const prefix=x.kind==="explore"?"כיוון נוסף לבדיקה":"ההתאמה נשענת על הבחירות שלך";
+  const prefix=x.kind==="explore"?"אולי יעניין אותך לגלות גם את הכיוון הזה":"חשבנו שהאפשרות הזאת יכולה לעניין אותך כי בחרת";
   const evidenceText=proof.length?": "+proof.map(v=>"״"+v+"״").join(" וגם ")+".":".";
   return prefix+evidenceText+(x.rule.note?" "+x.rule.note:"");
  };
@@ -1157,12 +1157,12 @@ function profile(){
  'לחזור ולבחור: אחרי ההתנסות לשאול מה עורר סקרנות, מה היה משמעותי ומה תרצה להמשיך לפתח.'
  ];
  const html='<div class="shell growth-results">'+stepper(3)+
- '<header class="growth-intro"><span class="growth-label">שורשים וכנפיים · מפת הצמיחה האישית</span><h2>'+esc(state.name)+', מתחיל להיווצר כאן סיפור שהוא שלך.</h2><p>לא ציון ולא אבחון — קריאה של הבחירות שלך כדי לפתוח כיוונים להתנסות ולצמיחה.</p></header>'+
- '<section class="growth-feature growth-story-feature"><div><span class="growth-label">01 · התמונה שמצטיירת</span><h3>'+esc(title||"לגלות אפשרויות")+'</h3><p>'+esc(main.map(x=>PROFILE_PHRASES[x.code]).join(" " ))+'</p></div><aside class="growth-proof"><h3>הבחירות שמאחורי התמונה</h3><ul class="growth-proof-list">'+proofHtml+'</ul></aside></section>'+
- '<section class="growth-story-section"><span class="growth-label">02 · מה כבר מסקרן אותי?</span><h2>שלושה כיוונים שמופיעים בבחירות שלך</h2><div class="growth-story-grid">'+pillars+'</div></section>'+
+ '<header class="growth-intro"><span class="growth-label">שורשים וכנפיים · מפת הצמיחה האישית</span><h2>'+esc(state.name)+', זו מפת הצמיחה האישית שלך!</h2><p>המפה נבנתה מתוך התשובות שבחרת. אפשר לחזור לשאלון בכל שלב, לשנות תשובות, לגלות כיוונים חדשים ולעדכן את המפה בהתאם.</p></header>'+
+ '<section class="growth-feature growth-story-feature"><div><span class="growth-label">01 · מה למדנו מהבחירות שלך</span><h3>'+esc(title||"לגלות אפשרויות")+'</h3><p>'+esc(main.map(x=>PROFILE_PHRASES[x.code]).join(" " ))+'</p></div><aside class="growth-proof"><h3>כך ענית בשאלון</h3><ul class="growth-proof-list">'+proofHtml+'</ul></aside></section>'+
+ '<section class="growth-story-section"><span class="growth-label">02 · מה כבר מסקרן אותי?</span><h2>התחומים שמעניינים אותך</h2><div class="growth-story-grid">'+pillars+'</div></section>'+
  '<div class="growth-pair"><section class="growth-panel"><span class="growth-label">03 · החיבור המיוחד שלי</span><h3>כשעולמות נפגשים</h3><p>'+esc(link)+'</p></section><section class="growth-panel"><span class="growth-label">04 · הדלת שאני רוצה לפתוח</span><h3>מה הייתי רוצה לפתח?</h3><p>'+esc(aspirationText)+'</p></section></div>'+
  socialText+
- '<section class="growth-recs"><span class="growth-label">05 · הזדמנויות בשבילי</span><h2>מה אפשר לנסות מכאן?</h2><p>אלה הצעות מתוך מאגר ההזדמנויות של בית הספר והסביבה. לכל הצעה יש סיבה; הצעה לפתיחת אופק חדש מסומנת בנפרד. מותר לבחור אחרת.</p><div class="growth-rec-grid">'+cards+'</div></section>'+
+ '<section class="growth-recs"><span class="growth-label">05 · הזדמנויות בשבילי</span><h2>מה אפשר לנסות מכאן?</h2><p>מצאנו כמה אפשרויות שיכולות להתאים לתשובות שלך. כדאי להכיר אותן, לשאול שאלות ולבחור את מה שמסקרן אותך באמת.</p><div class="growth-rec-grid">'+cards+'</div></section>'+
  '<section class="growth-path"><span class="growth-label">06 · מהסקרנות לצעד הראשון</span><h2>ארבעה צעדים קטנים להמשך הדרך</h2><ol>'+steps.map(t=>'<li>'+esc(t)+'</li>').join("")+'</ol></section>'+
  '<section class="growth-print-reflection"><h3>לקראת שיחה עם המחנכת</h3><p>מה גיליתי על עצמי? איזו הזדמנות מסקרנת אותי? במה ארצה להתנסות השנה?</p><div class="growth-reflection-lines" aria-hidden="true"></div></section>'+
  
