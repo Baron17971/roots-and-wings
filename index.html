@@ -985,6 +985,7 @@ body{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
 .growth-story-feature{align-items:stretch}.growth-proof-list{padding-inline-start:21px;line-height:1.9;color:#476b79}.growth-proof-list li{margin:9px 0}.growth-story-section{margin:35px 0}.growth-story-section h2{font-size:clamp(23px,3vw,32px)}.growth-story-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.growth-story-item{padding:24px;background:#fff;border:1px solid #d7e8ec;border-radius:20px}.growth-story-item h3{color:#086883;margin:0 0 12px}.growth-story-item p{line-height:1.85;color:#537381}.growth-path{margin:35px 0;background:#ecf8f7;border-radius:24px;padding:28px;border:1px solid #cde5e4}.growth-path h2{margin:12px 0;font-size:clamp(24px,3vw,32px)}.growth-path ol{padding-inline-start:26px;line-height:2;color:#3c6978}.growth-path li{padding:5px 0}@media(max-width:760px){.growth-story-grid{grid-template-columns:1fr}.growth-story-item,.growth-path{padding:22px}}
 .growth-print-controls{margin:25px 0;padding:23px;border:1px solid #cfe4e7;background:#f0faf9;border-radius:19px}.growth-print-controls p{margin:12px 0 0;line-height:1.7}.growth-print-reflection{margin:30px 0 10px;padding:24px;border:1px solid #d1e7e7;border-radius:20px;background:white}.growth-print-reflection h3{color:#074660;margin-top:0}.growth-reflection-lines{height:80px;background:repeating-linear-gradient(to bottom,transparent 0,transparent 29px,#cadcde 30px,#cadcde 31px)}
 @media print{@page{size:A4;margin:14mm}html,body{overflow:visible!important;height:auto!important;background:#fff!important;color:#092f42!important}body>.site-header,body>footer,.interior-hero,.stepper,.growth-print-controls,.growth-actions,.growth-opportunity button,.growth-opportunity .details-link{display:none!important}#app,.growth-results{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important;overflow:visible!important}.growth-intro{padding:0 0 12px!important;margin:0!important}.growth-intro h2{font-size:24px!important}.growth-feature,.growth-story-section,.growth-pair,.growth-bridge,.growth-social,.growth-recs,.growth-path,.growth-print-reflection{break-inside:avoid-page;page-break-inside:avoid;margin:12px 0!important;padding:12px!important;box-shadow:none!important}.growth-story-grid,.growth-rec-grid,.growth-pair{display:block!important}.growth-story-item,.growth-panel,.growth-opportunity{display:block!important;break-inside:avoid-page;page-break-inside:avoid;margin:8px 0!important;padding:12px!important;box-shadow:none!important}.growth-proof-list{font-size:12px!important}.growth-results p,.growth-results li{font-size:12px!important;line-height:1.6!important}.growth-results h2{font-size:19px!important}.growth-results h3{font-size:16px!important}.growth-reflection-lines{height:100px}.growth-print-reflection{display:block!important}a[href]:after{content:none!important}}.journey-chosen{margin:30px 0;padding:27px;background:#f0f9f9;border:1px solid #cbe5e8;border-radius:22px}.journey-chosen h2{color:#084a68}.journey-chosen-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.journey-chosen-grid>div{background:white;border:1px solid #d7e9e9;border-radius:17px;padding:20px}.journey-chosen-grid h3{color:#08738a}.journey-chosen-grid ol{padding-inline-start:24px}.journey-chosen-grid li{line-height:1.7;margin:12px 0}.journey-chosen-grid li span{display:block;color:#64818a;font-size:13px}.journey-export{margin:26px 0;padding:28px;border:1px solid #b9dfe3;border-radius:22px;background:#e9f8f7;text-align:center}.journey-export h3{font-size:24px;color:#064962}.journey-export p{line-height:1.8}.journey-export button{margin:10px auto}.journey-complete .growth-actions{margin-bottom:35px}@media(max-width:720px){.journey-chosen-grid{grid-template-columns:1fr}.journey-chosen,.journey-export{padding:20px}}@media print{.journey-export{display:none!important}.journey-chosen{display:block!important;break-before:page;break-inside:avoid-page;page-break-inside:avoid;padding:14px!important;margin:10px 0!important}.journey-chosen-grid{display:block!important}.journey-chosen-grid>div{break-inside:avoid-page;margin:12px 0;padding:12px!important}.journey-chosen li{font-size:12px!important}}
+.print-only-growth{display:none!important}@media print{.journey-screen{display:none!important}.print-only-growth{display:block!important}.print-only-growth .growth-results{display:block!important}.print-only-growth .journey-chosen{break-before:page;page-break-before:always}}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#choose">הבחירות שלי</a></nav></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
@@ -1203,30 +1204,24 @@ function pick(i,key){
  const finish=document.querySelector(".choose-page .actions button");
  if(finish)finish.disabled=!state.current.length||state.future.length!==2;
 }
+
 function journey(){
  if(!hasIntroduction()){location.hash="#start";return;}
  if(!Q.every((_,i)=>Array.isArray(state.answers[i])&&state.answers[i].length>0)){location.hash="#quiz";return;}
  if(!state.current.length||state.future.length!==2){location.hash="#choose";return;}
- // Reuse the very same personal profile displayed in stage 03,
- // so the printed profile always reflects the student's latest answers.
- profile();
- const page=document.querySelector(".growth-results");
- if(!page)return;
- page.classList.add("journey-complete");
  const esc=escapeHtml;
- const entries=(ids)=>ids.map(i=>programDetails[i]).filter(Boolean).map(p=>'<li><strong>'+esc(p.name)+'</strong><span>'+esc(p.category)+' · '+esc(p.scope)+'</span></li>').join("");
- const title=page.querySelector(".growth-intro .growth-label");
- if(title)title.textContent="שורשים וכנפיים · מפת הצמיחה והבחירות האישית";
- const selection='<section class="journey-chosen"><span class="growth-label">07 · ההחלטות שלי</span><h2>הבחירות שלי להמשך הדרך</h2><div class="journey-chosen-grid"><div><h3>השנה אני רוצה...</h3><ol>'+entries(state.current)+'</ol></div><div><h3>בשנים הבאות...</h3><ol>'+entries(state.future)+'</ol></div></div><p class="muted">אלה בחירות אישיות להתנסות ולבירור. השתתפות בתוכניות כפופה לזמינות ולתנאי ההצטרפות.</p></section>';
- const reflection=page.querySelector(".growth-print-reflection");
- const intro=page.querySelector(".growth-intro");
- if(intro)intro.insertAdjacentHTML("afterend",selection);
- else page.insertAdjacentHTML("afterbegin",selection);
- // The final document is a single, clear destination. No redundant navigation controls.
- page.querySelector(".growth-actions")?.remove();
- page.querySelectorAll(".growth-opportunity button, .growth-opportunity .details-link").forEach(button=>button.remove());
- page.querySelector(".stepper")?.remove();
- page.insertAdjacentHTML("beforeend",'<section class="journey-export"><h3>מפת הצמיחה והבחירות שלי מוכנה</h3><p>המסמך כולל את הפרופיל האישי, ההזדמנויות והבחירות לשנה הנוכחית ולשנים הבאות.</p><button type="button" onclick="window.print()">הדפסה או שמירה כ־PDF ←</button><p class="muted">המסמך אינו נשלח אוטומטית. אפשר לשמור ולשתף אותו עם המחנכת לפי בחירתך.</p></section>');
+ const entries=ids=>ids.map(i=>programDetails[i]).filter(Boolean).map(p=>'<li><strong>'+esc(p.name)+'</strong><span>'+esc(p.category)+' · '+esc(p.scope)+'</span></li>').join("");
+ // Prepare the profile for printing, without displaying it in the choices screen.
+ profile();
+ const profilePage=document.querySelector(".growth-results");
+ if(!profilePage)return;
+ const printProfile=profilePage.cloneNode(true);
+ printProfile.querySelector(".stepper")?.remove();
+ printProfile.querySelector(".growth-actions")?.remove();
+ printProfile.querySelectorAll("button").forEach(el=>el.remove());
+ const selections='<section class="journey-chosen"><h2>הבחירות שלי</h2><div class="journey-chosen-grid"><div><h3>השנה אני רוצה...</h3><ol>'+entries(state.current)+'</ol></div><div><h3>בשנים הבאות...</h3><ol>'+entries(state.future)+'</ol></div></div></section>';
+ const visible='<div class="shell journey-screen">'+stepper(4)+'<h2>הבחירות שלי</h2>'+selections+'<div class="journey-export"><p>סיימת לבחור. אפשר להדפיס או לשמור מסמך הכולל את הפרופיל האישי ואת הבחירות שלך.</p><button type="button" onclick="window.print()">הדפסה או שמירה כ־PDF ←</button></div></div>';
+ view(visible+'<div class="print-only-growth">'+printProfile.outerHTML+selections+'</div>');
 }
 function programCard(p,i,compact=false){const marks={"מדע וטכנולוגיה":"⚛","חברה ורוח":"✦","חברה ומנהיגות":"♧","אמנות ויצירה":"♫","ספורט ואתגר":"↗","מצוינות אישית":"◇"};return '<article class="opportunity-card"><div class="opportunity-top"><div class="program-symbol">'+(marks[p.category]||'✦')+'</div><span class="scope-pill">'+escapeHtml(p.scope)+'</span></div><span class="category-caption">'+escapeHtml(p.category)+'</span><h3>'+escapeHtml(p.name)+'</h3><p class="program-description">'+escapeHtml(p.desc)+'</p><div class="audience"><strong>למי זה מתאים?</strong><p>'+escapeHtml(p.audience)+'</p></div><div class="program-foot"><span>תנאי ההצטרפות ומועדים באימות</span><button class="details-link" onclick="showProgram('+i+')">פרטים נוספים ←</button></div></article>'}
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
