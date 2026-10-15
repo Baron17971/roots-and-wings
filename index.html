@@ -1423,13 +1423,13 @@ function choose(){
  save();
  if(!hasIntroduction()){location.hash='#start';return;}
  if(!Q.every((_,i)=>Array.isArray(state.answers[i])&&state.answers[i].length>0)){location.hash='#quiz';return;}
- view('<div class="shell choose-page">'+stepper(4)+'<h2>הבחירות שלי</h2><p>מוצגות תוכניות שמתאימות לשכבת הגיל ולמגמות שציינת; האפשרויות לעתיד הן לשנתיים הקרובות, והצטרפות אליהן עשויה לדרוש בחירת מגמה או מיון. תנאי קבלה נוספים דורשים אישור.</p><section class="choose-section"><h3>השנה אני רוצה...</h3><p class="muted">'+state.current.length+' תוכניות נבחרו · יש לבחור לפחות אחת</p>'+choiceCategories('current')+'</section><section class="choose-section"><h3>בשנים הבאות...</h3><p class="muted">'+state.future.length+' מתוך 2 תוכניות נבחרו</p>'+choiceCategories('future')+'</section><div class="actions"><button '+(!state.current.length||state.future.length!==futureChoiceTarget()?'disabled':'')+' onclick="location.hash=\'#journey\'">לסיכום הבחירות ←</button></div></div>');
+ view('<div class="shell choose-page">'+stepper(4)+'<h2>הבחירות שלי</h2><p>מוצגות תוכניות שמתאימות לשכבת הגיל ולמגמות שציינת; האפשרויות לעתיד הן לשנתיים הקרובות, והצטרפות אליהן עשויה לדרוש בחירת מגמה או מיון. תנאי קבלה נוספים דורשים אישור.</p><section class="choose-section"><h3>השנה אני רוצה...</h3><p class="muted">'+state.current.length+' תוכניות נבחרו · יש לבחור לפחות אחת</p>'+choiceCategories('current')+'</section><section class="choose-section"><h3>בשנים הבאות...</h3><p class="muted">'+state.future.length+' מתוך '+futureChoiceTarget()+' תוכניות נבחרו</p>'+choiceCategories('future')+'</section><div class="actions"><button '+(!state.current.length||state.future.length!==futureChoiceTarget()?'disabled':'')+' onclick="location.hash=\'#journey\'">לסיכום הבחירות ←</button></div></div>');
  document.querySelectorAll('.choose-group').forEach(el=>{el.open=(window.rwOpenChoiceGroups||[]).includes(el.dataset.choiceGroup);el.addEventListener('toggle',()=>{const key=el.dataset.choiceGroup;const opened=new Set(window.rwOpenChoiceGroups||[]);if(el.open)opened.add(key);else opened.delete(key);window.rwOpenChoiceGroups=[...opened];});});
 }
 function pick(i,key){
  let a=state[key];
  if(!programDetails[i]||!participation(programDetails[i],key).ok)return;
- state[key]=a.includes(i)?a.filter(x=>x!==i):key==="future"&&a.length>=2?a:[...a,i];
+ state[key]=a.includes(i)?a.filter(x=>x!==i):key==="future"&&a.length>=futureChoiceTarget()?a:[...a,i];
  save();
  const currentCount=document.getElementById("choose-current-count");
  const futureCount=document.getElementById("choose-future-count");
@@ -1441,10 +1441,10 @@ function pick(i,key){
   const total=group.querySelectorAll('input[type="checkbox"]').length;
   const meta=group.querySelector(".choose-group-meta");
   if(meta)meta.innerHTML=(chosen?chosen+" נבחרו · ":"")+total+' אפשרויות <span class="choose-chevron">⌄</span>';
-  if(kind==="future")group.querySelectorAll('input[type="checkbox"]').forEach(box=>{box.disabled=state.future.length>=2&&!box.checked;});
+  if(kind==="future")group.querySelectorAll('input[type="checkbox"]').forEach(box=>{box.disabled=state.future.length>=futureChoiceTarget()&&!box.checked;});
  });
  const finish=document.querySelector(".choose-page .actions button");
- if(finish)finish.disabled=!state.current.length||state.future.length!==2;
+ if(finish)finish.disabled=!state.current.length||state.future.length!==futureChoiceTarget();
 }
 
 
@@ -1545,7 +1545,7 @@ function journey(){
  save();
  if(!hasIntroduction()){location.hash="#start";return;}
  if(!Q.every((_,i)=>Array.isArray(state.answers[i])&&state.answers[i].length>0)){location.hash="#quiz";return;}
- if(!state.current.length||state.future.length!==2){location.hash="#choose";return;}
+ if(!state.current.length||state.future.length!==futureChoiceTarget()){location.hash="#choose";return;}
  const esc=escapeHtml;
  const entries=ids=>ids.map(i=>programDetails[i]).filter(Boolean).map(p=>'<li><strong>'+esc(p.name)+'</strong><span>'+esc(p.category)+' · '+esc(p.scope)+'</span></li>').join("");
  // Prepare the profile for printing, without displaying it in the choices screen.
