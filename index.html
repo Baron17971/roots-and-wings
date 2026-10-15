@@ -530,6 +530,16 @@ input::placeholder,textarea::placeholder{font-family:var(--site-font)!important}
 .ap-development-page .ap-cycle-repeat{margin-top:15px}
 @media(max-width:900px){.ap-development-layout{grid-template-columns:minmax(0,1fr)}.ap-development-illustration{grid-row:1}.ap-development-illustration img{width:min(100%,470px);max-height:620px}.ap-development-layout .ap-cycle{max-width:640px}.ap-development-page .ap-cycle-journey{padding-top:0!important}}
 @media(max-width:600px){.ap-development-page .ap-development-intro{padding-bottom:10px!important}.ap-development-illustration img{width:min(100%,350px);max-height:490px}.ap-development-layout{gap:3px}.ap-development-layout .ap-cycle-card{padding:19px 17px;column-gap:11px}.ap-development-layout .ap-cycle-card-title{font-size:23px}.ap-development-layout .ap-cycle-question{font-size:16px}.ap-development-page .ap-cycle-journey{padding-bottom:45px!important}}
+
+/* Align four development stages from the top to the bottom of the spiral illustration */
+@media(min-width:901px){
+.ap-development-layout{align-items:stretch!important}
+.ap-development-illustration{align-self:start!important}
+.ap-development-illustration img{width:100%!important;max-height:none!important;height:auto!important;object-fit:contain}
+.ap-development-cards{display:flex!important;flex-direction:column;align-self:stretch;justify-content:stretch}
+.ap-development-layout .ap-cycle{flex:1;max-width:none!important;width:100%;height:100%;grid-template-rows:repeat(4,minmax(0,1fr))!important;gap:clamp(14px,2vw,27px)!important}
+.ap-development-layout .ap-cycle-card{height:100%;min-height:0!important;align-content:center;padding-block:clamp(22px,2.5vw,40px)!important}
+}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
