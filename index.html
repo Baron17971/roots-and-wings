@@ -579,6 +579,9 @@ background-size:100% auto;background-repeat:no-repeat;background-position:center
 @media(max-width:900px){.ap-development-page .ap-cycle-journey::before{opacity:.5!important}}
 
 .ap-development-illustration picture{display:block;width:100%;text-align:center}.ap-development-illustration picture img{margin-inline:auto}
+
+/* Mobile journey: cards first, dedicated illustration below */
+@media(max-width:900px){.ap-development-layout{display:grid!important;grid-template-columns:minmax(0,1fr)!important}.ap-development-cards{grid-row:1!important}.ap-development-illustration{grid-row:2!important;margin-top:24px!important}.ap-development-illustration picture{width:100%}}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
