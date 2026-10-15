@@ -982,6 +982,7 @@ body{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
 .site-header{max-width:100%;overflow:visible}
 .site-header nav{min-width:0;max-width:100%;box-sizing:border-box}
 @media(min-width:1251px){.site-header nav{column-gap:clamp(12px,1.4vw,22px)}}
+.growth-story-feature{align-items:stretch}.growth-proof-list{padding-inline-start:21px;line-height:1.9;color:#476b79}.growth-proof-list li{margin:9px 0}.growth-story-section{margin:35px 0}.growth-story-section h2{font-size:clamp(23px,3vw,32px)}.growth-story-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.growth-story-item{padding:24px;background:#fff;border:1px solid #d7e8ec;border-radius:20px}.growth-story-item h3{color:#086883;margin:0 0 12px}.growth-story-item p{line-height:1.85;color:#537381}.growth-path{margin:35px 0;background:#ecf8f7;border-radius:24px;padding:28px;border:1px solid #cde5e4}.growth-path h2{margin:12px 0;font-size:clamp(24px,3vw,32px)}.growth-path ol{padding-inline-start:26px;line-height:2;color:#3c6978}.growth-path li{padding:5px 0}@media(max-width:760px){.growth-story-grid{grid-template-columns:1fr}.growth-story-item,.growth-path{padding:22px}}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
@@ -1022,90 +1023,134 @@ const ANSWER_KEY=[[{"primary":"M","secondary":"MT"},{"primary":"A","secondary":"
 const DIM_CODES={M:"מדע וחקר",T:"טכנולוגיה וחדשנות",H:"חברה ורוח",A:"אמנות ויצירה",L:"מנהיגות ויוזמה",S:"ספורט ואתגר"};
 const MODE_CODES={C:"יצירתיות ויוזמה",O:"תכנון והתמדה",P:"שיתוף פעולה",E:"ביטוי ותקשורת"};
 const GOAL_QUESTIONS=new Set([11,18,19]);
+
+const DOMAIN_NAMES={M:"מדע וחקר",T:"טכנולוגיה וחדשנות",H:"חברה ורוח",A:"אמנות ויצירה",L:"מנהיגות ויוזמה",S:"ספורט ואתגר",P:"חיבור ועזרה לאחרים",C:"חשיבה יצירתית",O:"תכנון והתמדה",E:"ביטוי ותקשורת"};
+const SOCIAL_ANSWER_COORDS=new Set(["1:2","2:8","4:0","4:4","5:2","6:0","6:3","7:2","8:1","8:5","10:3","11:8","13:2","13:4","14:5","15:2","15:5","16:4","18:1","19:3","19:4"]);
+const PROFILE_PHRASES={
+ M:"ניכר עניין בלחקור שאלות, לבדוק רעיונות ולנסות להבין את מה שעומד מאחורי התופעות.",
+ T:"מעניין אותך להבין כיצד מערכות פועלות, לבנות דברים ולנסות פתרונות חדשים.",
+ H:"אנשים, סיפורים, תרבויות ורעיונות הם עולמות שמעוררים אצלך סקרנות.",
+ A:"יש בתשובותיך משיכה לביטוי אישי, לדמיון וליצירת משהו משלך.",
+ L:"נראה שמסקרן אותך לקחת אחריות, ליזום ולהניע דברים קדימה.",
+ S:"תנועה, אתגר והתקדמות אישית הם חוויות שמדברות אליך.",
+ P:"הבחירות שלך חוזרות אל מפגש עם אנשים, הקשבה, שיתוף פעולה ועזרה לאחרים.",
+ C:"אתה נוטה לבחור בהזדמנויות לחשוב אחרת, להציע רעיון או לנסות כיוון חדש.",
+ O:"נראה שאתה מוצא עניין בארגון, בתכנון ובהתקדמות עקבית.",
+ E:"מעניין אותך להביע רעיון, לדבר, להציג ולהעביר מסר לאחרים."
+};
+const PROGRAM_TAGS={
+ P001:["H"],P002:["M","O"],P003:["O"],P004:["P","L","M"],
+ P005:["T","O"],P006:["T","O"],P007:["T"],P008:["T"],
+ P009:["M"],P010:["M"],P011:["L","P","E"],
+ P012:["P","H","E"],P013:["M","T"],P014:["M","T"],
+ P015:["O"],P016:["P","L","M"],P017:["P","L","T"],
+ P018:["A","E","P"],P019:["H","O"],P020:["H","O"],
+ P021:["H","M"],P022:["L","P","S","E"],P023:["E","H","L"],
+ P024:["M","O"],P025:["M","T","C"],P026:["M"],
+ P027:["M"],P028:["M","T"],P029:["M"],
+ P030:["S","P"],P031:["S","P","L"],P032:["S","O"]
+};
 function analyzeGrowth(){
- const interest=Object.fromEntries(Object.keys(DIM_CODES).map(k=>[k,0]));
- const modes=Object.fromEntries(Object.keys(MODE_CODES).map(k=>[k,0]));
- const goals=Object.fromEntries(Object.keys(DIM_CODES).map(k=>[k,0]));
- const evidence=Object.fromEntries(Object.keys(DIM_CODES).map(k=>[k,[]]));
- let count=0;
- Object.entries(state.answers).forEach(([qi,ids])=>{
-  const q=Number(qi);if(!Number.isInteger(q)||q<0||q>=Q.length||!Array.isArray(ids))return;
-  const valid=[...new Set(ids.filter(i=>Number.isInteger(i)&&i>=0&&i<ANSWER_KEY[q].length))].slice(0,Q[q][2]);
+ const scores=Object.fromEntries(Object.keys(DOMAIN_NAMES).map(c=>[c,0]));
+ const goals=Object.fromEntries(Object.keys(DOMAIN_NAMES).map(c=>[c,0]));
+ const evidence=Object.fromEntries(Object.keys(DOMAIN_NAMES).map(c=>[c,[]]));
+ let social=0,answersCount=0;
+ Object.entries(state.answers).forEach(([qIndex,raw])=>{
+  const q=Number(qIndex);
+  if(!Number.isInteger(q)||q<0||q>=Q.length||!Array.isArray(raw))return;
+  const valid=[...new Set(raw.filter(i=>Number.isInteger(i)&&ANSWER_KEY[q][i]))].slice(0,Q[q][2]);
   if(!valid.length)return;
   const weight=1/valid.length;
   valid.forEach(i=>{
-   const t=ANSWER_KEY[q][i],label=Q[q][1].split("|")[i];
-   if(GOAL_QUESTIONS.has(q)){if(goals[t.primary]!==undefined)goals[t.primary]+=weight;}
-   else if(interest[t.primary]!==undefined){interest[t.primary]+=weight;evidence[t.primary].push(label);}
-   for(const c of t.secondary){if(modes[c]!==undefined)modes[c]+=weight*.5;}
-   count++;
+   const opt=ANSWER_KEY[q][i],label=Q[q][1].split("|")[i];
+   const target=[11,18,19].includes(q)?goals:scores;
+   if(target[opt.primary]!==undefined)target[opt.primary]+=weight;
+   if(![11,18,19].includes(q)&&evidence[opt.primary])evidence[opt.primary].push({q,label});
+   if(SOCIAL_ANSWER_COORDS.has(q+":"+i)){social+=weight*1.6;if(![11,18,19].includes(q)){scores.P+=weight*.5;evidence.P.push({q,label});}}
+   if(q===17){if(opt.primary==="P")scores.P+=weight*.5;else if(opt.primary==="C")scores.C+=weight*.5;}
+   answersCount++;
   });
  });
- const rank=(obj,labels)=>Object.entries(obj).map(([code,score])=>({code,name:labels[code],score})).sort((a,b)=>b.score-a.score||a.code.localeCompare(b.code));
- return {interests:rank(interest,DIM_CODES),goals:rank(goals,DIM_CODES),modes:rank(modes,MODE_CODES),evidence,count,complete:Q.every((_,i)=>Array.isArray(state.answers[i])&&state.answers[i].length>0)};
+ const ranked=o=>Object.entries(o).map(([code,score])=>({code,name:DOMAIN_NAMES[code],score})).sort((a,b)=>b.score-a.score||a.name.localeCompare(b.name,"he"));
+ return {interests:ranked(scores),goals:ranked(goals),evidence,social,count:answersCount,complete:Q.every((_,i)=>Array.isArray(state.answers[i])&&state.answers[i].length>0)};
 }
-function ranked(){let result=analyzeGrowth(),max=Math.max(1,...result.interests.map(x=>x.score));return result.interests.map(x=>({name:x.name,v:Math.round(100*x.score/max),code:x.code}));}
-const PROGRAM_CODES={"מדע וטכנולוגיה":["M","T"],"חברה ורוח":["H"],"חברה ומנהיגות":["L","H"],"אמנות ויצירה":["A"],"ספורט ואתגר":["S"],"מצוינות אישית":[]};
+function ranked(){const r=analyzeGrowth(),max=Math.max(1,...r.interests.map(x=>x.score));return r.interests.map(x=>({code:x.code,name:x.name,v:Math.round(100*x.score/max)}));}
+function gradeEligibility(p){
+ // Eligibility is only excluded when the listed audience explicitly gives a grade range.
+ const a=String(p.audience||"");
+ const order=["ז","ח","ט","י","יא","יב"];
+ const normalize=v=>String(v).replace(/[׳״"'\s]/g,"");
+ const current=order.indexOf(normalize(state.grade));
+ const range=a.match(/(?:כיתות|תלמידי)\s*([זחטיי״׳"']{1,4})\s*[–\-]\s*([זחטיי״׳"']{1,4})/);
+ if(range&&current>=0){const low=order.indexOf(normalize(range[1])),high=order.indexOf(normalize(range[2]));if(low>=0&&high>=0)return current>=low&&current<=high;}
+ return true;
+}
 function opportunityRecommendations(result){
- const indexed=programDetails.map((p,i)=>{
-  const codes=PROGRAM_CODES[p.category]||[];
-  const match=codes.reduce((n,c)=>n+(result.interests.find(x=>x.code===c)?.score||0),0);
-  const growth=codes.reduce((n,c)=>n+(result.goals.find(x=>x.code===c)?.score||0),0);
-  const audience=String(p.audience||"");
-  const grade=String(state.grade||"").replace(/[׳״']/g,"");
-  const restricted=/כיתות?\s*[זחטיי״׳\-– עד]+/.test(audience);
-  const gradeMatch=audience.includes(grade)||!restricted;
-  return {p,i,match,growth,gradeMatch};
- }).filter(x=>x.gradeMatch);
- const sorted=indexed.sort((a,b)=>b.match-a.match||b.growth-a.growth||a.i-b.i);
- const selected=sorted.filter(x=>x.match>0).slice(0,3);
- const discover=sorted.find(x=>!selected.includes(x)&&x.match===0&&x.growth>0)||
-                sorted.find(x=>!selected.includes(x)&&x.match===0);
- if(discover)selected.push(discover);
+ const top=result.interests.filter(x=>x.score>0);
+ const scoreOf=c=>result.interests.find(x=>x.code===c)?.score||0;
+ const goalOf=c=>result.goals.find(x=>x.code===c)?.score||0;
+ const candidates=programDetails.map((p,i)=>{
+  const tags=PROGRAM_TAGS[p.id]||[];
+  const match=tags.reduce((v,c)=>v+scoreOf(c),0);
+  const growth=tags.reduce((v,c)=>v+goalOf(c),0);
+  const socialBoost=result.social>0&&tags.includes("P")?result.social*.85:0;
+  const score=match+growth*.65+socialBoost;
+  return {p,i,tags,score,match,growth};
+ }).filter(x=>gradeEligibility(x.p)).sort((a,b)=>b.score-a.score||a.i-b.i);
+ const selected=[];
+ // A core match requires nontrivial answer evidence. Never fill an empty match list with arbitrary academic programs.
+ const best=candidates.filter(x=>x.score>0.15);
+ for(const x of best){if(selected.length>=3)break;if(selected.some(y=>y.p.category===x.p.category)&&selected.length>=1)continue;selected.push({...x,kind:"match"});}
+ for(const x of best){if(selected.length>=3)break;if(!selected.some(y=>y.i===x.i))selected.push({...x,kind:"match"});}
+ // Curiosity-broadening suggestion is explicitly labeled, never misrepresented as a personal match.
+ const explore=candidates.find(x=>!selected.some(y=>y.i===x.i)&&x.growth>0)||
+ candidates.find(x=>!selected.some(y=>y.i===x.i)&&x.match>0)||
+ candidates.find(x=>!selected.some(y=>y.i===x.i)&&x.p.category!=="מצוינות אישית");
+ if(explore)selected.push({...explore,kind:"explore"});
  return selected;
 }
-
 function profile(){
- if(!hasIntroduction()){location.hash='#start';return;}
+ if(!hasIntroduction()){location.hash="#start";return;}
  const result=analyzeGrowth();
  if(!result.complete){location.hash="#quiz";return;}
- const main=result.interests.filter(x=>x.score>0).slice(0,3);
- const goals=result.goals.filter(x=>x.score>0).slice(0,3);
- const styles=result.modes.filter(x=>x.score>0).slice(0,3);
- const rec=opportunityRecommendations(result);
  const esc=escapeHtml;
- const pills=x=>x.map(z=>'<span class="growth-chip">'+esc(z.name)+'</span>').join('');
- const first=main[0],second=main[1];
- const chosen=first?(result.evidence[first.code]||[]).slice(0,3):[];
- const proof=chosen.length?'למשל, בחרת ב־'+chosen.map(x=>'״'+x+'״').join(' וב־')+'.':'ניכר עניין בכמה כיוונים שכדאי להמשיך ולבדוק.';
- const labels={M:'חקירה וגילוי',T:'פיתוח ויצירת פתרונות',H:'אנשים ורעיונות',A:'יצירה והבעה',L:'יוזמה והשפעה',S:'אתגר והתקדמות'};
- const related=main.length?main.map(x=>labels[x.code]||x.name).join(' לצד '):'עולמות תוכן שונים';
- const future=goals.length?goals.map(x=>x.name).join(' ו־'):'עולמות חדשים';
- const combination=first&&second?'מה יקרה אם נחבר בין '+first.name+' לבין '+second.name+'? אפשר לחפש פרויקט או פעילות שמאפשרים לנסות את שניהם יחד.':'אולי כדאי לבחור פעילות אחת מוכרת ולצידה התנסות חדשה לחלוטין.';
- const reasons=rec.map((x,j)=>{
-  const codes=PROGRAM_CODES[x.p.category]||[];
-  const matches=main.filter(y=>codes.includes(y.code));
-  const growth=goals.filter(y=>codes.includes(y.code));
-  const why=matches.length?'התוכנית קשורה לעניין שעלה בבחירות שלך: '+matches.map(y=>y.name).join(' ו־')+'.':growth.length?'זוהי הזדמנות לגלות תחום שבחרת לפתח בעתיד.':'זוהי הזדמנות לפתוח אופק חדש, גם מחוץ לתחומים שעלו בשאלון.';
-  return '<article class="growth-opportunity"><span class="growth-label">'+(matches.length?'מתחבר לתחומי העניין שלי':'לפתוח אופק חדש')+'</span><h3>'+esc(x.p.name)+'</h3><p>'+esc(x.p.desc||'')+'</p><p class="growth-why">'+esc(why)+'</p><p class="muted">'+esc(x.p.scope||'')+' · '+esc(x.p.audience||'יש לבדוק למי מיועד')+' · זמינות ותנאי הצטרפות דורשים בדיקה</p><button class="secondary" onclick="showProgram('+x.i+')">להכיר את ההזדמנות ←</button></article>';
- }).join('');
- const socialChoices=[[1,2],[4,0],[4,4],[7,2],[8,1],[11,2],[14,5],[15,2],[15,5],[16,4],[18,1],[19,3],[19,4]];
- const socialHits=socialChoices.filter(([q,i])=>Array.isArray(state.answers[q])&&state.answers[q].includes(i));
- const socialInterest=socialHits.length>=2||socialHits.some(([q,i])=>q===7&&i===2||q===16&&i===4)||((result.interests.find(x=>x.code==="L")||{}).score>=2);
- const socialNote=socialInterest?'<section class="growth-social"><span class="growth-label">יש לך רעיון שיכול להשפיע?</span><h3>גם יוזמה קטנה יכולה לחולל שינוי</h3><p>אם מעורבות חברתית, התנדבות או הובלת יוזמה מסקרנות אותך, בית הספר מעודד אותך להציע רעיונות ולמצוא דרך להגשים אותם. רכזת המעורבות החברתית יכולה לסייע לך להכיר אפשרויות לפעולה ולמעורבות בקהילה.</p><p>בכיתות י׳–י״ב יש מגוון אפיקי התנדבות במסגרת המעורבות החברתית, שהיא חלק מחובות הלימודים. עשייה מתמשכת ומשמעותית עשויה גם להשתלב בדרך לתעודת בגרות חברתית מצטיינת, בהתאם לדרישות ולקריטריונים.</p><p class="muted">כדאי לפנות לרכזת המעורבות החברתית כדי לבחון אפשרויות ותנאי השתתפות.</p></section>':'';
- const html='<div class="shell growth-results">'+
- ''+stepper(3)+''+
- '<header class="growth-intro"><span class="growth-label">מפת הצמיחה האישית שלי</span><h2>'+esc(state.name||'')+', זה הסיפור שמתחיל להצטייר מהבחירות שלך</h2><p>לא אבחון ולא הגדרה של מי שאת או מי שאתה — אלא נקודת פתיחה למסע של גילוי והתנסות.</p></header>'+
- '<section class="growth-feature"><div><span class="growth-label">מה מסקרן אותי היום?</span><h3>'+esc(first?first.name:'עולם של אפשרויות')+'</h3><p>מהתשובות שלך עולה סקרנות ל'+esc(related)+'.</p><div class="growth-chips">'+pills(main)+'</div></div><aside class="growth-proof"><h3>איפה זה הופיע בשאלון?</h3><p>'+esc(proof)+'</p><p class="muted">הבחירות מתארות עניין, לא מדידה של כישרון.</p></aside></section>'+
- '<div class="growth-pair"><section class="growth-panel"><span class="growth-label">איך נוח לי לפעול?</span><h3>הדרכים שמושכות אותי</h3><div class="growth-chips">'+pills(styles)+'</div><p>אלה דרכי פעולה שעלו מבחירותיך. אפשר לגלות עוד דרכים באמצעות התנסות.</p></section>'+
- '<section class="growth-panel"><span class="growth-label">לאן הייתי רוצה לצמוח?</span><h3>הדלת שאני רוצה לפתוח</h3><div class="growth-chips">'+pills(goals)+'</div><p>כיוונים להמשך הדרך: '+esc(future)+'.</p></section></div>'+
- '<section class="growth-bridge"><span class="growth-label">השילוב המיוחד שלי</span><h3>כששני עולמות נפגשים</h3><p>'+esc(combination)+'</p><span class="muted">הצעה לסקרנות ולהתנסות, לא קביעה על יכולות.</span></section>'+
- socialNote+
- '<section class="growth-recs"><span class="growth-label">מפת ההזדמנויות שלי</span><h2>לאן אפשר להמשיך מכאן?</h2><p>אלה הזדמנויות מהמפה שיכולות להתחבר לתחומי העניין שלך — לצד אפשרות חדשה שכדאי להכיר.</p><div class="growth-rec-grid">'+(reasons||'<p>מפת ההזדמנויות ממשיכה להתעדכן.</p>')+'</div></section>'+
+ const main=result.interests.filter(x=>x.score>.05).slice(0,3);
+ const aspiration=result.goals.filter(x=>x.score>0).slice(0,3);
+ const rec=opportunityRecommendations(result);
+ const social=result.social>=1.5||result.interests.find(x=>x.code==="P")?.score>=1.5;
+ const title=main.map(x=>x.name).join(" · ");
+ const pillars=main.map(x=>'<article class="growth-story-item"><h3>'+esc(x.name)+'</h3><p>'+esc(PROFILE_PHRASES[x.code])+'</p></article>').join("");
+ const proof=main.flatMap(x=>(result.evidence[x.code]||[]).slice(0,2)).filter((x,i,a)=>a.findIndex(y=>y.q===x.q&&y.label===x.label)===i).slice(0,5);
+ const proofHtml=proof.map(x=>'<li>בשאלה ״'+esc(Q[x.q][0])+'״ בחרת: <strong>״'+esc(x.label)+'״</strong></li>').join("");
+ const aspirationText=aspiration.length?'כיוונים שסימנת כמשהו שהיית רוצה ללמוד, להתנסות בו או לפתוח אליו דלת: '+aspiration.map(x=>x.name).join(" ו־")+'.':'השנה הקרובה היא הזדמנות לבחור כיוון חדש להתנסות.';
+ const link=main.length>1?'כאשר מחברים '+main[0].name+' עם '+main[1].name+', אפשר לחשוב על פרויקט שמשלב בין שני העולמות — ולא מחייב לבחור רק באחד.':'אפשר לבחור הזדמנות ראשונה ולהשתמש בה כדי לגלות מה עוד מסקרן אותך.';
+ const whyFor=x=>{
+  const related=main.filter(z=>x.tags.includes(z.code));
+  const growth=aspiration.filter(z=>x.tags.includes(z.code));
+  if(x.kind==="explore")return growth.length?'הצעה לפתוח דלת לכיוון שסימנת להתפתחות: '+growth.map(z=>z.name).join(" ו־")+'.':'הצעה להתנסות נוספת: לא חייבים לבחור רק במה שכבר מכירים.';
+  if(related.length)return 'מתאים לכיוון שעלה בבחירותיך: '+related.map(z=>z.name).join(" ו־")+'.'+(social&&x.tags.includes("P")?' יש כאן גם אפשרות למפגש עם אנשים ולתרומה לאחרים.':'');
+  if(growth.length)return 'מתחבר לדלת שביקשת לפתוח: '+growth.map(z=>z.name).join(" ו־")+'.';
+  return 'אפשרות להתנסות ולגילוי נוסף.';
+ };
+ const cards=rec.map(x=>'<article class="growth-opportunity"><span class="growth-label">'+(x.kind==="explore"?'פותחים אופק חדש':'מומלץ לפי הבחירות שלי')+'</span><h3>'+esc(x.p.name)+'</h3><p>'+esc(x.p.desc)+'</p><p class="growth-why">'+esc(whyFor(x))+'</p><p class="muted">'+esc(x.p.audience||"")+' · תנאי ההצטרפות והזמינות דורשים בירור</p><button class="secondary" onclick="showProgram('+x.i+')">להכיר את ההזדמנות ←</button></article>').join("");
+ const socialText=social?'<section class="growth-social"><span class="growth-label">העשייה שלי יכולה להשפיע</span><h3>מעניין אותך לעזור לאחרים? יש לזה מקום אמיתי בבית הספר.</h3><p>חזרת בכמה תשובות אל עזרה, הקשבה או שיתוף פעולה. אלה בחירות שכדאי להפוך להתנסות: אפשר לפנות לרכזת המעורבות החברתית, להכיר אפיקי התנדבות ולהציע יוזמה משלך. בית הספר מברך על יוזמות של תלמידים.</p><p>בכיתות י׳–י״ב המעורבות החברתית היא גם חלק מחובות הלימודים. עשייה משמעותית ומתמשכת עשויה לתרום לעמידה בקריטריונים לתעודת בגרות חברתית מצטיינת.</p><p><strong>רעיון לצעד ראשון:</strong> לבחור צורך קטן בקהילה או בבית הספר ולשאול את רכזת המעורבות החברתית איך אפשר לפעול.</p></section>':'';
+ const steps=[
+ 'להתבונן: לבחור מתוך הפרופיל נושא אחד שמעניין אותך ולדייק מה היית רוצה לגלות בו.',
+ 'להתנסות: להשתתף בפעילות או לשוחח עם מי שכבר מכיר אותה, לפני שמתחייבים למסלול.',
+ social?'להשפיע: להציע יוזמה קטנה או להצטרף לעשייה קהילתית בתיאום רכזת המעורבות החברתית.':'להרחיב: להתנסות גם בתחום נוסף, שלא נמצא בראש הבחירות שלך.',
+ 'לחזור ולבחור: אחרי ההתנסות לשאול מה עורר סקרנות, מה היה משמעותי ומה תרצה להמשיך לפתח.'
+ ];
+ const html='<div class="shell growth-results">'+stepper(3)+
+ '<header class="growth-intro"><span class="growth-label">שורשים וכנפיים · מפת הצמיחה האישית</span><h2>'+esc(state.name)+', מתחיל להיווצר כאן סיפור שהוא שלך.</h2><p>לא ציון ולא אבחון — קריאה של הבחירות שלך כדי לפתוח כיוונים להתנסות ולצמיחה.</p></header>'+
+ '<section class="growth-feature growth-story-feature"><div><span class="growth-label">01 · התמונה שמצטיירת</span><h3>'+esc(title||"לגלות אפשרויות")+'</h3><p>'+esc(main.map(x=>PROFILE_PHRASES[x.code]).join(" " ))+'</p></div><aside class="growth-proof"><h3>הבחירות שמאחורי התמונה</h3><ul class="growth-proof-list">'+proofHtml+'</ul></aside></section>'+
+ '<section class="growth-story-section"><span class="growth-label">02 · מה כבר מסקרן אותי?</span><h2>שלושה כיוונים שמופיעים בבחירות שלך</h2><div class="growth-story-grid">'+pillars+'</div></section>'+
+ '<div class="growth-pair"><section class="growth-panel"><span class="growth-label">03 · החיבור המיוחד שלי</span><h3>כשעולמות נפגשים</h3><p>'+esc(link)+'</p></section><section class="growth-panel"><span class="growth-label">04 · הדלת שאני רוצה לפתוח</span><h3>מה הייתי רוצה לפתח?</h3><p>'+esc(aspirationText)+'</p></section></div>'+
+ socialText+
+ '<section class="growth-recs"><span class="growth-label">05 · הזדמנויות בשבילי</span><h2>מה אפשר לנסות מכאן?</h2><p>אלה הצעות מתוך מאגר ההזדמנויות של בית הספר והסביבה. לכל הצעה יש סיבה; הצעה לפתיחת אופק חדש מסומנת בנפרד. מותר לבחור אחרת.</p><div class="growth-rec-grid">'+cards+'</div></section>'+
+ '<section class="growth-path"><span class="growth-label">06 · מהסקרנות לצעד הראשון</span><h2>ארבעה צעדים קטנים להמשך הדרך</h2><ol>'+steps.map(t=>'<li>'+esc(t)+'</li>').join("")+'</ol></section>'+
  '<div class="growth-actions"><a class="growth-action" href="#choose">לבחירת תוכניות ←</a><a class="growth-action growth-action-light" href="#catalog">לכל מפת ההזדמנויות ←</a></div></div>';
  view(html);
 }
-
 function choiceCategories(key){
  const groups={};
  programDetails.forEach((p,i)=>{const category=p.category||"אפשרויות נוספות";(groups[category]||(groups[category]=[])).push({p,i});});
