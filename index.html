@@ -1203,7 +1203,7 @@ function participation(p,when="current"){
  if(!grade)return {ok:false,reason:"יש להזין שכבת גיל"};
  const grades=conditions.grades||[];
  // Future opportunities must be achievable within the next two school years.
- const possible=when==="future"?[grade+1,grade+2].filter(g=>g<=12):[grade];
+ const possible=when==="future"?(grade===12?[12]:[grade+1,grade+2].filter(g=>g<=12)):[grade];
  if(!possible.some(g=>grades.includes(g)))return {ok:false,reason:"לא מתאים לשכבת הגיל"};
  if(when==="current"&&conditions.majors?.length){
   const actual=studentMajors();
