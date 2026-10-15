@@ -1233,6 +1233,13 @@ function showNoAlternativeDialog(){
  document.body.appendChild(shade);
  shade.querySelector(".modal-close")?.focus();
 }
+const PROGRAM_MICRO_DOMAIN={"P001":"history","P002":"academic","P003":"academic","P004":"health","P005":"coding","P006":"coding","P007":"coding","P008":"coding","P009":"science-general","P010":"science-general","P011":"leadership","P012":"community","P013":"space","P014":"science-general","P015":"academic","P016":"environment","P017":"environment","P018":"vocal","P019":"bible","P020":"history","P021":"history","P022":"outdoor","P023":"history","P024":"chemistry","P025":"physics","P026":"physics","P027":"biology","P028":"biotech","P029":"physics","P030":"basketball","P031":"football","P032":"athletics","P033":"dance"};
+const RELATED_MICRO_DOMAINS={"physics":["physics","science-general"],"chemistry":["chemistry","science-general"],"biology":["biology","biotech","science-general"],"biotech":["biotech","biology","science-general"],"science-general":["science-general","physics","chemistry","biology","biotech"],"history":["history","bible"],"bible":["bible","history"],"community":["community","environment"],"environment":["environment","community"],"leadership":["leadership","community","outdoor"],"outdoor":["outdoor","leadership"],"vocal":["vocal"],"dance":["dance"],"basketball":["basketball"],"football":["football"],"athletics":["athletics"]};
+function sameOpportunityWorld(sourceId,candidateId){
+ const source=PROGRAM_MICRO_DOMAIN[sourceId],candidate=PROGRAM_MICRO_DOMAIN[candidateId];
+ if(!source||!candidate)return false;
+ return (RELATED_MICRO_DOMAINS[source]||[source]).includes(candidate);
+}
 function swapOpportunity(id){
  const result=analyzeGrowth();
  const history=recommendationHistory(result);
@@ -1242,6 +1249,7 @@ function swapOpportunity(id){
  // Only genuine, not-previously-shown alternatives grounded in specific answers.
  const alternative=opportunityCandidates(result).find(x=>{
   if(blocked.has(x.p.id))return false;
+  if(!sameOpportunityWorld(id,x.p.id))return false;
   // Re-check eligibility at the moment of swapping, not only during the initial profile.
   const fit=participation(x.p,"current");
   if(!fit.ok||fit.pending)return false;
@@ -1260,7 +1268,7 @@ function swapOpportunity(id){
  save();
  const grid=document.querySelector(".growth-rec-grid");
  if(grid)grid.innerHTML=renderRecommendationCards(opportunityRecommendations(result));
- if(msg)msg.textContent="מצאנו תוכנית נוספת שעומדת בתנאי הגיל, המגמה וההעדפות שסימנת. אפשר לבדוק את פרטי הפעילות בכרטיסייה.";
+ if(msg)msg.textContent="מצאנו הזדמנות נוספת מאותו תחום עניין, שמתאימה לתשובות ולנתוני הפרופיל שלך.";
 }
 function renderRecommendationCards(rec){
  const esc=escapeHtml;
