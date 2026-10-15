@@ -549,6 +549,26 @@ input::placeholder,textarea::placeholder{font-family:var(--site-font)!important}
 .ap-development-layout .ap-cycle-card{cursor:default;row-gap:12px;align-content:center}
 .ap-development-layout .ap-cycle-card:hover{transform:none}
 }
+
+/* Quiet sky background for the annual development journey */
+.ap-development-page{background:#f8fcff}
+.ap-development-page .ap-development-intro{background:linear-gradient(180deg,#fff 0%,#f8fcff 76%,#f1f9fe 100%)!important}
+.ap-development-page .ap-cycle-journey{
+position:relative;isolation:isolate;overflow:hidden;
+background:radial-gradient(ellipse 38% 42% at 22% 37%,rgba(139,207,242,.23),transparent 100%),
+radial-gradient(ellipse 40% 40% at 78% 68%,rgba(184,226,248,.22),transparent 100%),
+linear-gradient(180deg,#f1f9fe 0%,#e8f5fd 55%,#edf8fd 85%,#f8fcff 100%)!important;
+}
+.ap-development-page .ap-cycle-journey::before{
+content:"";position:absolute;inset:7% 0 7%;z-index:-1;pointer-events:none;opacity:.3;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 1100'%3E%3Cpath d='M35 400 C220 200 340 650 580 425 S960 230 1170 395' fill='none' stroke='%238fc6e2' stroke-width='2'/%3E%3Cpath d='M30 413 C230 225 350 665 593 439 S960 248 1176 408' fill='none' stroke='%23d8bb74' stroke-width='1.4'/%3E%3C/svg%3E");
+background-size:100% auto;background-repeat:no-repeat;background-position:center 35%;
+}
+.ap-development-page .ap-development-layout{position:relative;z-index:1}
+.ap-development-page .ap-cycle-card{background:rgba(255,255,255,.94)!important;border-color:rgba(166,210,231,.55)!important;box-shadow:0 12px 30px rgba(18,78,110,.055)!important}
+.ap-development-page .ap-development-illustration::before{content:"";position:absolute;inset:13% 0 16%;z-index:-1;border-radius:50%;background:radial-gradient(ellipse,rgba(154,221,250,.19) 0%,transparent 70%);pointer-events:none}
+.ap-development-page .ap-development-foot{background:linear-gradient(180deg,#f8fcff,#fff)!important}
+@media(max-width:900px){.ap-development-page .ap-cycle-journey::before{opacity:.15;background-position:center 18%}}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
