@@ -1190,7 +1190,7 @@ function participation(p,when="current"){
  if(!c||c.unverified)return {ok:false,status:"unverified",reason:"תנאי התוכנית עדיין בבירור"};
  const g=gradeNumber(state.grade),years=c.grades||[];
  if(!g)return {ok:false,status:"unknown",reason:"שכבת גיל אינה ידועה"};
- const target=when==="future"?(g===12?[]:Array.from({length:12-g},(_,i)=>g+i+1)):[g];
+ const target=when==="future"?(g===12?[]:[g+1]):[g];
  const matched=target.filter(x=>years.includes(x));
  if(!matched.length)return {ok:false,status:"grade",reason:"התוכנית אינה מיועדת לשכבת הגיל הרלוונטית"};
  const required=c.majors||[],actual=studentMajors();
@@ -1412,7 +1412,7 @@ function profile(){
   return prefix+evidenceText+(x.rule.note?" "+x.rule.note:"");
  };
  const cards=renderRecommendationCards(rec);
- const futureCards=renderFutureOpportunities(futureOpportunityCandidates());
+ const futureCards=""; // Personal profile presents current opportunities only.
  const initiativeChoices=(Array.isArray(state.answers[4])?state.answers[4]:[]).filter(i=>Number.isInteger(i)&&i>=0&&i<Q[4][1].split("|").length);
  const initiativeText=initiativeChoices.length?'<section class="growth-social growth-initiative-card"><span class="growth-label">רעיון שיכול לצמוח למעשה</span><h3>יש לך רעיון? אולי זה הזמן לתת לו כנפיים</h3><p>בשאלון בחרת שהיית רוצה ליזום: <strong>'+initiativeChoices.map(i=>'״'+esc(Q[4][1].split("|")[i])+'״').join(' וגם ')+'</strong>.</p><p>אם זה רעיון שבאמת מסקרן אותך, אפשר לגשת למחנכת, לספר לה עליו ולחשוב יחד איך מתחילים בצעד קטן. יוזמה טובה יכולה להתחיל משיחה אחת.</p></section>':'';
  const socialText=social?'<section class="growth-social"><span class="growth-label">העשייה שלי יכולה להשפיע</span><h3>מעניין אותך לעזור לאחרים? יש לזה מקום אמיתי בבית הספר.</h3><p>חזרת בכמה תשובות אל עזרה, הקשבה או שיתוף פעולה. אלה בחירות שכדאי להפוך להתנסות: אפשר לפנות לרכזת המעורבות החברתית, להכיר אפיקי התנדבות ולהציע יוזמה משלך. בית הספר מברך על יוזמות של תלמידים.</p><p>בכיתות י׳–י״ב המעורבות החברתית היא גם חלק מחובות הלימודים. עשייה משמעותית ומתמשכת עשויה לתרום לעמידה בקריטריונים לתעודת בגרות חברתית מצטיינת.</p><p><strong>רעיון לצעד ראשון:</strong> לבחור צורך קטן בקהילה או בבית הספר ולשאול את רכזת המעורבות החברתית איך אפשר לפעול.</p></section>':'';
@@ -1436,7 +1436,7 @@ function profile(){
  '<div class="growth-actions"><a class="growth-action" href="#choose">לבחירת תוכניות ←</a><a class="growth-action growth-action-light" href="#catalog">לכל מפת ההזדמנויות ←</a></div></div>';
  view(html);
 }
-function futureChoiceTarget(){return gradeNumber(state.grade)===12?0:2;}
+function futureChoiceTarget(){if(gradeNumber(state.grade)>=12)return 0;return Math.min(2,programDetails.filter(p=>participation(p,'future').ok).length);}
 function choiceCategories(key){
  const groups={};
  programDetails.forEach((p,i)=>{const fit=participation(p,key);if(!fit.ok)return;const category=p.category||"אפשרויות נוספות";(groups[category]||(groups[category]=[])).push({p,i,fit});});
@@ -1453,7 +1453,7 @@ function choose(){
  save();
  if(!hasIntroduction()){location.hash='#start';return;}
  if(!Q.every((_,i)=>Array.isArray(state.answers[i])&&state.answers[i].length>0)){location.hash='#quiz';return;}
- view('<div class="shell choose-page">'+stepper(4)+'<h2>הבחירות שלי</h2><p>מוצגות תוכניות שמתאימות לשכבת הגיל ולמגמות שציינת; האפשרויות לעתיד הן עד סיום כיתה י״ב, והצטרפות אליהן עשויה לדרוש בחירת מגמה או מיון. תנאי קבלה נוספים דורשים אישור.</p><section class="choose-section"><h3>השנה אני רוצה...</h3><p class="muted">'+state.current.length+' תוכניות נבחרו · יש לבחור לפחות אחת</p>'+choiceCategories('current')+'</section><section class="choose-section"><h3>בשנים הבאות...</h3><p class="muted">'+state.future.length+' מתוך '+futureChoiceTarget()+' תוכניות נבחרו</p>'+choiceCategories('future')+'</section><div class="actions"><button '+(!state.current.length||state.future.length!==futureChoiceTarget()?'disabled':'')+' onclick="location.hash=\'#journey\'">לסיכום הבחירות ←</button></div></div>');
+ view('<div class="shell choose-page">'+stepper(4)+'<h2>הבחירות שלי</h2><p>מוצגות תוכניות שמתאימות לשכבת הגיל ולמגמות שציינת; הבחירות לעתיד מיועדות לשנת הלימודים הבאה בלבד, והצטרפות אליהן עשויה לדרוש בחירת מגמה או מיון. תנאי קבלה נוספים דורשים אישור.</p><section class="choose-section"><h3>השנה אני רוצה...</h3><p class="muted">'+state.current.length+' תוכניות נבחרו · יש לבחור לפחות אחת</p>'+choiceCategories('current')+'</section><section class="choose-section"><h3>בשנת הלימודים הבאה...</h3><p class="muted">'+state.future.length+' מתוך '+futureChoiceTarget()+' תוכניות נבחרו</p>'+choiceCategories('future')+'</section><div class="actions"><button '+(!state.current.length||state.future.length!==futureChoiceTarget()?'disabled':'')+' onclick="location.hash=\'#journey\'">לסיכום הבחירות ←</button></div></div>');
  document.querySelectorAll('.choose-group').forEach(el=>{el.open=(window.rwOpenChoiceGroups||[]).includes(el.dataset.choiceGroup);el.addEventListener('toggle',()=>{const key=el.dataset.choiceGroup;const opened=new Set(window.rwOpenChoiceGroups||[]);if(el.open)opened.add(key);else opened.delete(key);window.rwOpenChoiceGroups=[...opened];});});
 }
 function pick(i,key){
