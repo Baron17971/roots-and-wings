@@ -1210,7 +1210,7 @@ const PROGRAM_MATCH_RULES={"P001":{"options":["7:5","9:5","14:6","16:6","19:6","
 const FUTURE_QUESTION_IDS=new Set([11,18,19]);
 function optionWasChosen(ref){const [q,i]=ref.split(":").map(Number);return Array.isArray(state.answers[q])&&state.answers[q].includes(i);}
 function currentFeedback(){
- const signature=JSON.stringify({engineVersion:7,answers:state.answers,grade:state.grade,majors:state.majors,middleTrack:state.middleTrack});
+ const signature=JSON.stringify({engineVersion:8,answers:state.answers,grade:state.grade,majors:state.majors,middleTrack:state.middleTrack});
  if(state.recommendationFeedbackSignature!==signature){
   state.recommendationFeedbackSignature=signature;
   state.recommendationFeedback={};
@@ -1291,7 +1291,7 @@ function renderRecommendationCards(rec){
  if(!rec.length)return '<p>לא מצאנו כרגע הצעות עם קשר מספיק ברור לתשובות. אפשר לעיין במפת ההזדמנויות המלאה.</p>';
  return rec.map(x=>'<article class="growth-opportunity"><span class="growth-label">'+(x.kind==="explore"?'לגלות עוד אפשרות':'מומלץ לפי הבחירות שלי')+'</span><h3>'+esc(x.p.name)+'</h3><p>'+esc(x.p.desc)+'</p><p class="growth-why">'+esc(reasons(x))+'</p><p class="muted">'+esc(x.p.audience||"")+' · תנאי ההצטרפות והזמינות דורשים בירור</p><div class="recommendation-actions"><button type="button" class="secondary swap-btn" onclick="swapOpportunity(\''+esc(x.p.id)+'\')">↻ הציעו לי אפשרות אחרת</button><button type="button" class="details-btn" onclick="showProgram('+x.i+')">להכיר את ההזדמנות ←</button></div></article>').join("");
 }
-const PROGRAM_STRONG_SIGNALS={"P018":["0:1","2:1","8:2","9:3","16:1","18:2"],"P033":["0:6","7:1","11:5","14:3","19:2"],"P021":["0:5","12:5","16:6","4:6"],"P005":["0:2","16:5","4:1"],"P006":["16:5","7:0","4:1"],"P007":["0:2","16:5","4:1"],"P008":["16:5","11:3","4:1"],"P025":["7:3","2:5"],"P026":["0:0","7:3"],"P027":["2:5","7:3"],"P028":["2:5","7:3"],"P030":["2:3","16:3"],"P031":["9:4"],"P032":["8:3","4:3","7:6"],"P016":["4:5"],"P017":["4:5"],"P023":["4:6"],"P019":["16:2"],"P012":["16:2"]};
+const PROGRAM_STRONG_SIGNALS={"P018":["0:1","2:1","8:2","9:3","16:1","18:2"],"P033":["0:6","7:1","11:5","14:3","19:2"],"P021":["0:5","12:5","16:6","4:6"],"P005":["0:2","16:5","4:1"],"P006":["16:5","7:0","4:1"],"P007":["0:2","16:5","4:1"],"P008":["16:5","11:3","4:1"],"P025":["7:3","2:5","0:0","14:4"],"P026":["0:0","7:3"],"P027":["2:5","7:3","14:2"],"P028":["2:5","7:3"],"P030":["2:3","16:3"],"P031":["9:4"],"P032":["8:3","4:3","7:6"],"P016":["4:5"],"P017":["4:5"],"P023":["4:6"],"P019":["16:2"],"P012":["16:2"],"P029":["0:0","7:3","14:4"]};
 function matchStrength(p,ref){
  const strong=PROGRAM_STRONG_SIGNALS[p.id]||[];
  if(strong.includes(ref))return 3;
@@ -1326,11 +1326,14 @@ function futureOpportunityCandidates(){
   const fit=participation(p,"future"),rule=PROGRAM_MATCH_RULES[p.id];
   if(!fit.ok||!rule)return null;
   const req=PROGRAM_ELIGIBILITY[p.id]?.majors||[];
-  if(req.length&&gradeNumber(state.grade)>=10&&fit.status==="future-path")return null;
+  // Future pathways with missing majors are shown conditionally, never as present eligibility.
   const hits=rule.options.filter(optionWasChosen);
   const aspirations=hits.filter(ref=>FUTURE_QUESTION_IDS.has(Number(ref.split(":")[0])));
   const present=hits.filter(ref=>!FUTURE_QUESTION_IDS.has(Number(ref.split(":")[0])));
   if(!aspirations.length&&!present.length)return null;
+  const specificHits=hits.filter(ref=>(PROGRAM_STRONG_SIGNALS[p.id]||[]).includes(ref));
+  if(["coding","science-general"].includes(PROGRAM_MICRO_DOMAIN[p.id])&&specificHits.length<2)return null;
+  if(req.length&&fit.status==="future-path"&&specificHits.length<2)return null;
   const micro=PROGRAM_MICRO_DOMAIN[p.id];
   if(["history","bible","biology","biotech","physics","chemistry"].includes(micro)
     && !hits.some(ref=>(PROGRAM_STRONG_SIGNALS[p.id]||[]).includes(ref))
