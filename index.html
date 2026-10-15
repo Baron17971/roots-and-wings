@@ -1311,6 +1311,25 @@ function opportunityCandidates(result){
  .sort((a,b)=>Number(b.eligibleMatch)-Number(a.eligibleMatch)||b.score-a.score||a.i-b.i);
 }
 
+function futureOpportunityCandidates(){
+ if(gradeNumber(state.grade)>=12)return [];
+ return programDetails.map((p,i)=>{
+  const fit=participation(p,"future"),rule=PROGRAM_MATCH_RULES[p.id];
+  if(!fit.ok||!rule)return null;
+  const hits=rule.options.filter(optionWasChosen);
+  const aspirations=hits.filter(ref=>FUTURE_QUESTION_IDS.has(Number(ref.split(":")[0])));
+  const present=hits.filter(ref=>!FUTURE_QUESTION_IDS.has(Number(ref.split(":")[0])));
+  if(!aspirations.length&&!present.length)return null;
+  const score=aspirations.reduce((z,ref)=>z+matchStrength(p,ref)*2,0)
+   +present.reduce((z,ref)=>z+matchStrength(p,ref)*0.75,0);
+  if(score<2.5)return null;
+  return {p,i,fit,evidence:hits,score};
+ }).filter(Boolean).sort((a,b)=>b.score-a.score||a.i-b.i).slice(0,3);
+}
+function renderFutureOpportunities(items){
+ if(!items.length)return "";
+ return '<section class="growth-recs"><span class="growth-label">להסתכל קדימה</span><h2>אפשרויות לשנים הבאות</h2><p>אלה כיוונים שהתעניינת בהם ושעשויים להתאים בהמשך, בכפוף למסלול הלימודים ולתנאי ההצטרפות.</p><div class="growth-rec-grid">'+items.map(x=>'<article class="growth-opportunity"><span class="growth-label">אפשרות לעתיד · לא אישור קבלה</span><h3>'+escapeHtml(x.p.name)+'</h3><p>'+escapeHtml(x.p.desc)+'</p><p class="muted">'+escapeHtml(x.fit.reason||"יש לבדוק מועדי הרשמה ותנאי קבלה")+'</p><button type="button" class="details-btn" onclick="showProgram('+x.i+')">להכיר את ההזדמנות ←</button></article>').join("")+'</div></section>';
+}
 function initialOpportunityRecommendations(candidates){
  const selected=[];
  for(const x of candidates.filter(x=>x.eligibleMatch)){
@@ -1365,6 +1384,7 @@ function profile(){
   return prefix+evidenceText+(x.rule.note?" "+x.rule.note:"");
  };
  const cards=renderRecommendationCards(rec);
+ const futureCards=renderFutureOpportunities(futureOpportunityCandidates());
  const socialText=social?'<section class="growth-social"><span class="growth-label">העשייה שלי יכולה להשפיע</span><h3>מעניין אותך לעזור לאחרים? יש לזה מקום אמיתי בבית הספר.</h3><p>חזרת בכמה תשובות אל עזרה, הקשבה או שיתוף פעולה. אלה בחירות שכדאי להפוך להתנסות: אפשר לפנות לרכזת המעורבות החברתית, להכיר אפיקי התנדבות ולהציע יוזמה משלך. בית הספר מברך על יוזמות של תלמידים.</p><p>בכיתות י׳–י״ב המעורבות החברתית היא גם חלק מחובות הלימודים. עשייה משמעותית ומתמשכת עשויה לתרום לעמידה בקריטריונים לתעודת בגרות חברתית מצטיינת.</p><p><strong>רעיון לצעד ראשון:</strong> לבחור צורך קטן בקהילה או בבית הספר ולשאול את רכזת המעורבות החברתית איך אפשר לפעול.</p></section>':'';
  const steps=[
  'להתבונן: לבחור מתוך הפרופיל נושא אחד שמעניין אותך ולדייק מה היית רוצה לגלות בו.',
@@ -1379,19 +1399,21 @@ function profile(){
  '<div class="growth-pair"><section class="growth-panel"><span class="growth-label">03 · החיבור המיוחד שלי</span><h3>כשעולמות נפגשים</h3><p>'+esc(link)+'</p></section><section class="growth-panel"><span class="growth-label">04 · הדלת שאני רוצה לפתוח</span><h3>מה הייתי רוצה לפתח?</h3><p>'+esc(aspirationText)+'</p></section></div>'+
  socialText+
  '<section class="growth-recs"><span class="growth-label">05 · הזדמנויות בשבילי</span><h2>מה אפשר לנסות מכאן?</h2><p>מצאנו כמה אפשרויות שיכולות להתאים לתשובות שלך. כדאי להכיר אותן, לשאול שאלות ולבחור את מה שמסקרן אותך באמת.</p><p class="growth-swap-note" aria-live="polite"></p><div class="growth-rec-grid">'+cards+'</div></section>'+
+ futureCards+
  '<section class="growth-path"><span class="growth-label">06 · מהסקרנות לצעד הראשון</span><h2>ארבעה צעדים קטנים להמשך הדרך</h2><ol>'+steps.map(t=>'<li>'+esc(t)+'</li>').join("")+'</ol></section>'+
  '<section class="growth-print-reflection"><h3>לקראת שיחה עם המחנכת</h3><p>מה גיליתי על עצמי? איזו הזדמנות מסקרנת אותי? במה ארצה להתנסות השנה?</p><div class="growth-reflection-lines" aria-hidden="true"></div></section>'+
  
  '<div class="growth-actions"><a class="growth-action" href="#choose">לבחירת תוכניות ←</a><a class="growth-action growth-action-light" href="#catalog">לכל מפת ההזדמנויות ←</a></div></div>';
  view(html);
 }
+function futureChoiceTarget(){return gradeNumber(state.grade)===12?0:2;}
 function choiceCategories(key){
  const groups={};
  programDetails.forEach((p,i)=>{const fit=participation(p,key);if(!fit.ok)return;const category=p.category||"אפשרויות נוספות";(groups[category]||(groups[category]=[])).push({p,i,fit});});
  const esc=escapeHtml;
  return Object.entries(groups).map(([cat,entries])=>{
   const selected=entries.filter(x=>state[key].includes(x.i)).length;
-  const choices=entries.map(({p,i,fit})=>'<label class="choice choose-option"><input type="checkbox" '+(state[key].includes(i)?'checked':'')+(key==='future'&&state.future.length>=2&&!state.future.includes(i)?' disabled':'')+' onchange="pick('+i+',\''+key+'\')"><span>'+esc(p.name)+'</span></label>').join('');
+  const choices=entries.map(({p,i,fit})=>'<label class="choice choose-option"><input type="checkbox" '+(state[key].includes(i)?'checked':'')+(key==='future'&&state.future.length>=futureChoiceTarget()&&!state.future.includes(i)?' disabled':'')+' onchange="pick('+i+',\''+key+'\')"><span>'+esc(p.name)+'</span></label>').join('');
   return '<details class="choose-group" data-choice-group="'+key+'|'+esc(cat)+'"><summary><span>'+esc(cat)+'</span><span class="choose-group-meta">'+(selected?selected+' נבחרו · ':'')+entries.length+' אפשרויות <span class="choose-chevron">⌄</span></span></summary><div class="choose-options">'+choices+'</div></details>';
  }).join('');
 }
@@ -1401,7 +1423,7 @@ function choose(){
  save();
  if(!hasIntroduction()){location.hash='#start';return;}
  if(!Q.every((_,i)=>Array.isArray(state.answers[i])&&state.answers[i].length>0)){location.hash='#quiz';return;}
- view('<div class="shell choose-page">'+stepper(4)+'<h2>הבחירות שלי</h2><p>מוצגות תוכניות שמתאימות לשכבת הגיל ולמגמות שציינת; האפשרויות לעתיד הן לשנתיים הקרובות. תנאי קבלה נוספים דורשים אישור.</p><section class="choose-section"><h3>השנה אני רוצה...</h3><p class="muted">'+state.current.length+' תוכניות נבחרו · יש לבחור לפחות אחת</p>'+choiceCategories('current')+'</section><section class="choose-section"><h3>בשנים הבאות...</h3><p class="muted">'+state.future.length+' מתוך 2 תוכניות נבחרו</p>'+choiceCategories('future')+'</section><div class="actions"><button '+(!state.current.length||state.future.length!==2?'disabled':'')+' onclick="location.hash=\'#journey\'">לסיכום הבחירות ←</button></div></div>');
+ view('<div class="shell choose-page">'+stepper(4)+'<h2>הבחירות שלי</h2><p>מוצגות תוכניות שמתאימות לשכבת הגיל ולמגמות שציינת; האפשרויות לעתיד הן לשנתיים הקרובות, והצטרפות אליהן עשויה לדרוש בחירת מגמה או מיון. תנאי קבלה נוספים דורשים אישור.</p><section class="choose-section"><h3>השנה אני רוצה...</h3><p class="muted">'+state.current.length+' תוכניות נבחרו · יש לבחור לפחות אחת</p>'+choiceCategories('current')+'</section><section class="choose-section"><h3>בשנים הבאות...</h3><p class="muted">'+state.future.length+' מתוך 2 תוכניות נבחרו</p>'+choiceCategories('future')+'</section><div class="actions"><button '+(!state.current.length||state.future.length!==futureChoiceTarget()?'disabled':'')+' onclick="location.hash=\'#journey\'">לסיכום הבחירות ←</button></div></div>');
  document.querySelectorAll('.choose-group').forEach(el=>{el.open=(window.rwOpenChoiceGroups||[]).includes(el.dataset.choiceGroup);el.addEventListener('toggle',()=>{const key=el.dataset.choiceGroup;const opened=new Set(window.rwOpenChoiceGroups||[]);if(el.open)opened.add(key);else opened.delete(key);window.rwOpenChoiceGroups=[...opened];});});
 }
 function pick(i,key){
@@ -1412,7 +1434,7 @@ function pick(i,key){
  const currentCount=document.getElementById("choose-current-count");
  const futureCount=document.getElementById("choose-future-count");
  if(currentCount)currentCount.textContent=state.current.length+" תוכניות נבחרו · יש לבחור לפחות אחת";
- if(futureCount)futureCount.textContent=state.future.length+" מתוך 2 תוכניות נבחרו";
+ if(futureCount)futureCount.textContent=state.future.length+" מתוך "+futureChoiceTarget()+" תוכניות נבחרו";
  document.querySelectorAll(".choose-group").forEach(group=>{
   const kind=group.dataset.choiceGroup.split("|")[0];
   const chosen=Array.from(group.querySelectorAll('input[type="checkbox"]:checked')).length;
