@@ -1093,13 +1093,13 @@ function optionWasChosen(ref){const [q,i]=ref.split(":").map(Number);return Arra
 function opportunityRecommendations(result){
  const candidates=programDetails.map((p,i)=>{
   const rule=PROGRAM_MATCH_RULES[p.id];
-  if(!rule||!gradeEligibility(p))return null;
+  if(!rule||!gradeEligibility(p)||p.id==="P003")return null;
   const hits=rule.options.filter(optionWasChosen);
   const present=hits.filter(ref=>!FUTURE_QUESTION_IDS.has(Number(ref.split(":")[0])));
   const future=hits.filter(ref=>FUTURE_QUESTION_IDS.has(Number(ref.split(":")[0])));
   // Subject-specific programs need evidence that the subject itself interests the learner.
   const specialist=rule.strict;
-  const eligibleMatch=present.length>=2||(!specialist&&present.length>=1&&future.length>=1);
+  const eligibleMatch=!specialist&&(present.length>=2||(present.length>=1&&future.length>=1));
   // Advanced, selective and prerequisite-based tracks are for exploration, not assumed eligibility.
   const score=present.length*2+future.length*.85;
   return {p,i,tags:PROGRAM_TAGS[p.id]||[],score,match:present.length,growth:future.length,
@@ -1117,7 +1117,7 @@ function opportunityRecommendations(result){
   if(!selected.some(y=>y.i===x.i))selected.push(x);
  }
  // Only one exploration option, and only with explicit questionnaire evidence.
- const explore=candidates.find(x=>x.growth>0&&!selected.some(y=>y.i===x.i))||
+ const explore=candidates.find(x=>x.growth>0&&!x.eligibleMatch&&!selected.some(y=>y.i===x.i))||
  candidates.find(x=>!x.eligibleMatch&&x.evidence.length>=1&&!selected.some(y=>y.i===x.i));
  if(explore)selected.push({...explore,kind:"explore"});
  return selected;
