@@ -1334,6 +1334,7 @@ function futureOpportunityCandidates(){
   const specificHits=hits.filter(ref=>(PROGRAM_STRONG_SIGNALS[p.id]||[]).includes(ref));
   if(["coding","science-general"].includes(PROGRAM_MICRO_DOMAIN[p.id])&&specificHits.length<2)return null;
   if(req.length&&fit.status==="future-path"&&specificHits.length<2)return null;
+  if(req.length&&fit.status==="future-path"&&["P025","P026","P029"].includes(p.id)&&!hits.includes("14:4"))return null;
   const micro=PROGRAM_MICRO_DOMAIN[p.id];
   if(["history","bible","biology","biotech","physics","chemistry"].includes(micro)
     && !hits.some(ref=>(PROGRAM_STRONG_SIGNALS[p.id]||[]).includes(ref))
