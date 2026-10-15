@@ -1238,47 +1238,95 @@ function pick(i,key){
 
 
 async function downloadJourneyPdf(button){
- const source=document.querySelector(".print-only-growth");
+ const source=document.querySelector(".print-only-growth .growth-results");
  if(!source)return;
  const original=button.textContent;
- button.disabled=true;
- button.textContent="מכינים את הקובץ...";
- let staging;
+ button.disabled=true;button.textContent="מכינים את הקובץ...";
  try{
-  if(!window.html2pdf){
+  // Draw each page directly on a canvas instead of capturing a hidden HTML node.
+  // This avoids the blank-page bug on browsers that do not snapshot hidden nodes.
+  if(!window.jspdf?.jsPDF){
    await new Promise((resolve,reject)=>{
     const script=document.createElement("script");
-    script.src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
-    script.onload=resolve;script.onerror=()=>reject(new Error("PDF library unavailable"));
+    script.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+    script.onload=resolve;script.onerror=()=>reject(new Error("PDF engine unavailable"));
     document.head.appendChild(script);
    });
   }
-  staging=source.cloneNode(true);
-  staging.className="pdf-render-document";
-  // Keep the source inside the viewport: html2canvas skips far-offscreen nodes.
-  staging.style.cssText="display:block!important;position:fixed!important;top:0!important;left:0!important;width:760px!important;max-width:760px!important;opacity:1!important;visibility:visible!important;z-index:2147483646!important;background:white!important;pointer-events:none!important;overflow:visible!important;";
-  staging.querySelectorAll("button,.growth-actions,.stepper").forEach(n=>n.remove());
-  document.body.appendChild(staging);
   await document.fonts.ready;
-  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-  if(!staging.getBoundingClientRect().width||!staging.textContent.trim())throw new Error("Empty PDF source");
+  const pdf=new window.jspdf.jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
+  const canvas=document.createElement("canvas");
+  canvas.width=1190;canvas.height=1684;
+  const ctx=canvas.getContext("2d");
+  if(!ctx)throw new Error("Canvas unavailable");
+  const left=92,right=1098,top=110,bottom=1560;
+  let y=top,page=0,items=0;
+  function newSheet(){
+   ctx.fillStyle="#ffffff";ctx.fillRect(0,0,canvas.width,canvas.height);
+   ctx.fillStyle="#087e91";ctx.fillRect(right-100,64,100,6);
+   ctx.textAlign="right";ctx.direction="rtl";
+   y=top;
+  }
+  function commit(){
+   if(!items)return;
+   ctx.font='26px "Varela Round", Arial, sans-serif';
+   ctx.fillStyle="#67838b";ctx.fillText("שורשים וכנפיים · מפת הצמיחה והבחירות",right,1630);
+   if(page++)pdf.addPage();
+   pdf.addImage(canvas.toDataURL("image/jpeg",0.88),"JPEG",0,0,210,297);
+   items=0;
+  }
+  function wrap(text,weight,size){
+   ctx.font=weight+" "+size+'px "Varela Round", Arial, sans-serif';
+   const words=String(text).trim().split(/\s+/);
+   const lines=[];let line="";
+   for(const word of words){
+    const next=line?line+" "+word:word;
+    if(ctx.measureText(next).width>right-left&&line){lines.push(line);line=word;}
+    else line=next;
+   }
+   if(line)lines.push(line);
+   return lines;
+  }
+  function write(text,type="p"){
+   text=String(text||"").replace(/\s+/g," ").trim();
+   if(!text)return;
+   const size=type==="title"?42:type==="h"?32:25;
+   const weight=type==="p"?"400":"700";
+   const height=type==="title"?64:type==="h"?49:39;
+   const lines=wrap(text,weight,size);
+   if(y+lines.length*height+32>bottom){commit();newSheet();}
+   if(type!=="p")y+=18;
+   ctx.font=weight+" "+size+'px "Varela Round", Arial, sans-serif';
+   ctx.fillStyle=type==="p"?"#375765":"#064a68";
+   for(const line of lines){ctx.fillText(line,right,y);y+=height;}
+   if(type!=="p")y+=12;else y+=7;
+   items++;
+  }
+  newSheet();
+  write("מפת הצמיחה האישית של "+(state.name||"התלמיד"),"title");
+  const profileNodes=source.querySelectorAll("h2,h3,p,li");
+  profileNodes.forEach(el=>{
+   if(el.closest(".growth-actions,.stepper,.growth-print-reflection"))return;
+   const t=el.textContent.trim();
+   if(!t)return;
+   write(t,el.matches("h2")?"h":el.matches("h3")?"h":"p");
+  });
+  commit();newSheet();
+  write("הבחירות שלי","title");
+  function section(label,indices){
+   write(label,"h");
+   for(const i of indices){const program=programDetails[i];if(program)write("• "+program.name+" — "+program.category);}
+  }
+  section("השנה אני רוצה...",state.current);
+  section("בשנים הבאות...",state.future);
+  write("אפשר להביא את המפה לשיחה עם המחנכת ולבחור יחד איך להמשיך.");
+  commit();
   const safeName=String(state.name||"תלמיד").replace(/[\\/:*?"<>|]/g,"").trim()||"תלמיד";
-  const filename="מפת הצמיחה והבחירות - "+safeName+".pdf";
-  await window.html2pdf().set({
-   margin:[9,9,9,9],filename,
-   image:{type:"jpeg",quality:0.95},
-   html2canvas:{scale:1,useCORS:true,backgroundColor:"#ffffff",scrollY:0,windowWidth:800},
-   jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
-   pagebreak:{mode:["css","legacy"],avoid:[".growth-opportunity",".growth-story-item",".journey-chosen-grid>div"]}
-  }).from(staging).save();
- }catch(e){
-  console.error("PDF download failed",e);
-  alert("לא הצלחנו להוריד את הקובץ כרגע. אפשר להשתמש בכפתור ההדפסה ולבחור שמירה כ־PDF.");
- }finally{
-  if(staging)staging.remove();
-  button.textContent=original;
-  button.disabled=false;
- }
+  pdf.save("מפת הצמיחה והבחירות - "+safeName+".pdf");
+ }catch(err){
+  console.error("PDF creation error",err);
+  alert("לא הצלחנו ליצור את הקובץ. אפשר ללחוץ על הדפסה ולבחור שמירה כ־PDF.");
+ }finally{button.textContent=original;button.disabled=false;}
 }
 function journey(){
  if(!hasIntroduction()){location.hash="#start";return;}
