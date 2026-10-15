@@ -1385,6 +1385,8 @@ function profile(){
  };
  const cards=renderRecommendationCards(rec);
  const futureCards=renderFutureOpportunities(futureOpportunityCandidates());
+ const initiativeChoices=(Array.isArray(state.answers[4])?state.answers[4]:[]).filter(i=>Number.isInteger(i)&&i>=0&&i<Q[4][1].split("|").length);
+ const initiativeText=initiativeChoices.length?'<section class="growth-social"><span class="growth-label">רעיון שיכול לצמוח למעשה</span><h3>יש לך רעיון? אולי זה הזמן לתת לו כנפיים</h3><p>בשאלון בחרת שהיית רוצה ליזום: <strong>'+initiativeChoices.map(i=>'״'+esc(Q[4][1].split("|")[i])+'״').join(' וגם ')+'</strong>.</p><p>אם זה רעיון שבאמת מסקרן אותך, אפשר לגשת למחנכת, לספר לה עליו ולחשוב יחד איך מתחילים בצעד קטן. יוזמה טובה יכולה להתחיל משיחה אחת.</p></section>':'';
  const socialText=social?'<section class="growth-social"><span class="growth-label">העשייה שלי יכולה להשפיע</span><h3>מעניין אותך לעזור לאחרים? יש לזה מקום אמיתי בבית הספר.</h3><p>חזרת בכמה תשובות אל עזרה, הקשבה או שיתוף פעולה. אלה בחירות שכדאי להפוך להתנסות: אפשר לפנות לרכזת המעורבות החברתית, להכיר אפיקי התנדבות ולהציע יוזמה משלך. בית הספר מברך על יוזמות של תלמידים.</p><p>בכיתות י׳–י״ב המעורבות החברתית היא גם חלק מחובות הלימודים. עשייה משמעותית ומתמשכת עשויה לתרום לעמידה בקריטריונים לתעודת בגרות חברתית מצטיינת.</p><p><strong>רעיון לצעד ראשון:</strong> לבחור צורך קטן בקהילה או בבית הספר ולשאול את רכזת המעורבות החברתית איך אפשר לפעול.</p></section>':'';
  const steps=[
  'להתבונן: לבחור מתוך הפרופיל נושא אחד שמעניין אותך ולדייק מה היית רוצה לגלות בו.',
@@ -1397,7 +1399,7 @@ function profile(){
  '<section class="growth-feature growth-story-feature"><div><span class="growth-label">01 · מה ניתן ללמוד מהבחירות שלך</span><h3>'+esc(title||"לגלות אפשרויות")+'</h3><p>'+esc(main.map(x=>profilePhrase(PROFILE_PHRASES[x.code])).join(" " ))+'</p></div><aside class="growth-proof"><h3>כך ענית בשאלון</h3><ul class="growth-proof-list">'+proofHtml+'</ul></aside></section>'+
  '<section class="growth-story-section"><span class="growth-label">02 · מה כבר מסקרן אותי?</span><h2>התחומים שמעניינים אותך</h2><div class="growth-story-grid">'+pillars+'</div></section>'+
  '<div class="growth-pair"><section class="growth-panel"><span class="growth-label">03 · החיבור המיוחד שלי</span><h3>כשעולמות נפגשים</h3><p>'+esc(link)+'</p></section><section class="growth-panel"><span class="growth-label">04 · הדלת שאני רוצה לפתוח</span><h3>מה הייתי רוצה לפתח?</h3><p>'+esc(aspirationText)+'</p></section></div>'+
- socialText+
+ socialText+initiativeText+
  '<section class="growth-recs"><span class="growth-label">05 · הזדמנויות בשבילי</span><h2>מה אפשר לנסות מכאן?</h2><p>מצאנו כמה אפשרויות שיכולות להתאים לתשובות שלך. כדאי להכיר אותן, לשאול שאלות ולבחור את מה שמסקרן אותך באמת.</p><p class="growth-swap-note" aria-live="polite"></p><div class="growth-rec-grid">'+cards+'</div></section>'+
  futureCards+
  '<section class="growth-path"><span class="growth-label">06 · מהסקרנות לצעד הראשון</span><h2>ארבעה צעדים קטנים להמשך הדרך</h2><ol>'+steps.map(t=>'<li>'+esc(t)+'</li>').join("")+'</ol></section>'+
