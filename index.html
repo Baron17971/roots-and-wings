@@ -1131,31 +1131,45 @@ function currentFeedback(){
  if(state.recommendationFeedbackSignature!==signature){
   state.recommendationFeedbackSignature=signature;
   state.recommendationFeedback={};
+  state.recommendationHistory=null;
   state.recommendationSwaps={};
  }
  return state.recommendationFeedback||(state.recommendationFeedback={});
 }
-function recommendationSwaps(){
+function recommendationHistory(result){
  currentFeedback();
- return state.recommendationSwaps||(state.recommendationSwaps={});
+ const candidates=opportunityCandidates(result);
+ const ids=new Set(candidates.map(x=>x.p.id));
+ const prior=state.recommendationHistory;
+ if(prior&&Array.isArray(prior.original)&&Array.isArray(prior.slots)&&Array.isArray(prior.seen)
+    &&prior.original.every(id=>ids.has(id))&&prior.slots.every(id=>ids.has(id))){
+  return prior;
+ }
+ const original=initialOpportunityRecommendations(candidates).map(x=>x.p.id);
+ const history={original,slots:[...original],seen:[...original]};
+ state.recommendationHistory=history;
+ save();
+ return history;
 }
 function swapOpportunity(id){
  const result=analyzeGrowth();
- const current=opportunityRecommendations(result);
- const visible=new Set(current.map(x=>x.p.id));
- const available=opportunityCandidates(result).filter(x=>!visible.has(x.p.id));
- const next=available[0];
+ const history=recommendationHistory(result);
+ const index=history.slots.indexOf(id);
+ if(index<0)return;
+ const blocked=new Set([...history.original,...history.seen,...history.slots]);
+ // Only genuine, not-previously-shown alternatives grounded in specific answers.
+ const alternative=opportunityCandidates(result).find(x=>!blocked.has(x.p.id) && (x.eligibleMatch||x.growth>0||x.match>=2));
  const msg=document.querySelector(".growth-swap-note");
- if(!next){
-  if(msg)msg.textContent="כרגע אין הצעה נוספת שמבוססת מספיק על התשובות שלך. ההמלצות הקיימות נשארות במקומן.";
+ if(!alternative){
+  if(msg)msg.textContent="לא מצאנו כרגע אפשרות חדשה שמתאימה מספיק לתשובות שלך. ההמלצות הקיימות נשארו ללא שינוי.";
   return;
  }
- // Preserve the exact number of suggestions, and replace only the requested one.
- recommendationSwaps()[id]=next.p.id;
+ history.slots[index]=alternative.p.id;
+ history.seen.push(alternative.p.id);
  save();
  const grid=document.querySelector(".growth-rec-grid");
  if(grid)grid.innerHTML=renderRecommendationCards(opportunityRecommendations(result));
- if(msg)msg.textContent="מצאנו אפשרות אחרת והחלפנו רק את ההמלצה שביקשת.";
+ if(msg)msg.textContent="החלפנו רק את ההמלצה שביקשת, בתוכנית חדשה שקשורה לבחירות שלך.";
 }
 function renderRecommendationCards(rec){
  const esc=escapeHtml;
@@ -1180,8 +1194,7 @@ function opportunityCandidates(result){
  }).filter(Boolean).filter(x=>x.evidence.length>0)
  .sort((a,b)=>Number(b.eligibleMatch)-Number(a.eligibleMatch)||b.score-a.score||a.i-b.i);
 }
-function opportunityRecommendations(result){
- const candidates=opportunityCandidates(result);
+function initialOpportunityRecommendations(candidates){
  const selected=[];
  for(const x of candidates.filter(x=>x.eligibleMatch)){
   if(selected.length===3)break;
@@ -1195,19 +1208,12 @@ function opportunityRecommendations(result){
  const explore=candidates.find(x=>x.growth>0&&!x.eligibleMatch&&!selected.some(y=>y.i===x.i))||
  candidates.find(x=>!x.eligibleMatch&&!selected.some(y=>y.i===x.i));
  if(explore)selected.push({...explore,kind:"explore"});
- const swaps=recommendationSwaps();
- const used=new Set(selected.map(x=>x.p.id));
- return selected.map(x=>{
-  let target=x.p.id,seen=new Set();
-  while(swaps[target]&&!seen.has(target)){
-   seen.add(target);
-   const replacement=candidates.find(y=>y.p.id===swaps[target]&&!used.has(y.p.id));
-   if(!replacement)break;
-   used.delete(target);used.add(replacement.p.id);
-   x=replacement;target=x.p.id;
-  }
-  return x;
- });
+ return selected;
+}
+function opportunityRecommendations(result){
+ const candidates=opportunityCandidates(result);
+ const byId=new Map(candidates.map(x=>[x.p.id,x]));
+ return recommendationHistory(result).slots.map(id=>byId.get(id)).filter(Boolean);
 }
 const COMMON_FEMALE_NAMES=new Set("ענת,נועה,מיה,מאיה,יעל,רוני,שירה,תמר,דנה,דניאלית,ליה,ליאן,אגם,נויה,נוגה,איילה,אלה,אילה,אביגיל,אורית,הילה,הדרית,רחל,שרה,רבקה,רות,אסתר,אפרת,טליה,יובלית,ליאורית,יסמין,מורן,שני,סתיוית,עדיָה,אדוה,אדווה,רעות,אביטל,שחרית,מיכל,מירב,מירה,מיכאלה,מיכאלה,נטלי,נטע,נגה,סיון,סיוון,אורלי,אורטל,לירוןית,מיטל,יפעת,יפית,אביבה,רותםית,אלינור,אליה,אלינע,לינוי,ליטל,בר,ברית,גאיה,גילי,גלית,אלונה,מיקה,תהל,תהילה,הודיה,מרים,מלכה,נעמה,רונה,אמה,אמילי,אדל,אופירית,אופירה,אלמוגית,אבישג,שילת,שי-לי,שירלי,שיר,רותי,אורנה,יפה,דפנה,הדס,עדןית,מירית,נורית".split(","));
 const COMMON_MALE_NAMES=new Set("איתי,אורי,דוד,דניאל,יונתן,יואב,יוסף,משה,אברהם,יצחק,ישראל,עמית,אמיר,איתן,עומר,עידו,גיא,רועי,רון,אילן,אלון,אריאל,נועם,עילאי,מתן,אופק,נבו,אדם,אורן,רפאל,שמואל,ניר,אביב,ברק,אבי,אריק,יובל,מיכאל,מנחם,יהונתן,טל,תומר,ישי,יהודה,אופיר,עוז,יובל,שלומי,שלמה,חיים,מאור,דביר,עידן,דור,אור,אייל,יוסף,איליי,אליהו".split(","));
