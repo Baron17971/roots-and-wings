@@ -582,6 +582,51 @@ background-size:100% auto;background-repeat:no-repeat;background-position:center
 
 /* Mobile journey: cards first, dedicated illustration below */
 @media(max-width:900px){.ap-development-layout{display:grid!important;grid-template-columns:minmax(0,1fr)!important}.ap-development-cards{grid-row:1!important}.ap-development-illustration{grid-row:2!important;margin-top:24px!important}.ap-development-illustration picture{width:100%}}
+
+/* Bespoke watercolor cards: prose in a continuous paragraph, illustration stays below-left */
+.ap-story .ap-chapter{
+  position:relative;overflow:hidden;isolation:isolate;
+  min-height:clamp(410px,38vw,520px);
+  padding:clamp(25px,3vw,42px) clamp(25px,4vw,52px);
+  background-color:#eaf8f8!important;
+  background-image:linear-gradient(90deg,rgba(239,251,251,.03) 0%,rgba(241,251,251,.27) 38%,rgba(239,251,251,.88) 67%,rgba(239,251,251,.97) 100%),var(--principle-art)!important;
+  background-position:center,center bottom!important;
+  background-repeat:no-repeat,no-repeat!important;
+  background-size:cover,cover!important;
+  border:1px solid #c9e5ea!important;
+}
+.ap-story .ap-chapter:nth-child(1){--principle-art:url('/principle-01-growth-story.png')}
+.ap-story .ap-chapter:nth-child(2){--principle-art:url('/principle-02-growing-changing.png')}
+.ap-story .ap-chapter:nth-child(3){--principle-art:url('/principle-03-continuous-discovery.png')}
+.ap-story .ap-chapter:nth-child(4){--principle-art:url('/principle-04-many-ways-to-excel.png')}
+.ap-story .ap-chapter:nth-child(5){--principle-art:url('/principle-05-world-of-opportunities.png')}
+.ap-story .ap-chapter:nth-child(6){--principle-art:url('/principle-06-roots-and-wings.png')}
+.ap-story .ap-chapter-body{width:min(100%,760px);margin-right:0;margin-left:auto;position:relative;z-index:1;text-align:right}
+.ap-story .ap-chapter h3{font-size:clamp(24px,2.25vw,32px);line-height:1.35;margin-bottom:12px}
+.ap-story .ap-sub{font-size:clamp(18px,1.6vw,22px)!important;margin-bottom:20px!important}
+.ap-story .ap-paras p{font-size:clamp(17px,1.32vw,20px);line-height:1.9;max-width:72ch;text-wrap:pretty}
+.ap-story .ap-index{position:relative;z-index:2;line-height:1}
+@media(min-width:850px){
+  .ap-story .ap-chapter-body{width:73%}
+  .ap-story .ap-chapter{background-position:center,center 64%!important}
+}
+@media(max-width:849px){
+  .ap-story .ap-chapter{
+    min-height:610px;
+    padding:24px 23px 25px;
+    background-image:linear-gradient(180deg,rgba(239,251,251,.98) 0%,rgba(239,251,251,.98) 40%,rgba(239,251,251,.83) 59%,rgba(239,251,251,.08) 84%),var(--principle-art)!important;
+    background-position:center,center bottom!important;
+    background-size:cover,100% auto!important;
+  }
+  .ap-story .ap-chapter-body{width:100%;margin:0}
+  .ap-story .ap-chapter h3{font-size:clamp(22px,4.8vw,29px)}
+  .ap-story .ap-paras p{font-size:clamp(16px,3.25vw,18px);line-height:1.75}
+}
+@media(max-width:540px){
+  .ap-story .ap-chapter{min-height:590px;padding:22px 21px;background-size:cover,auto 49%!important;background-position:center,left bottom!important}
+  .ap-story .ap-sub{font-size:17px!important;margin-bottom:12px!important}
+  .ap-story .ap-paras p{font-size:16px;line-height:1.65}
+}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
