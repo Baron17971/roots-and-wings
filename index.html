@@ -1095,8 +1095,16 @@ function opportunityRecommendations(result){
   const growth=tags.reduce((v,c)=>v+goalOf(c),0);
   const socialBoost=result.social>0&&tags.includes("P")?result.social*.85:0;
   const score=match+growth*.65+socialBoost;
-  return {p,i,tags,score,match,growth};
- }).filter(x=>gradeEligibility(x.p)).sort((a,b)=>b.score-a.score||a.i-b.i);
+  // A secondary trait (teamwork, perseverance) is not evidence of interest
+  // in the program's essential subject (football, coding, music, etc.).
+  const coreTags={
+   "ספורט ואתגר":["S"],
+   "מדע וטכנולוגיה":["M","T"],
+   "אמנות ויצירה":["A","E"]
+  }[p.category];
+  const coreMatch=!coreTags||coreTags.some(c=>scoreOf(c)>0||goalOf(c)>0);
+  return {p,i,tags,score,match,growth,coreMatch};
+ }).filter(x=>gradeEligibility(x.p)&&x.coreMatch).sort((a,b)=>b.score-a.score||a.i-b.i);
  const selected=[];
  // A core match requires nontrivial answer evidence. Never fill an empty match list with arbitrary academic programs.
  const best=candidates.filter(x=>x.score>0.15);
@@ -1104,8 +1112,8 @@ function opportunityRecommendations(result){
  for(const x of best){if(selected.length>=3)break;if(!selected.some(y=>y.i===x.i))selected.push({...x,kind:"match"});}
  // Curiosity-broadening suggestion is explicitly labeled, never misrepresented as a personal match.
  const explore=candidates.find(x=>!selected.some(y=>y.i===x.i)&&x.growth>0)||
- candidates.find(x=>!selected.some(y=>y.i===x.i)&&x.match>0)||
- candidates.find(x=>!selected.some(y=>y.i===x.i)&&x.p.category!=="מצוינות אישית");
+ candidates.find(x=>!selected.some(y=>y.i===x.i)&&x.match>0);
+ // No unrelated filler recommendation: fewer, meaningful suggestions are better.
  if(explore)selected.push({...explore,kind:"explore"});
  return selected;
 }
