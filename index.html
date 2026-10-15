@@ -1195,8 +1195,8 @@ function participation(p,when="current"){
  if(!matched.length)return {ok:false,status:"grade",reason:"התוכנית אינה מיועדת לשכבת הגיל הרלוונטית"};
  const required=c.majors||[],actual=studentMajors();
  const majorMatch=!required.length||required.some(m=>actual.some(x=>x===m||x.includes(m+" ")||x.startsWith(m+"־")||x.startsWith(m+"-")));
- if(when==="current"&&!majorMatch)return {ok:false,status:"major",reason:"נדרשת מגמת "+required.join("/")};
- const futureMajor=when==="future"&&!majorMatch&&required.length>0;
+ if(!majorMatch)return {ok:false,status:"major",reason:"נדרשת מגמת "+required.join("/")};
+ const futureMajor=false;
  const pending=!!c.verify||futureMajor;
  return {ok:true,status:futureMajor?"future-path":pending?"conditional":"eligible",pending,
   reason:futureMajor?"אפשרות עתידית רק אם תיבחר מגמת "+required.join("/")+(c.verify?" ובהתקיים תנאי קבלה נוספים":""):c.verify||"",
