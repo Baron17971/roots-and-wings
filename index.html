@@ -1280,7 +1280,7 @@ function opportunityCandidates(result){
   const hits=rule.options.filter(optionWasChosen);
   const present=hits.filter(ref=>!FUTURE_QUESTION_IDS.has(Number(ref.split(":")[0])));
   const future=hits.filter(ref=>FUTURE_QUESTION_IDS.has(Number(ref.split(":")[0])));
-  const eligibleMatch=!rule.strict&&(present.length>=2||(present.length>=1&&future.length>=1));
+  const eligibleMatch=present.length>=2||(present.length>=1&&future.length>=1);
   const score=present.length*2+future.length*.85;
   return {p,i,tags:PROGRAM_TAGS[p.id]||[],score,match:present.length,growth:future.length,evidence:hits,rule,kind:eligibleMatch?"match":"explore",eligibleMatch};
  }).filter(Boolean).filter(x=>x.evidence.length>0)
