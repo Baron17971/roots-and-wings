@@ -1059,7 +1059,25 @@ function choose(){
  view('<div class="shell choose-page"><div class="stepper"><span>01 • היכרות</span><span>02 • שאלון</span><span>03 • הפרופיל שלי</span><span class="active-step">04 • בחירת מסלולים</span></div><h2>הבחירות שלי</h2><p>פותחים רק את התחום שמעניין אותך ובוחרים את ההזדמנויות המתאימות.</p><section class="choose-section"><h3>השנה אני רוצה...</h3><p class="muted">'+state.current.length+' תוכניות נבחרו · יש לבחור לפחות אחת</p>'+choiceCategories('current')+'</section><section class="choose-section"><h3>בשנים הבאות...</h3><p class="muted">'+state.future.length+' מתוך 2 תוכניות נבחרו</p>'+choiceCategories('future')+'</section><div class="actions"><button '+(!state.current.length||state.future.length!==2?'disabled':'')+' onclick="location.hash=\'#journey\'">לסיכום הבחירות ←</button></div></div>');
  document.querySelectorAll('.choose-group').forEach(el=>{el.open=(window.rwOpenChoiceGroups||[]).includes(el.dataset.choiceGroup);el.addEventListener('toggle',()=>{const key=el.dataset.choiceGroup;const opened=new Set(window.rwOpenChoiceGroups||[]);if(el.open)opened.add(key);else opened.delete(key);window.rwOpenChoiceGroups=[...opened];});});
 }
-function pick(i,key){let a=state[key];state[key]=a.includes(i)?a.filter(x=>x!==i):key==="future"&&a.length>=2?a:[...a,i];save();choose()}
+function pick(i,key){
+ let a=state[key];
+ state[key]=a.includes(i)?a.filter(x=>x!==i):key==="future"&&a.length>=2?a:[...a,i];
+ save();
+ const currentCount=document.getElementById("choose-current-count");
+ const futureCount=document.getElementById("choose-future-count");
+ if(currentCount)currentCount.textContent=state.current.length+" תוכניות נבחרו · יש לבחור לפחות אחת";
+ if(futureCount)futureCount.textContent=state.future.length+" מתוך 2 תוכניות נבחרו";
+ document.querySelectorAll(".choose-group").forEach(group=>{
+  const kind=group.dataset.choiceGroup.split("|")[0];
+  const chosen=Array.from(group.querySelectorAll('input[type="checkbox"]:checked')).length;
+  const total=group.querySelectorAll('input[type="checkbox"]').length;
+  const meta=group.querySelector(".choose-group-meta");
+  if(meta)meta.innerHTML=(chosen?chosen+" נבחרו · ":"")+total+' אפשרויות <span class="choose-chevron">⌄</span>';
+  if(kind==="future")group.querySelectorAll('input[type="checkbox"]').forEach(box=>{box.disabled=state.future.length>=2&&!box.checked;});
+ });
+ const finish=document.querySelector(".choose-page .actions button");
+ if(finish)finish.disabled=!state.current.length||state.future.length!==2;
+}
 function journey(){view('<div class="shell"><h2>המסע שלי · '+(state.name||'')+'</h2><div class="card"><h3>השנה בחרתי</h3>'+(state.current.map(i=>'<p>✓ '+programs[i]+'</p>').join('')||'עדיין לא נבחרו תוכניות')+'<h3>לשנים הבאות</h3>'+(state.future.map(i=>'<p>✦ '+programs[i]+'</p>').join('')||'עדיין לא נבחרו תוכניות')+'<p class="muted">שמירה מקומית בדפדפן בלבד. אין כרגע כניסת מחנכת או שמירה מרכזית.</p><button onclick="window.print()">הדפסת סיכום</button></div></div>')}
 function programCard(p,i,compact=false){const marks={"מדע וטכנולוגיה":"⚛","חברה ורוח":"✦","חברה ומנהיגות":"♧","אמנות ויצירה":"♫","ספורט ואתגר":"↗","מצוינות אישית":"◇"};return '<article class="opportunity-card"><div class="opportunity-top"><div class="program-symbol">'+(marks[p.category]||'✦')+'</div><span class="scope-pill">'+escapeHtml(p.scope)+'</span></div><span class="category-caption">'+escapeHtml(p.category)+'</span><h3>'+escapeHtml(p.name)+'</h3><p class="program-description">'+escapeHtml(p.desc)+'</p><div class="audience"><strong>למי זה מתאים?</strong><p>'+escapeHtml(p.audience)+'</p></div><div class="program-foot"><span>תנאי ההצטרפות ומועדים באימות</span><button class="details-link" onclick="showProgram('+i+')">פרטים נוספים ←</button></div></article>'}
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
