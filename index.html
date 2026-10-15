@@ -627,6 +627,27 @@ background-size:100% auto;background-repeat:no-repeat;background-position:center
   .ap-story .ap-sub{font-size:17px!important;margin-bottom:12px!important}
   .ap-story .ap-paras p{font-size:16px;line-height:1.65}
 }
+
+/* Principle 01 only: reserve clear reading space above the intact illustration */
+@media(min-width:850px){
+ .ap-story .ap-chapter:first-child .ap-chapter-body{width:66%}
+}
+@media(max-width:849px){
+ .ap-story .ap-chapter:first-child{
+  min-height:760px!important;
+  padding-bottom:345px!important;
+  background-position:center,left bottom!important;
+  background-size:cover,auto 43%!important;
+ }
+ .ap-story .ap-chapter:first-child .ap-chapter-body{width:100%}
+}
+@media(max-width:540px){
+ .ap-story .ap-chapter:first-child{
+  min-height:740px!important;
+  padding-bottom:320px!important;
+  background-size:cover,auto 43%!important;
+ }
+}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
