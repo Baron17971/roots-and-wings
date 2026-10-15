@@ -898,6 +898,29 @@ background-size:100% auto;background-repeat:no-repeat;background-position:center
 /* Profile groups generated from explicit pedagogical mappings */
 .profile-tags{display:flex;flex-wrap:wrap;gap:9px;margin:13px 0}
 .profile-tags .tag{display:inline-block}
+
+.growth-results{max-width:1120px}.growth-label{color:#168a9c;font-size:14px;font-weight:800}
+.growth-intro{text-align:center;padding:34px 14px 28px;max-width:830px;margin:auto}
+.growth-intro h2{font-size:clamp(28px,4vw,48px);line-height:1.27;margin:12px 0;color:#073b5a}
+.growth-intro p,.growth-feature p,.growth-panel p,.growth-bridge p,.growth-recs p{line-height:1.85;color:#567687}
+.growth-feature{display:grid;grid-template-columns:1.1fr .9fr;gap:20px;background:linear-gradient(125deg,#e9f7fb,#f5fbf8);border:1px solid #cae4e9;border-radius:26px;padding:35px}
+.growth-feature h3{font-size:clamp(26px,3vw,38px);margin:15px 0;color:#084766}
+.growth-proof{background:#ffffffd9;border-radius:20px;padding:23px;border:1px solid #d4e9eb;align-self:center}
+.growth-proof h3{font-size:19px;margin:0 0 12px}
+.growth-chips{display:flex;flex-wrap:wrap;gap:8px;margin:17px 0}.growth-chip{font-size:14px;padding:8px 14px;background:#e0f3f5;color:#0c6b82;border:1px solid #c6e5eb;border-radius:30px}
+.growth-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:18px 0}
+.growth-panel{background:#fff;border:1px solid #d2e6ed;border-radius:23px;padding:27px}.growth-panel h3{color:#0b4865;font-size:23px}
+.growth-bridge{border:1px solid #d0e5db;background:linear-gradient(125deg,#f1faf5,#eef8fb);border-radius:23px;padding:28px;margin:18px 0 40px}
+.growth-bridge h3{font-size:25px;margin:12px 0}.growth-recs h2{font-size:clamp(28px,3vw,38px);margin:13px 0}
+.growth-rec-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin:23px 0}
+.growth-opportunity{display:flex;flex-direction:column;border:1px solid #d3e6ed;background:white;border-radius:22px;padding:25px}
+.growth-opportunity h3{color:#0b4a6b;margin:14px 0 7px;font-size:22px}
+.growth-opportunity p{font-size:15px;line-height:1.75}.growth-opportunity .growth-why{font-weight:700;color:#087a8a}
+.growth-opportunity button{margin-top:auto;align-self:flex-start}
+.growth-actions{display:flex;gap:14px;flex-wrap:wrap;margin:26px 0}
+.growth-action{padding:14px 24px;border-radius:30px;background:#063d59;color:white;text-decoration:none;font-weight:700}
+.growth-action-light{border:1px solid #5794a1;color:#063d59;background:white}
+@media(max-width:720px){.growth-feature,.growth-pair,.growth-rec-grid{grid-template-columns:1fr}.growth-intro{padding:20px 5px}.growth-feature,.growth-panel,.growth-bridge,.growth-opportunity{padding:21px}.growth-actions{flex-direction:column}.growth-action{text-align:center}}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
@@ -975,23 +998,40 @@ function opportunityRecommendations(result){
  if(discover)selected.push(discover);
  return selected;
 }
+
 function profile(){
- const result=analyzeGrowth();if(!result.complete){location.hash="#quiz";return;}
+ const result=analyzeGrowth();
+ if(!result.complete){location.hash="#quiz";return;}
  const main=result.interests.filter(x=>x.score>0).slice(0,3);
- const goals=result.goals.filter(x=>x.score>0).slice(0,2);
- const styles=result.modes.filter(x=>x.score>0).slice(0,2);
- const recommendations=opportunityRecommendations(result);
- const safeName=escapeHtml(state.name||"");
- const intro=main.length?'לפי הבחירות שלך, תחומים שמסקרנים אותך במיוחד הם '+main.map(x=>x.name).join(" ו־")+'.':'זהו מקום להכיר תחומים חדשים ולגלות מה מסקרן אותך.';
- const tags=items=>items.map(x=>'<span class="tag">'+escapeHtml(x.name)+'</span>').join(" ");
- view('<div class="shell"><div class="stepper"><span>01 • היכרות</span><span>02 • שאלון</span><span class="active-step">03 • הפרופיל שלי</span><span>04 • בחירת מסלולים</span></div>'+
- tag("פרופיל הצמיחה שלי")+'<h2>'+safeName+', לאן ייפתח המסע שלך?</h2>'+
- '<div class="card"><h3>מה מסקרן אותי היום?</h3><p>'+escapeHtml(intro)+'</p><div class="profile-tags">'+tags(main)+'</div><p class="muted">אלה תחומי עניין שנבחרו בשאלון, לא אבחון של יכולות או כישרונות.</p></div>'+
- '<div class="card"><h3>איך אני אוהב לפעול?</h3><div class="profile-tags">'+(styles.length?tags(styles):'ממשיכים לגלות')+'</div><p class="muted">העדפות פעולה מתוך התשובות, ולא קביעה על האישיות שלך.</p></div>'+
- '<div class="card"><h3>הדלת שאני רוצה לפתוח</h3><div class="profile-tags">'+(goals.length?tags(goals):'עוד אפשרויות מחכות לך')+'</div><p>אלה כיוונים שהיית רוצה לגלות או לפתח בהמשך הדרך.</p></div>'+
- '<h2>הזדמנויות שמתחברות למסע שלי</h2><p class="muted">ההצעות מתבססות על תחומי העניין והשאיפות שלך ועל התוכניות המופיעות במפה. הזמינות ותנאי הקבלה דורשים בדיקה מול הגורם המפעיל.</p>'+
- (recommendations.length?recommendations.map((x,j)=>'<div class="card">'+tag(j===recommendations.length-1&&x.match===0?"לפתוח אופק חדש":"כדאי להכיר")+'<h3>'+escapeHtml(x.p.name)+'</h3><p>'+escapeHtml(x.p.desc||"")+'</p><p class="muted">תחום: '+escapeHtml(x.p.category)+' · מיועד ל: '+escapeHtml(x.p.audience||"יש לבדוק")+'</p><button class="secondary" onclick="showProgram('+x.i+')">פרטים נוספים ←</button></div>').join(""):'<div class="card">מפת התוכניות עדיין מתעדכנת. אפשר לעיין בכל ההזדמנויות גם ללא המלצה אישית.</div>')+
- '<div class="actions"><button onclick="location.hash=\'#choose\'">לבחירת תוכניות ←</button><button class="secondary" onclick="location.hash=\'#catalog\'">לכל מפת ההזדמנויות ←</button></div></div>');
+ const goals=result.goals.filter(x=>x.score>0).slice(0,3);
+ const styles=result.modes.filter(x=>x.score>0).slice(0,3);
+ const rec=opportunityRecommendations(result);
+ const esc=escapeHtml;
+ const pills=x=>x.map(z=>'<span class="growth-chip">'+esc(z.name)+'</span>').join('');
+ const first=main[0],second=main[1];
+ const chosen=first?(result.evidence[first.code]||[]).slice(0,3):[];
+ const proof=chosen.length?'למשל, בחרת ב־'+chosen.map(x=>'״'+x+'״').join(' וב־')+'.':'ניכר עניין בכמה כיוונים שכדאי להמשיך ולבדוק.';
+ const labels={M:'חקירה וגילוי',T:'פיתוח ויצירת פתרונות',H:'אנשים ורעיונות',A:'יצירה והבעה',L:'יוזמה והשפעה',S:'אתגר והתקדמות'};
+ const related=main.length?main.map(x=>labels[x.code]||x.name).join(' לצד '):'עולמות תוכן שונים';
+ const future=goals.length?goals.map(x=>x.name).join(' ו־'):'עולמות חדשים';
+ const combination=first&&second?'מה יקרה אם נחבר בין '+first.name+' לבין '+second.name+'? אפשר לחפש פרויקט או פעילות שמאפשרים לנסות את שניהם יחד.':'אולי כדאי לבחור פעילות אחת מוכרת ולצידה התנסות חדשה לחלוטין.';
+ const reasons=rec.map((x,j)=>{
+  const codes=PROGRAM_CODES[x.p.category]||[];
+  const matches=main.filter(y=>codes.includes(y.code));
+  const growth=goals.filter(y=>codes.includes(y.code));
+  const why=matches.length?'התוכנית קשורה לעניין שעלה בבחירות שלך: '+matches.map(y=>y.name).join(' ו־')+'.':growth.length?'זוהי הזדמנות לגלות תחום שבחרת לפתח בעתיד.':'זוהי הזדמנות לפתוח אופק חדש, גם מחוץ לתחומים שעלו בשאלון.';
+  return '<article class="growth-opportunity"><span class="growth-label">'+(matches.length?'מתחבר לתחומי העניין שלי':'לפתוח אופק חדש')+'</span><h3>'+esc(x.p.name)+'</h3><p>'+esc(x.p.desc||'')+'</p><p class="growth-why">'+esc(why)+'</p><p class="muted">'+esc(x.p.scope||'')+' · '+esc(x.p.audience||'יש לבדוק למי מיועד')+' · זמינות ותנאי הצטרפות דורשים בדיקה</p><button class="secondary" onclick="showProgram('+x.i+')">להכיר את ההזדמנות ←</button></article>';
+ }).join('');
+ const html='<div class="shell growth-results">'+
+ '<div class="stepper"><span>01 • היכרות</span><span>02 • שאלון</span><span class="active-step">03 • הפרופיל שלי</span><span>04 • בחירת מסלולים</span></div>'+
+ '<header class="growth-intro"><span class="growth-label">מפת הצמיחה האישית שלי</span><h2>'+esc(state.name||'')+', זה הסיפור שמתחיל להצטייר מהבחירות שלך</h2><p>לא אבחון ולא הגדרה של מי שאת או מי שאתה — אלא נקודת פתיחה למסע של גילוי והתנסות.</p></header>'+
+ '<section class="growth-feature"><div><span class="growth-label">מה מסקרן אותי היום?</span><h3>'+esc(first?first.name:'עולם של אפשרויות')+'</h3><p>מהתשובות שלך עולה סקרנות ל'+esc(related)+'.</p><div class="growth-chips">'+pills(main)+'</div></div><aside class="growth-proof"><h3>איפה זה הופיע בשאלון?</h3><p>'+esc(proof)+'</p><p class="muted">הבחירות מתארות עניין, לא מדידה של כישרון.</p></aside></section>'+
+ '<div class="growth-pair"><section class="growth-panel"><span class="growth-label">איך נוח לי לפעול?</span><h3>הדרכים שמושכות אותי</h3><div class="growth-chips">'+pills(styles)+'</div><p>אלה דרכי פעולה שעלו מבחירותיך. אפשר לגלות עוד דרכים באמצעות התנסות.</p></section>'+
+ '<section class="growth-panel"><span class="growth-label">לאן הייתי רוצה לצמוח?</span><h3>הדלת שאני רוצה לפתוח</h3><div class="growth-chips">'+pills(goals)+'</div><p>כיוונים להמשך הדרך: '+esc(future)+'.</p></section></div>'+
+ '<section class="growth-bridge"><span class="growth-label">השילוב המיוחד שלי</span><h3>כששני עולמות נפגשים</h3><p>'+esc(combination)+'</p><span class="muted">הצעה לסקרנות ולהתנסות, לא קביעה על יכולות.</span></section>'+
+ '<section class="growth-recs"><span class="growth-label">מפת ההזדמנויות שלי</span><h2>לאן אפשר להמשיך מכאן?</h2><p>אלה הזדמנויות מהמפה שיכולות להתחבר לתחומי העניין שלך — לצד אפשרות חדשה שכדאי להכיר.</p><div class="growth-rec-grid">'+(reasons||'<p>מפת ההזדמנויות ממשיכה להתעדכן.</p>')+'</div></section>'+
+ '<div class="growth-actions"><a class="growth-action" href="#choose">לבחירת תוכניות ←</a><a class="growth-action growth-action-light" href="#catalog">לכל מפת ההזדמנויות ←</a></div></div>';
+ view(html);
 }
 function choose(){view('<div class="shell"><div class="stepper"><span>01 • היכרות</span><span>02 • שאלון</span><span>03 • הפרופיל שלי</span><span class="active-step">04 • בחירת מסלולים</span></div><h2>הבחירות שלי</h2><p>בחרו לפחות מסלול אחד לשנה ושני מסלולים לשנים הבאות.</p><h3>השנה אני רוצה...</h3><div class="grid">'+programs.map((p,i)=>'<label class="choice"><input type="checkbox" '+(state.current.includes(i)?'checked':'')+' onchange="pick('+i+',\'current\')">'+p+'</label>').join('')+'</div><h3>בשנים הבאות...</h3><p>'+state.future.length+'/2</p><div class="grid">'+programs.map((p,i)=>'<label class="choice"><input type="checkbox" '+(state.future.includes(i)?'checked':'')+(state.future.length>=2&&!state.future.includes(i)?' disabled':'')+' onchange="pick('+i+',\'future\')">'+p+'</label>').join('')+'</div><div class="actions"><button '+(!state.current.length||state.future.length!==2?'disabled':'')+' onclick="location.hash=\'#journey\'">לסיכום הבחירות ←</button></div></div>')}
 function pick(i,key){let a=state[key];state[key]=a.includes(i)?a.filter(x=>x!==i):key==="future"&&a.length>=2?a:[...a,i];save();choose()}
