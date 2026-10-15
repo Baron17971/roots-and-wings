@@ -1030,6 +1030,13 @@ body{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
 #about-principles .ap-carousel-stage>.ap-carousel-buttons{position:absolute;z-index:5;bottom:25px;left:50%;transform:translateX(-50%);display:flex;justify-content:center;gap:14px;direction:ltr}
 #about-principles .ap-carousel-stage .ap-carousel-btn{box-shadow:0 3px 14px rgba(6,47,75,.14);background:rgba(255,255,255,.94)}
 @media(max-width:650px){#about-principles .ap-carousel-stage .ap-chapter{padding-bottom:105px}#about-principles .ap-carousel-stage>.ap-carousel-buttons{bottom:22px}}
+
+/* Expanded opportunity content appears only inside the detail dialog */
+#programDialog .program-detail-lead{font-size:19px;font-weight:700;color:#087c90;margin:13px 0 22px}
+#programDialog .program-detail-section{margin:20px 0 0}
+#programDialog .program-detail-section h3{font-size:18px;margin:0 0 7px;color:#0b5169}
+#programDialog .program-detail-section p{margin:0;line-height:1.85}
+#programDialog .modal-panel{max-height:88vh;overflow-y:auto}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#choose">הבחירות שלי</a></nav></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
@@ -1457,7 +1464,44 @@ function journey(){
 }
 function programCard(p,i,compact=false){const marks={"מדע וטכנולוגיה":"⚛","חברה ורוח":"✦","חברה ומנהיגות":"♧","אמנות ויצירה":"♫","ספורט ואתגר":"↗","מצוינות אישית":"◇"};return '<article class="opportunity-card"><div class="opportunity-top"><div class="program-symbol">'+(marks[p.category]||'✦')+'</div><span class="scope-pill">'+escapeHtml(p.scope)+'</span></div><span class="category-caption">'+escapeHtml(p.category)+'</span><h3>'+escapeHtml(p.name)+'</h3><p class="program-description">'+escapeHtml(p.desc)+'</p><div class="audience"><strong>למי זה מתאים?</strong><p>'+escapeHtml(p.audience)+'</p></div><div class="program-foot"><span>תנאי ההצטרפות ומועדים באימות</span><button class="details-link" onclick="showProgram('+i+')">פרטים נוספים ←</button></div></article>'}
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function showProgram(i){let p=programDetails[i];if(!p)return;document.querySelector('#programDialog')?.remove();let div=document.createElement('div');div.id='programDialog';div.className='modal-shade';div.innerHTML='<section class="modal-panel" role="dialog" aria-modal="true" aria-label="'+escapeHtml(p.name)+'"><button class="modal-close" onclick="document.getElementById(\'programDialog\').remove()">✕</button><span class="category-caption">'+escapeHtml(p.category)+' · '+escapeHtml(p.scope)+'</span><h2>'+escapeHtml(p.name)+'</h2><p>'+escapeHtml(p.desc)+'</p><h3>קהל יעד</h3><p>'+escapeHtml(p.audience)+'</p><p class="muted">המידע מבוסס על מאגר התוכניות המקורי. התאמה לשכבה, מועדי הרשמה ופרטי קשר טרם אומתו.</p><button onclick="document.getElementById(\'programDialog\').remove()">סגירה</button></section>';div.onclick=e=>{if(e.target===div)div.remove()};document.body.append(div)}
+const RICH_PROGRAM_DETAILS={
+ P001:{
+  lead:"לחקור את העבר, לשמר את הזיכרון ולהשפיע על העתיד",
+  sections:[
+   ["על המסלול","מגמת משואה לתקומה היא מסלול לימודים בהיקף של 5 יחידות לימוד, שאליו ניתן להשתלב מכיתה י׳. המסלול מעמיק בחקר השואה, האנטישמיות, הזיכרון ההיסטורי ותקומת העם היהודי."],
+   ["מחקר וכתיבה אקדמית","התלמידים מתקדמים ממשימות כתיבה בהיקפים הולכים וגדלים אל ניסוח שאלת חקר, קריאת מאמרים, סינתזה של מקורות, כתיבת הצעת מחקר והשלמת עבודת גמר. כך הם רוכשים מיומנויות כתיבה אקדמית, חשיבה ביקורתית ולמידה עצמאית."],
+   ["למידה מחוץ לכיתה ועשייה בקהילה","הלימודים משלבים סיורים וימי עיון במקומות כגון יד ושם, בית לוחמי הגטאות ומשואה; למידה בין־תחומית, למידת עמיתים והתנדבות. התלמידים מתנסים בהעברת סדנאות ובארגון טקסים, ומעבירים תכנים בכיתותיהם כדי להרחיב את השיח ואת העניין בנושא, גם לקראת המסע הבית־ספרי לפולין."],
+   ["מפגש בין־לאומי","במסגרת המסלול קיימת אפשרות להצטרף למשלחת חילופי נוער לברלין, הכוללת ביקור במוזיאון היהודי ומפגש עם בני נוער גרמנים העוסקים בזיכרון השואה בגרמניה. ההשתתפות במשלחת אינה מובטחת לכל תלמיד."],
+   ["מה מפתחים?","מיומנויות מחקר וכתיבה אקדמית, סינתזה של מקורות, הובלה והדרכה, אחריות חברתית והעמקה בזיכרון ובמורשת."]
+  ]
+ },
+ P002:{
+  lead:"להתחיל את המסע האקדמי כבר בזמן התיכון",
+  sections:[
+   ["על התוכנית","תוכנית אקדמיה בתיכון מאפשרת לתלמידים מחוננים ומצטיינים בכיתות ט׳–י״ב ללמוד קורסים אקדמיים במוסדות מוכרים להשכלה גבוהה, במקביל ללימודים בבית הספר."],
+   ["איך לומדים?","התלמידים משתלבים בקורסים במוסד אקדמי שהשתתפותו בתוכנית אושרה, מתמודדים עם חומר לימודי ברמה אקדמית ונבחנים בהתאם לדרישות המוסד. נדרשות יכולת למידה עצמאית, מוטיבציה גבוהה וניהול זמן שמאפשר לשמור גם על ההישגים בבית הספר."],
+   ["המרת בגרויות ונקודות זכות","במקצועות ובמסלולים מסוימים שאושרו על ידי משרד החינוך, אפשר להמיר למידה והיבחנות בבגרות בלימודים ובהיבחנות בקורסים אקדמיים. קורסים אלה עשויים להעניק ציון בתעודת הבגרות וכן נקודות זכות אקדמיות לקראת תואר ראשון, בהתאם להסדרים המאושרים."],
+   ["למי מתאים?","לתלמידים מצטיינים ומחוננים בעלי הישגים גבוהים, מוטיבציה ללימודים, יכולת למידה עצמאית ונכונות להתמודד עם אתגר אקדמי במקביל ללימודי התיכון. הקבלה כפופה לתנאי התוכנית ולדרישות המוסד."],
+   ["מה מפתחים?","העמקה בתחומי דעת, חשיבה ברמה גבוהה, עצמאות לימודית, התמדה והיכרות ממשית עם עולם האקדמיה."]
+  ]
+ },
+ P003:{
+  lead:"להתכונן לפסיכומטרי כבר במהלך התיכון",
+  sections:[
+   ["על הקורס","קורס הפסיכומטרי מיועד לתלמידי י״א–י״ב המעוניינים להיערך לבחינה הפסיכומטרית עוד במהלך לימודיהם בתיכון. ההכנה כוללת תרגול בחשיבה כמותית, חשיבה מילולית ואנגלית, לצד היכרות עם מבנה הבחינה, אסטרטגיות פתרון וניהול זמן."],
+   ["למי זה מתאים?","לתלמידים ששוקלים מסלולי לימודים אקדמיים לאחר התיכון, ובפרט מי שמתעניינים בעתודה האקדמית בצה״ל וזקוקים לציון פסיכומטרי בהתאם לדרישות המסלול. התוכנית מתאימה גם לתלמידים הרוצים לנצל את הרגלי הלמידה והתרגול שפיתחו בתקופת הבגרויות."],
+   ["מתי כדאי להיערך?","אפשר לתכנן את ההכנה בתקופות שבהן עומס הלימודים מאפשר זאת, למשל במהלך חופשה או בפרק זמן מתאים בשנת הלימודים. חשוב להביא בחשבון גם את מחויבויות הבגרות ואת מועדי הבחינה הרלוונטיים."],
+   ["חשוב לדעת","תנאי הקבלה לעתודה האקדמית וספי הציון הפסיכומטרי עשויים להשתנות בין מסלולים ושנים. יש לבדוק את הדרישות המעודכנות מול הגורמים הרשמיים; אין ציון סף אחיד המובטח לכל המסלולים."],
+   ["מה מפתחים?","אסטרטגיות פתרון, חשיבה אנליטית, התמודדות עם מבחן מוגבל בזמן, תכנון למידה והתמדה."]
+  ]
+ }
+};
+function programDetailedHtml(p){
+ const detail=RICH_PROGRAM_DETAILS[p.id];
+ if(!detail)return '<p>'+escapeHtml(p.desc)+'</p>';
+ return '<p class="program-detail-lead">'+escapeHtml(detail.lead)+'</p>'+detail.sections.map(([title,content])=>'<section class="program-detail-section"><h3>'+escapeHtml(title)+'</h3><p>'+escapeHtml(content)+'</p></section>').join('');
+}
+function showProgram(i){let p=programDetails[i];if(!p)return;document.querySelector('#programDialog')?.remove();let div=document.createElement('div');div.id='programDialog';div.className='modal-shade';div.innerHTML='<section class="modal-panel" role="dialog" aria-modal="true" aria-label="'+escapeHtml(p.name)+'"><button class="modal-close" onclick="document.getElementById(\'programDialog\').remove()">✕</button><span class="category-caption">'+escapeHtml(p.category)+' · '+escapeHtml(p.scope)+'</span><h2>'+escapeHtml(p.name)+'</h2>'+programDetailedHtml(p)+'<h3>קהל יעד</h3><p>'+escapeHtml(p.audience)+'</p><p class="muted">המידע מבוסס על מאגר התוכניות המקורי. התאמה לשכבה, מועדי הרשמה ופרטי קשר טרם אומתו.</p><button onclick="document.getElementById(\'programDialog\').remove()">סגירה</button></section>';div.onclick=e=>{if(e.target===div)div.remove()};document.body.append(div)}
 function filterCatalog(value){window.rwCatalogSearch=value;const pos=document.activeElement?.selectionStart||value.length;catalog(false);const field=document.getElementById('catalogSearch');if(field){field.focus({preventScroll:true});field.setSelectionRange(pos,pos)}}
 function catalog(resetScroll=true){const search=window.rwCatalogSearch||'',filter=window.rwCatalogFilter||'הכול';let list=programDetails.map((p,i)=>({...p,i})).filter(p=>(filter==='הכול'||p.category===filter)&&(!search||[p.name,p.desc,p.audience,p.category].some(t=>t.includes(search))));view('<div class="shell catalogue"><div class="catalogue-heading"><span class="eyebrow">מפת ההזדמנויות</span><h2>לכל סקרנות יש מסלול</h2><p>מגוון מסלולים והזדמנויות לצמיחה, למצוינות, ליצירה, לחקר, למנהיגות ולהתפתחות אישית.</p></div><div class="catalogue-controls"><label class="search-label" for="catalogSearch">מחפשים הזדמנות מסוימת?</label><div class="search-field"><span class="search-icon" aria-hidden="true">⌕</span><input id="catalogSearch" type="search" autocomplete="off" placeholder="שם תוכנית, תחום עניין או מילת מפתח..." value="'+escapeHtml(search)+'" oninput="filterCatalog(this.value)"></div><div class="filter-row">'+['הכול','מדע וטכנולוגיה','חברה ורוח','חברה ומנהיגות','אמנות ויצירה','ספורט ואתגר','מצוינות אישית'].map(v=>'<button class="filter-btn '+(filter===v?'active':'')+'" onclick="window.rwCatalogFilter=\''+v+'\';catalog()">'+v+'</button>').join('')+'</div></div><p class="catalog-count">'+list.length+' תוכניות בתצוגה</p><div class="program-grid">'+list.map(p=>programCard(p,p.i)).join('')+'</div><p class="notice-soft">התיאורים וקהל היעד לקוחים מהקוד המקורי. מועדי הרשמה וזכאות אישית יופיעו לאחר אימות נתוני השנה.</p></div>')}
 const ABOUT_CHAPTERS=[
