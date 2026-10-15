@@ -1255,15 +1255,19 @@ async function downloadJourneyPdf(button){
   }
   staging=source.cloneNode(true);
   staging.className="pdf-render-document";
+  // Keep the source inside the viewport: html2canvas skips far-offscreen nodes.
+  staging.style.cssText="display:block!important;position:fixed!important;top:0!important;left:0!important;width:760px!important;max-width:760px!important;opacity:1!important;visibility:visible!important;z-index:2147483646!important;background:white!important;pointer-events:none!important;overflow:visible!important;";
   staging.querySelectorAll("button,.growth-actions,.stepper").forEach(n=>n.remove());
   document.body.appendChild(staging);
   await document.fonts.ready;
+  await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  if(!staging.getBoundingClientRect().width||!staging.textContent.trim())throw new Error("Empty PDF source");
   const safeName=String(state.name||"תלמיד").replace(/[\\/:*?"<>|]/g,"").trim()||"תלמיד";
   const filename="מפת הצמיחה והבחירות - "+safeName+".pdf";
   await window.html2pdf().set({
    margin:[9,9,9,9],filename,
    image:{type:"jpeg",quality:0.95},
-   html2canvas:{scale:1.7,useCORS:true,backgroundColor:"#ffffff",scrollY:0},
+   html2canvas:{scale:1,useCORS:true,backgroundColor:"#ffffff",scrollY:0,windowWidth:800},
    jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
    pagebreak:{mode:["css","legacy"],avoid:[".growth-opportunity",".growth-story-item",".journey-chosen-grid>div"]}
   }).from(staging).save();
