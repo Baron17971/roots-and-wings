@@ -1319,7 +1319,7 @@ function opportunityCandidates(result){
   const technical=["coding","physics","chemistry","biology","biotech"].includes(domain);
   const direct=present.filter(ref=>(PROGRAM_STRONG_SIGNALS[p.id]||[]).includes(ref));
   const physicsEvidence=p.id==="P029"?(present.includes("14:4")||(studentMajors().includes("פיזיקה")&&present.includes("0:0"))):true;
-  const validated=physicsEvidence&&(technical?direct.length>=1:(specific.length>=1||present.length>=2&&score>=3));
+  const validated=physicsEvidence&&(domain==="coding"?direct.length>=2:technical?direct.length>=1:(specific.length>=1||present.length>=2&&score>=3));
   const eligibleMatch=validated;
   return {p,i,tags:PROGRAM_TAGS[p.id]||[],score,match:present.length,growth:future.length,
    specific:specific.length,evidence:hits,rule,fit,kind:eligibleMatch?"match":"explore",eligibleMatch};
