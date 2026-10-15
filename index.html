@@ -972,6 +972,16 @@ html,body{max-width:100%;overflow-x:clip}
 .interior-hero img,.ap-about:not(.ap-development-page) .ap-about-image-banner img{display:block!important;width:100%!important;max-width:100%!important;height:auto!important;max-height:none!important;object-fit:contain!important;object-position:center!important}
 .approved-hero,.approved-hero>img{height:auto!important;max-height:none!important;object-fit:contain!important}
 @media(max-width:720px){.interior-hero,.ap-about:not(.ap-development-page) .ap-about-image-banner{height:auto!important}}
+
+/* Desktop viewport containment: no horizontal page panning; retain full hero images. */
+html{width:100%;max-width:100%;overflow-x:hidden}
+body{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
+#app,main,.site-header,footer{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
+#app>*,.shell,.interior-hero,.approved-hero,.ap-about,.ap-development-page{max-width:100%;min-width:0;box-sizing:border-box}
+.interior-hero img,.approved-hero>img,.ap-about-image-banner img{display:block;max-width:100%!important;width:100%!important;height:auto!important;object-fit:contain!important}
+.site-header{max-width:100%;overflow:visible}
+.site-header nav{min-width:0;max-width:100%;box-sizing:border-box}
+@media(min-width:1251px){.site-header nav{column-gap:clamp(12px,1.4vw,22px)}}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
