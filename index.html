@@ -932,6 +932,7 @@ background-size:100% auto;background-repeat:no-repeat;background-position:center
 .choose-option{display:flex;align-items:center;gap:11px;margin:0!important;line-height:1.6}
 .choose-option input{flex-shrink:0}.choose-option:has(input:disabled){opacity:.55;cursor:not-allowed}
 @media(max-width:720px){.choose-options{grid-template-columns:1fr}.choose-group summary{padding:17px 15px}.choose-group-meta{font-size:12px}}
+.growth-social{border:1px solid #c8e4de;border-radius:23px;background:linear-gradient(125deg,#eef9f5,#f0f9fc);padding:29px;margin:18px 0 34px}.growth-social h3{font-size:clamp(22px,2.5vw,28px);color:#0b5269;margin:12px 0}.growth-social p{line-height:1.8;color:#456f7d}.growth-social .muted{font-size:14px}@media(max-width:720px){.growth-social{padding:22px}}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
@@ -1033,6 +1034,10 @@ function profile(){
   const why=matches.length?'התוכנית קשורה לעניין שעלה בבחירות שלך: '+matches.map(y=>y.name).join(' ו־')+'.':growth.length?'זוהי הזדמנות לגלות תחום שבחרת לפתח בעתיד.':'זוהי הזדמנות לפתוח אופק חדש, גם מחוץ לתחומים שעלו בשאלון.';
   return '<article class="growth-opportunity"><span class="growth-label">'+(matches.length?'מתחבר לתחומי העניין שלי':'לפתוח אופק חדש')+'</span><h3>'+esc(x.p.name)+'</h3><p>'+esc(x.p.desc||'')+'</p><p class="growth-why">'+esc(why)+'</p><p class="muted">'+esc(x.p.scope||'')+' · '+esc(x.p.audience||'יש לבדוק למי מיועד')+' · זמינות ותנאי הצטרפות דורשים בדיקה</p><button class="secondary" onclick="showProgram('+x.i+')">להכיר את ההזדמנות ←</button></article>';
  }).join('');
+ const socialChoices=[[1,2],[4,0],[4,4],[7,2],[8,1],[11,2],[14,5],[15,2],[15,5],[16,4],[18,1],[19,3],[19,4]];
+ const socialHits=socialChoices.filter(([q,i])=>Array.isArray(state.answers[q])&&state.answers[q].includes(i));
+ const socialInterest=socialHits.length>=2||socialHits.some(([q,i])=>q===7&&i===2||q===16&&i===4)||((result.interests.find(x=>x.code==="L")||{}).score>=2);
+ const socialNote=socialInterest?'<section class="growth-social"><span class="growth-label">יש לך רעיון שיכול להשפיע?</span><h3>גם יוזמה קטנה יכולה לחולל שינוי</h3><p>אם מעורבות חברתית, התנדבות או הובלת יוזמה מסקרנות אותך, בית הספר מעודד אותך להציע רעיונות ולמצוא דרך להגשים אותם. רכזת המעורבות החברתית יכולה לסייע לך להכיר אפשרויות לפעולה ולמעורבות בקהילה.</p><p>בכיתות י׳–י״ב יש מגוון אפיקי התנדבות במסגרת המעורבות החברתית, שהיא חלק מחובות הלימודים. עשייה מתמשכת ומשמעותית עשויה גם להשתלב בדרך לתעודת בגרות חברתית מצטיינת, בהתאם לדרישות ולקריטריונים.</p><p class="muted">כדאי לפנות לרכזת המעורבות החברתית כדי לבחון אפשרויות ותנאי השתתפות.</p></section>':'';
  const html='<div class="shell growth-results">'+
  '<div class="stepper"><span>01 • היכרות</span><span>02 • שאלון</span><span class="active-step">03 • הפרופיל שלי</span><span>04 • בחירת מסלולים</span></div>'+
  '<header class="growth-intro"><span class="growth-label">מפת הצמיחה האישית שלי</span><h2>'+esc(state.name||'')+', זה הסיפור שמתחיל להצטייר מהבחירות שלך</h2><p>לא אבחון ולא הגדרה של מי שאת או מי שאתה — אלא נקודת פתיחה למסע של גילוי והתנסות.</p></header>'+
@@ -1040,6 +1045,7 @@ function profile(){
  '<div class="growth-pair"><section class="growth-panel"><span class="growth-label">איך נוח לי לפעול?</span><h3>הדרכים שמושכות אותי</h3><div class="growth-chips">'+pills(styles)+'</div><p>אלה דרכי פעולה שעלו מבחירותיך. אפשר לגלות עוד דרכים באמצעות התנסות.</p></section>'+
  '<section class="growth-panel"><span class="growth-label">לאן הייתי רוצה לצמוח?</span><h3>הדלת שאני רוצה לפתוח</h3><div class="growth-chips">'+pills(goals)+'</div><p>כיוונים להמשך הדרך: '+esc(future)+'.</p></section></div>'+
  '<section class="growth-bridge"><span class="growth-label">השילוב המיוחד שלי</span><h3>כששני עולמות נפגשים</h3><p>'+esc(combination)+'</p><span class="muted">הצעה לסקרנות ולהתנסות, לא קביעה על יכולות.</span></section>'+
+ socialNote+
  '<section class="growth-recs"><span class="growth-label">מפת ההזדמנויות שלי</span><h2>לאן אפשר להמשיך מכאן?</h2><p>אלה הזדמנויות מהמפה שיכולות להתחבר לתחומי העניין שלך — לצד אפשרות חדשה שכדאי להכיר.</p><div class="growth-rec-grid">'+(reasons||'<p>מפת ההזדמנויות ממשיכה להתעדכן.</p>')+'</div></section>'+
  '<div class="growth-actions"><a class="growth-action" href="#choose">לבחירת תוכניות ←</a><a class="growth-action growth-action-light" href="#catalog">לכל מפת ההזדמנויות ←</a></div></div>';
  view(html);
