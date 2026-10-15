@@ -659,6 +659,31 @@ background-size:100% auto;background-repeat:no-repeat;background-position:center
 @media(min-width:850px){.ap-story .ap-chapter-body{width:73%!important}.ap-story .ap-chapter:first-child .ap-chapter-body{width:66%!important}}
 @media(max-width:849px){.ap-story .ap-chapter{padding-top:23px!important}.ap-story .ap-index{width:45px!important;height:45px!important;top:14px!important;left:14px!important;font-size:19px!important}.ap-story .ap-chapter-body{width:100%!important}.ap-story .ap-chapter h3{font-size:clamp(23px,4.8vw,30px)!important}.ap-story .ap-sub{font-size:18px!important}.ap-story .ap-paras p{font-size:clamp(16px,3.5vw,18px)!important;line-height:1.72!important}}
 @media(max-width:540px){.ap-story .ap-chapter:first-child{min-height:775px!important;padding-bottom:345px!important}}
+
+/* Compact mobile principle cards, preserve the entire decorative illustration */
+@media(max-width:849px){
+ .ap-story .ap-chapter,
+ .ap-story .ap-chapter:first-child{
+  min-height:0!important;
+  height:auto!important;
+  padding-bottom:185px!important;
+  background-size:cover,auto 175px!important;
+  background-position:center,left bottom!important;
+ }
+ .ap-story .ap-chapter-body{width:100%!important}
+ .ap-story .ap-chapter h3{padding-left:43px}
+}
+@media(max-width:540px){
+ .ap-story .ap-chapter,
+ .ap-story .ap-chapter:first-child{
+  min-height:0!important;
+  padding:23px 19px 172px!important;
+  background-size:cover,auto 160px!important;
+  background-position:center,left bottom!important;
+ }
+ .ap-story .ap-chapter h3{font-size:clamp(23px,5.5vw,28px)!important}
+ .ap-story .ap-paras p{font-size:clamp(16px,4.1vw,18px)!important;line-height:1.72!important}
+}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
