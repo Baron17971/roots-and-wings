@@ -1221,10 +1221,11 @@ function journey(){
  const reflection=page.querySelector(".growth-print-reflection");
  if(reflection)reflection.insertAdjacentHTML("beforebegin",selection);
  else page.insertAdjacentHTML("beforeend",selection);
- const footer=page.querySelector(".growth-actions");
- if(footer)footer.insertAdjacentHTML("beforebegin",'<section class="journey-export"><h3>מפת הצמיחה שלי מוכנה</h3><p>המסמך כולל את הפרופיל, ההמלצות והמסלולים שבחרת. אפשר להדפיס, לשמור כ־PDF ולהביא לשיחה עם המחנכת.</p><button type="button" onclick="window.print()">הדפסה או שמירה כ־PDF ←</button><p class="muted">המסמך לא נשלח אוטומטית לבית הספר או למורה.</p></section>');
- const action=page.querySelector('.growth-actions a[href="#choose"]');
- if(action)action.textContent="לעדכון הבחירות שלי ←";
+ // The final document is a single, clear destination. No redundant navigation controls.
+ page.querySelector(".growth-actions")?.remove();
+ page.querySelectorAll(".growth-opportunity button, .growth-opportunity .details-link").forEach(button=>button.remove());
+ page.querySelector(".stepper")?.remove();
+ page.insertAdjacentHTML("beforeend",'<section class="journey-export"><h3>מפת הצמיחה והבחירות שלי מוכנה</h3><p>המסמך כולל את הפרופיל האישי, ההזדמנויות והבחירות לשנה הנוכחית ולשנים הבאות.</p><button type="button" onclick="window.print()">הדפסה או שמירה כ־PDF ←</button><p class="muted">המסמך אינו נשלח אוטומטית. אפשר לשמור ולשתף אותו עם המחנכת לפי בחירתך.</p></section>');
 }
 function programCard(p,i,compact=false){const marks={"מדע וטכנולוגיה":"⚛","חברה ורוח":"✦","חברה ומנהיגות":"♧","אמנות ויצירה":"♫","ספורט ואתגר":"↗","מצוינות אישית":"◇"};return '<article class="opportunity-card"><div class="opportunity-top"><div class="program-symbol">'+(marks[p.category]||'✦')+'</div><span class="scope-pill">'+escapeHtml(p.scope)+'</span></div><span class="category-caption">'+escapeHtml(p.category)+'</span><h3>'+escapeHtml(p.name)+'</h3><p class="program-description">'+escapeHtml(p.desc)+'</p><div class="audience"><strong>למי זה מתאים?</strong><p>'+escapeHtml(p.audience)+'</p></div><div class="program-foot"><span>תנאי ההצטרפות ומועדים באימות</span><button class="details-link" onclick="showProgram('+i+')">פרטים נוספים ←</button></div></article>'}
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
