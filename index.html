@@ -1189,23 +1189,37 @@ function analyzeGrowth(){
  return {interests:ranked(scores),goals:ranked(goals),evidence,social,count:answersCount,complete:Q.every((_,i)=>Array.isArray(state.answers[i])&&state.answers[i].length>0)};
 }
 function ranked(){const r=analyzeGrowth(),max=Math.max(1,...r.interests.map(x=>x.score));return r.interests.map(x=>({code:x.code,name:x.name,v:Math.round(100*x.score/max)}));}
-function gradeEligibility(p){
- // Eligibility is only excluded when the listed audience explicitly gives a grade range.
- const a=String(p.audience||"");
- const order=["ז","ח","ט","י","יא","יב"];
- const normalize=v=>String(v).replace(/[׳״"'\s]/g,"");
- const current=order.indexOf(normalize(state.grade));
- const range=a.match(/(?:כיתות|תלמידי)\s*([זחטיי״׳"']{1,4})\s*[–\-]\s*([זחטיי״׳"']{1,4})/);
- if(range&&current>=0){const low=order.indexOf(normalize(range[1])),high=order.indexOf(normalize(range[2]));if(low>=0&&high>=0)return current>=low&&current<=high;}
- return true;
+/* Structured participation conditions derived from the approved extended program descriptions.
+   Grade and existing majors are hard requirements for current recommendations;
+   selection tests and achievements remain explicitly unverified. */
+const PROGRAM_ELIGIBILITY={"P001":{"grades":[10,11,12]},"P002":{"grades":[10,11,12],"verify":"תנאי קבלה והישגים אקדמיים"},"P003":{"grades":[11,12]},"P004":{"grades":[10,11,12],"verify":"הכשרת עזרה ראשונה והתאמה למסלול"},"P005":{"grades":[9,10,11,12],"verify":"מיון וקבלה למסלול"},"P006":{"grades":[9,10,11,12],"verify":"מיון וקבלה למסלול"},"P007":{"grades":[9]},"P008":{"grades":[10,11,12],"verify":"ידע קודם בתכנות וקבלה למסלול"},"P009":{"grades":[8,9,10,11,12],"verify":"מיון ומסלול הצטרפות"},"P010":{"grades":[9,10,11],"verify":"מיון והצטרפות למסלול מחקר"},"P011":{"grades":[11,12],"verify":"הצטיינות ומעורבות חברתית"},"P012":{"grades":[7,8,9,10,11,12]},"P013":{"grades":[9,10,11,12],"unverified":true},"P014":{"grades":[8,9,10,11,12],"verify":"תנאי המיון והקבלה"},"P015":{"grades":[10,11,12],"verify":"קרבה לסף בגרות מצטיינת"},"P016":{"grades":[7,8,9,10,11,12]},"P017":{"grades":[7,8,9,10,11,12],"unverified":true},"P018":{"grades":[7,8,9,10,11,12],"verify":"התאמה לשירה בהרכב"},"P019":{"grades":[9,10,11,12]},"P020":{"grades":[9,10,11,12],"unverified":true},"P021":{"grades":[10,11,12],"verify":"תנאי ההצטרפות למגמה על־אזורית"},"P022":{"grades":[8,9,10,11,12]},"P023":{"grades":[9,10,11,12]},"P024":{"grades":[9,10,11]},"P025":{"grades":[12],"majors":["פיזיקה"],"verify":"לימודי פיזיקה 5 יח״ל והצטרפות לצוות"},"P026":{"grades":[10,11,12],"majors":["פיזיקה"]},"P027":{"grades":[10,11,12],"majors":["ביולוגיה"]},"P028":{"grades":[12],"majors":["ביוטכנולוגיה"],"verify":"עבודת גמר ביישומים בביוטכנולוגיה 5 יח״ל"},"P029":{"grades":[9,10,11],"verify":"יכולת בפיזיקה ומתמטיקה ומיונים"},"P030":{"grades":[7,8,9,10,11,12],"verify":"התאמה למסלול המצוינות בכדורסל"},"P031":{"grades":[7,8,9,10,11,12],"verify":"התאמה לנבחרת הכדורגל"},"P032":{"grades":[7,8,9,10,11,12],"verify":"התאמה לנבחרת האתלטיקה"},"P033":{"grades":[7,8,9,10,11,12],"verify":"רקע במחול ותנאי קבלה"}};
+const GRADE_NUMBER={"ז׳":7,"ח׳":8,"ט׳":9,"י׳":10,"י״א":11,"י״ב":12};
+function gradeNumber(v){return GRADE_NUMBER[v]||0;}
+function studentMajors(){return (Array.isArray(state.majors)?state.majors:[]).map(v=>String(v||"").replace(/[״׳"']/g,"").replace(/\\s+/g,"").toLowerCase()).filter(Boolean);}
+function participation(p,when="current"){
+ const conditions=PROGRAM_ELIGIBILITY[p.id];
+ if(!conditions||conditions.unverified)return {ok:false,reason:"פרטי הזכאות עדיין בבירור"};
+ const grade=gradeNumber(state.grade);
+ if(!grade)return {ok:false,reason:"יש להזין שכבת גיל"};
+ const grades=conditions.grades||[];
+ // Future opportunities must be achievable within the next two school years.
+ const possible=when==="future"?[grade+1,grade+2].filter(g=>g<=12):[grade];
+ if(!possible.some(g=>grades.includes(g)))return {ok:false,reason:"לא מתאים לשכבת הגיל"};
+ if(when==="current"&&conditions.majors?.length){
+  const actual=studentMajors();
+  if(!conditions.majors.some(m=>actual.some(x=>x.includes(m)||m.includes(x)&&x.length>=4)))
+   return {ok:false,reason:"מיועד לתלמידי מגמת "+conditions.majors.join("/")};
+ }
+ return {ok:true,reason:conditions.verify||"",pending:!!conditions.verify,forward:when==="future"&&!grades.includes(grade)};
 }
+function gradeEligibility(p){return participation(p,"current").ok;}
 
 /* Curriculum-aligned explicit option-to-program evidence; no AI or keyword guesswork. */
 const PROGRAM_MATCH_RULES={"P001":{"options":["7:5","9:6","14:8","16:7","19:7"],"strict":false,"note":""},"P002":{"options":["17:2","18:6","11:7"],"strict":true,"note":"נדרש לברר התאמה ללימודים אקדמיים, ולא להסיק מצוינות מהשאלון."},"P003":{"options":["18:0"],"strict":true,"note":"רק לתלמידים שמתעניינים בפועל בהכנה לפסיכומטרי; השאלון אינו שואל זאת ישירות."},"P004":{"options":["2:8","4:0","8:1","14:2","15:5","19:6"],"strict":false,"note":""},"P005":{"options":["0:2","7:0","11:3","12:1","14:4","19:1"],"strict":false,"note":""},"P006":{"options":["7:0","11:3","12:1","19:1"],"strict":false,"note":""},"P007":{"options":["0:2","7:0","11:3","12:1","19:1"],"strict":false,"note":""},"P008":{"options":["7:0","11:3","12:1","19:1"],"strict":true,"note":"מחייב רקע קודם בתכנות שאינו נבדק בשאלון."},"P009":{"options":["0:0","2:7","7:3","9:0","14:0","19:0"],"strict":true,"note":""},"P010":{"options":["0:0","2:7","7:3","9:0","19:0"],"strict":true,"note":""},"P011":{"options":["0:4","4:0","7:2","11:2","14:5","16:4","18:1","19:3"],"strict":true,"note":"לפי המאגר מיועד לתלמידי י״ב מצטיינים; יש לוודא עמידה בתנאים."},"P012":{"options":["0:5","2:2","4:0","7:2","9:1","9:7","12:3","13:2","15:2","16:4","19:4","19:7"],"strict":false,"note":""},"P013":{"options":["0:0","7:3","9:0","14:0","19:0"],"strict":false,"note":""},"P014":{"options":["0:0","7:3","9:0","19:0","19:1"],"strict":true,"note":"לפי המאגר מיועד לתלמידות מצטיינות; השאלון אינו מוודא תנאים אלה."},"P015":{"options":["13:0","18:5","18:6"],"strict":true,"note":"נדרשים הישגים לימודיים שאינם נבדקים בשאלון."},"P016":{"options":["4:4","7:2","14:5","16:4","19:4"],"strict":false,"note":""},"P017":{"options":["4:4","4:1","7:2","14:4","16:4","19:4"],"strict":false,"note":""},"P018":{"options":["0:1","9:3","11:6","16:1"],"strict":true,"note":"חבורת זמר דורשת עניין בשירה ולעיתים גם התאמה קולית; השאלון אינו בודק זאת במפורש."},"P019":{"options":["7:5","16:7","18:6"],"strict":true,"note":""},"P020":{"options":["7:5","9:6","14:8","16:7","18:6"],"strict":true,"note":""},"P021":{"options":["0:5","7:5","9:6","12:5","14:8","16:7"],"strict":false,"note":""},"P022":{"options":["0:3","0:4","4:4","7:2","13:2","14:5","16:4","18:1","19:3"],"strict":false,"note":""},"P023":{"options":["0:4","4:5","7:4","9:7","11:0","11:9","12:2","15:6","16:2","18:2","19:8"],"strict":false,"note":""},"P024":{"options":["0:0","2:7","7:3","9:0","16:6","19:0"],"strict":true,"note":""},"P025":{"options":["2:0","2:5","7:0","7:3","10:0","11:7","14:4","16:6","19:0"],"strict":true,"note":""},"P026":{"options":["0:0","7:3","9:0","19:0"],"strict":true,"note":"לפי המאגר מיועד לתלמידי מגמת פיזיקה; השאלון אינו מוודא זאת."},"P027":{"options":["0:0","2:7","7:3","9:0","16:6","19:0"],"strict":true,"note":"לפי המאגר מיועד לתלמידי מגמת ביולוגיה; השאלון אינו מוודא זאת."},"P028":{"options":["0:0","2:7","7:3","9:0","16:6","19:0"],"strict":true,"note":"לפי המאגר מיועד לתלמידי מגמת ביוטכנולוגיה; השאלון אינו מוודא זאת."},"P029":{"options":["0:0","2:5","7:3","9:0","16:6","19:0"],"strict":true,"note":"נדרש ידע מתקדם בפיזיקה ומתמטיקה שאינו נמדד בשאלון."},"P030":{"options":["0:3","2:3","4:3","7:6","9:4","16:3","19:5"],"strict":true,"note":""},"P031":{"options":["0:3","2:3","4:3","7:6","9:4","16:3","19:5"],"strict":true,"note":""},"P032":{"options":["0:3","2:3","4:3","7:6","9:4","16:3","19:5"],"strict":true,"note":""}};
 const FUTURE_QUESTION_IDS=new Set([11,18,19]);
 function optionWasChosen(ref){const [q,i]=ref.split(":").map(Number);return Array.isArray(state.answers[q])&&state.answers[q].includes(i);}
 function currentFeedback(){
- const signature=JSON.stringify(state.answers);
+ const signature=JSON.stringify({answers:state.answers,grade:state.grade,majors:state.majors,middleTrack:state.middleTrack});
  if(state.recommendationFeedbackSignature!==signature){
   state.recommendationFeedbackSignature=signature;
   state.recommendationFeedback={};
@@ -1254,7 +1268,7 @@ function renderRecommendationCards(rec){
  const reasons=x=>{
   const answers=x.evidence.slice(0,2).map(ref=>{const [q,i]=ref.split(":").map(Number);return Q[q][1].split("|")[i];});
   const lead=x.kind==="explore"?"עוד כיוון שכדאי להכיר":"האפשרות הזאת עלתה בעקבות הבחירות";
-  return lead+(answers.length?": "+answers.map(a=>"״"+a+"״").join(" וגם ")+".":".")+(x.rule.note?" "+x.rule.note:"");
+  return lead+(answers.length?": "+answers.map(a=>"״"+a+"״").join(" וגם ")+".":".")+(participation(x.p).reason?" נדרשת בדיקה: "+participation(x.p).reason+".":"");
  };
  if(!rec.length)return '<p>לא מצאנו כרגע הצעות עם קשר מספיק ברור לתשובות. אפשר לעיין במפת ההזדמנויות המלאה.</p>';
  return rec.map(x=>'<article class="growth-opportunity"><span class="growth-label">'+(x.kind==="explore"?'לגלות עוד אפשרות':'מומלץ לפי הבחירות שלי')+'</span><h3>'+esc(x.p.name)+'</h3><p>'+esc(x.p.desc)+'</p><p class="growth-why">'+esc(reasons(x))+'</p><p class="muted">'+esc(x.p.audience||"")+' · תנאי ההצטרפות והזמינות דורשים בירור</p><div class="recommendation-actions"><button type="button" class="secondary swap-btn" onclick="swapOpportunity(\''+esc(x.p.id)+'\')">↻ הציעו לי אפשרות אחרת</button><button type="button" class="details-btn" onclick="showProgram('+x.i+')">להכיר את ההזדמנות ←</button></div></article>').join("");
@@ -1262,7 +1276,7 @@ function renderRecommendationCards(rec){
 function opportunityCandidates(result){
  return programDetails.map((p,i)=>{
   const rule=PROGRAM_MATCH_RULES[p.id];
-  if(!rule||!gradeEligibility(p)||["P003","P018"].includes(p.id))return null;
+  if(!rule||!gradeEligibility(p))return null;
   const hits=rule.options.filter(optionWasChosen);
   const present=hits.filter(ref=>!FUTURE_QUESTION_IDS.has(Number(ref.split(":")[0])));
   const future=hits.filter(ref=>FUTURE_QUESTION_IDS.has(Number(ref.split(":")[0])));
