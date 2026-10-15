@@ -987,6 +987,7 @@ body{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
 @media print{@page{size:A4;margin:14mm}html,body{overflow:visible!important;height:auto!important;background:#fff!important;color:#092f42!important}body>.site-header,body>footer,.interior-hero,.stepper,.growth-print-controls,.growth-actions,.growth-opportunity button,.growth-opportunity .details-link{display:none!important}#app,.growth-results{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important;overflow:visible!important}.growth-intro{padding:0 0 12px!important;margin:0!important}.growth-intro h2{font-size:24px!important}.growth-feature,.growth-story-section,.growth-pair,.growth-bridge,.growth-social,.growth-recs,.growth-path,.growth-print-reflection{break-inside:avoid-page;page-break-inside:avoid;margin:12px 0!important;padding:12px!important;box-shadow:none!important}.growth-story-grid,.growth-rec-grid,.growth-pair{display:block!important}.growth-story-item,.growth-panel,.growth-opportunity{display:block!important;break-inside:avoid-page;page-break-inside:avoid;margin:8px 0!important;padding:12px!important;box-shadow:none!important}.growth-proof-list{font-size:12px!important}.growth-results p,.growth-results li{font-size:12px!important;line-height:1.6!important}.growth-results h2{font-size:19px!important}.growth-results h3{font-size:16px!important}.growth-reflection-lines{height:100px}.growth-print-reflection{display:block!important}a[href]:after{content:none!important}}.journey-chosen{margin:30px 0;padding:27px;background:#f0f9f9;border:1px solid #cbe5e8;border-radius:22px}.journey-chosen h2{color:#084a68}.journey-chosen-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.journey-chosen-grid>div{background:white;border:1px solid #d7e9e9;border-radius:17px;padding:20px}.journey-chosen-grid h3{color:#08738a}.journey-chosen-grid ol{padding-inline-start:24px}.journey-chosen-grid li{line-height:1.7;margin:12px 0}.journey-chosen-grid li span{display:block;color:#64818a;font-size:13px}.journey-export{margin:26px 0;padding:28px;border:1px solid #b9dfe3;border-radius:22px;background:#e9f8f7;text-align:center}.journey-export h3{font-size:24px;color:#064962}.journey-export p{line-height:1.8}.journey-export button{margin:10px auto}.journey-complete .growth-actions{margin-bottom:35px}@media(max-width:720px){.journey-chosen-grid{grid-template-columns:1fr}.journey-chosen,.journey-export{padding:20px}}@media print{.journey-export{display:none!important}.journey-chosen{display:block!important;break-before:page;break-inside:avoid-page;page-break-inside:avoid;padding:14px!important;margin:10px 0!important}.journey-chosen-grid{display:block!important}.journey-chosen-grid>div{break-inside:avoid-page;margin:12px 0;padding:12px!important}.journey-chosen li{font-size:12px!important}}
 .print-only-growth{display:none!important}@media print{.journey-screen{display:none!important}.print-only-growth{display:block!important}.print-only-growth .growth-results{display:block!important}.print-only-growth .journey-chosen{break-before:page;page-break-before:always}}
 #middle-fields[hidden],#upper-fields[hidden]{display:none!important}#middle-fields,#upper-fields{margin:12px 0;padding:17px;border:1px solid #d2e5e8;border-radius:16px;background:#f7fbfb}#middle-fields label,#upper-fields label{display:block;margin-bottom:12px}#upper-fields .muted{margin:0 0 12px}
+.journey-export-buttons{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.pdf-render-document{display:block!important;position:absolute!important;left:-20000px!important;top:0!important;width:790px!important;max-width:790px!important;padding:18px!important;background:#fff!important;direction:rtl!important;z-index:-1}.pdf-render-document .growth-results{max-width:100%!important;width:100%!important;margin:0!important}.pdf-render-document .growth-story-grid,.pdf-render-document .growth-rec-grid{grid-template-columns:1fr!important}.pdf-render-document .journey-chosen{break-before:page;page-break-before:always}.pdf-render-document .growth-opportunity,.pdf-render-document .growth-panel,.pdf-render-document .growth-story-item{break-inside:avoid;page-break-inside:avoid}@media print{.pdf-render-document{display:none!important}}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#choose">הבחירות שלי</a></nav></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
@@ -1235,6 +1236,46 @@ function pick(i,key){
  if(finish)finish.disabled=!state.current.length||state.future.length!==2;
 }
 
+
+async function downloadJourneyPdf(button){
+ const source=document.querySelector(".print-only-growth");
+ if(!source)return;
+ const original=button.textContent;
+ button.disabled=true;
+ button.textContent="מכינים את הקובץ...";
+ let staging;
+ try{
+  if(!window.html2pdf){
+   await new Promise((resolve,reject)=>{
+    const script=document.createElement("script");
+    script.src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+    script.onload=resolve;script.onerror=()=>reject(new Error("PDF library unavailable"));
+    document.head.appendChild(script);
+   });
+  }
+  staging=source.cloneNode(true);
+  staging.className="pdf-render-document";
+  staging.querySelectorAll("button,.growth-actions,.stepper").forEach(n=>n.remove());
+  document.body.appendChild(staging);
+  await document.fonts.ready;
+  const safeName=String(state.name||"תלמיד").replace(/[\\/:*?"<>|]/g,"").trim()||"תלמיד";
+  const filename="מפת הצמיחה והבחירות - "+safeName+".pdf";
+  await window.html2pdf().set({
+   margin:[9,9,9,9],filename,
+   image:{type:"jpeg",quality:0.95},
+   html2canvas:{scale:1.7,useCORS:true,backgroundColor:"#ffffff",scrollY:0},
+   jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
+   pagebreak:{mode:["css","legacy"],avoid:[".growth-opportunity",".growth-story-item",".journey-chosen-grid>div"]}
+  }).from(staging).save();
+ }catch(e){
+  console.error("PDF download failed",e);
+  alert("לא הצלחנו להוריד את הקובץ כרגע. אפשר להשתמש בכפתור ההדפסה ולבחור שמירה כ־PDF.");
+ }finally{
+  if(staging)staging.remove();
+  button.textContent=original;
+  button.disabled=false;
+ }
+}
 function journey(){
  if(!hasIntroduction()){location.hash="#start";return;}
  if(!Q.every((_,i)=>Array.isArray(state.answers[i])&&state.answers[i].length>0)){location.hash="#quiz";return;}
@@ -1250,7 +1291,7 @@ function journey(){
  printProfile.querySelector(".growth-actions")?.remove();
  printProfile.querySelectorAll("button").forEach(el=>el.remove());
  const selections='<section class="journey-chosen"><h2>הבחירות שלי</h2><div class="journey-chosen-grid"><div><h3>השנה אני רוצה...</h3><ol>'+entries(state.current)+'</ol></div><div><h3>בשנים הבאות...</h3><ol>'+entries(state.future)+'</ol></div></div></section>';
- const visible='<div class="shell journey-screen">'+stepper(4)+'<h2>הבחירות שלי</h2>'+selections+'<div class="journey-export"><p>סיימת לבחור. אפשר להדפיס או לשמור מסמך הכולל את הפרופיל האישי ואת הבחירות שלך.</p><button type="button" onclick="window.print()">הדפסה או שמירה כ־PDF ←</button></div></div>';
+ const visible='<div class="shell journey-screen">'+stepper(4)+'<h2>הבחירות שלי</h2>'+selections+'<div class="journey-export"><p>סיימת לבחור. אפשר להדפיס או לשמור מסמך הכולל את הפרופיל האישי ואת הבחירות שלך.</p><div class="journey-export-buttons"><button type="button" onclick="downloadJourneyPdf(this)">הורדת המפה שלי כ־PDF ↓</button><button class="secondary" type="button" onclick="window.print()">הדפסה ←</button></div><p class="muted">הקובץ נשמר במכשיר שלך ואינו נשלח לבית הספר.</p></div></div>';
  view(visible+'<div class="print-only-growth">'+printProfile.outerHTML+selections+'</div>');
 }
 function programCard(p,i,compact=false){const marks={"מדע וטכנולוגיה":"⚛","חברה ורוח":"✦","חברה ומנהיגות":"♧","אמנות ויצירה":"♫","ספורט ואתגר":"↗","מצוינות אישית":"◇"};return '<article class="opportunity-card"><div class="opportunity-top"><div class="program-symbol">'+(marks[p.category]||'✦')+'</div><span class="scope-pill">'+escapeHtml(p.scope)+'</span></div><span class="category-caption">'+escapeHtml(p.category)+'</span><h3>'+escapeHtml(p.name)+'</h3><p class="program-description">'+escapeHtml(p.desc)+'</p><div class="audience"><strong>למי זה מתאים?</strong><p>'+escapeHtml(p.audience)+'</p></div><div class="program-foot"><span>תנאי ההצטרפות ומועדים באימות</span><button class="details-link" onclick="showProgram('+i+')">פרטים נוספים ←</button></div></article>'}
