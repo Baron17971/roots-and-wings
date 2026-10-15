@@ -648,6 +648,17 @@ background-size:100% auto;background-repeat:no-repeat;background-position:center
   background-size:cover,auto 43%!important;
  }
 }
+
+/* Principle carousel refinement: top-left round index and larger elevated typography */
+.ap-story .ap-chapter{position:relative!important;display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:0!important;padding-top:25px!important}
+.ap-story .ap-index{position:absolute!important;top:19px!important;left:20px!important;right:auto!important;z-index:3!important;width:51px!important;height:51px!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:rgba(255,255,255,.91)!important;border:1px solid #b4dce9!important;box-shadow:0 5px 15px rgba(15,80,110,.075)!important;color:#278fae!important;font-size:21px!important;line-height:1!important}
+.ap-story .ap-chapter-body{padding-top:0!important;align-self:flex-start!important}
+.ap-story .ap-chapter h3{font-size:clamp(26px,2.5vw,36px)!important;line-height:1.27!important;margin:0 0 9px!important}
+.ap-story .ap-sub{font-size:clamp(19px,1.7vw,23px)!important;line-height:1.45!important;margin:0 0 14px!important}
+.ap-story .ap-paras p{font-size:clamp(18px,1.43vw,21px)!important;line-height:1.82!important;margin:0!important}
+@media(min-width:850px){.ap-story .ap-chapter-body{width:73%!important}.ap-story .ap-chapter:first-child .ap-chapter-body{width:66%!important}}
+@media(max-width:849px){.ap-story .ap-chapter{padding-top:23px!important}.ap-story .ap-index{width:45px!important;height:45px!important;top:14px!important;left:14px!important;font-size:19px!important}.ap-story .ap-chapter-body{width:100%!important}.ap-story .ap-chapter h3{font-size:clamp(23px,4.8vw,30px)!important}.ap-story .ap-sub{font-size:18px!important}.ap-story .ap-paras p{font-size:clamp(16px,3.5vw,18px)!important;line-height:1.72!important}}
+@media(max-width:540px){.ap-story .ap-chapter:first-child{min-height:775px!important;padding-bottom:345px!important}}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
