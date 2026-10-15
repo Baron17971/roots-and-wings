@@ -943,6 +943,21 @@ background-size:100% auto;background-repeat:no-repeat;background-position:center
 .stepper .stepper-profile-link:hover{background:#d4ecf2}
 .stepper .stepper-profile-locked{background:#e2ecf0;color:#62818c}
 @media(max-width:720px){.stepper{gap:10px;padding:12px}.stepper .stepper-profile-link,.stepper .stepper-profile-locked{padding:10px 12px;font-size:13px;white-space:normal;text-align:center}}
+/* Prevent horizontal clipping of the choices screen on narrow phones */
+html,body{max-width:100%;overflow-x:clip}
+.choose-page,.choose-section,.choose-group,.choose-group summary,.choose-options{min-width:0;max-width:100%}
+.choose-group summary>span:first-child{min-width:0;overflow-wrap:anywhere}
+.choose-group-meta{min-width:0;white-space:normal;text-align:end;overflow-wrap:normal}
+.choose-group .choose-options{min-width:0}
+.choose-page .stepper{max-width:100%;min-width:0}
+@media(max-width:720px){
+ .choose-page{width:100%;padding-inline:16px}
+ .choose-group summary{gap:8px;align-items:center}
+ .choose-group-meta{flex-shrink:1}
+ .choose-page .stepper{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .choose-page .stepper>a,.choose-page .stepper>span{min-width:0;width:100%;box-sizing:border-box;overflow-wrap:anywhere}
+ .choose-page .choose-options{grid-template-columns:minmax(0,1fr)}
+}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
