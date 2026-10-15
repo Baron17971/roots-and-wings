@@ -744,6 +744,22 @@ background-size:100% auto;background-repeat:no-repeat;background-position:center
  }
  .ap-story .ap-chapter:first-child h3{max-width:none!important}
 }
+
+/* First principle: use the full available card width even in desktop-mode mobile browsers */
+.ap-story .ap-chapter:first-child .ap-chapter-body,
+.ap-story .ap-chapter:first-child .ap-paras,
+.ap-story .ap-chapter:first-child .ap-paras p{
+  width:100%!important;max-width:100%!important;min-width:0!important;
+  margin-inline:0!important;
+}
+.ap-story .ap-chapter:first-child .ap-paras p{
+  text-align:right!important;
+  text-wrap:wrap!important;
+}
+@media(min-width:850px){
+ .ap-story .ap-chapter:first-child .ap-chapter-body{width:100%!important}
+ .ap-story .ap-chapter:first-child .ap-paras p{max-width:100%!important}
+}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#journey">הבחירות שלי</a></nav><a class="header-entry" href="#start">מתחילים עכשיו ←</a></header><main id="app"></main><footer>מקיף ז׳ אשדוד | גרסת הדגמה בלבד · אין שמירת נתונים במאגר מרכזי</footer><script src="/programs-rich.js"></script><script>
 const Q=[
 ["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיצוח תעלומות|אולפן מוזיקה או צילום|מרכז לפיתוח משחקים|מרכז ספורט ואתגרים|חדר דיונים ומנהיגות|מסע לחקר אנשים ותרבויות",3],
