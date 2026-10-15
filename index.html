@@ -1244,6 +1244,16 @@ function recommendationHistory(result){
  save();
  return history;
 }
+function showNoAlternativeDialog(){
+ document.getElementById("rw-no-alternative")?.remove();
+ const shade=document.createElement("div");
+ shade.id="rw-no-alternative";
+ shade.className="modal-shade";
+ shade.innerHTML='<section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="rw-no-alt-title" style="max-width:430px;text-align:center;padding:30px 24px"><button type="button" class="modal-close" aria-label="סגירה" onclick="document.getElementById(\'rw-no-alternative\')?.remove()">✕</button><h2 id="rw-no-alt-title" style="margin:6px 0 14px">לא נמצאה כרגע חלופה מתאימה</h2><p style="line-height:1.75;margin:0 0 23px">לא מצאנו הצעה נוספת שמתאימה להעדפות שלך ולתנאי ההשתתפות. אפשר להמשיך ולגלות הזדמנויות במפה באופן עצמאי.</p><div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"><button type="button" onclick="document.getElementById(\'rw-no-alternative\')?.remove();location.hash=\'#catalog\'">למפת ההזדמנויות ←</button><button type="button" class="secondary" onclick="document.getElementById(\'rw-no-alternative\')?.remove()">להישאר בפרופיל</button></div></section>';
+ shade.onclick=e=>{if(e.target===shade)shade.remove()};
+ document.body.appendChild(shade);
+ shade.querySelector(".modal-close")?.focus();
+}
 function swapOpportunity(id){
  const result=analyzeGrowth();
  const history=recommendationHistory(result);
@@ -1254,14 +1264,16 @@ function swapOpportunity(id){
  const alternative=opportunityCandidates(result).find(x=>{
   if(blocked.has(x.p.id))return false;
   // Re-check eligibility at the moment of swapping, not only during the initial profile.
-  if(!participation(x.p,"current").ok)return false;
+  const fit=participation(x.p,"current");
+  if(!fit.ok||fit.pending)return false;
   // A replacement must have a clear connection to choices about present interests;
   // aspirations alone are not enough to replace a recommendation.
   return x.match>=2 || (x.match>=1 && x.growth>=1);
  });
  const msg=document.querySelector(".growth-swap-note");
  if(!alternative){
-  if(msg)msg.textContent="לא מצאנו כרגע אפשרות חדשה שעומדת גם בהעדפות שסימנת וגם בתנאי השכבה והמגמה שלך. ההמלצה הקיימת נשארה ללא שינוי.";
+  if(msg)msg.textContent="לא נמצאה חלופה מתאימה נוספת; ההמלצה המקורית נשארה ללא שינוי.";
+  showNoAlternativeDialog();
   return;
  }
  history.slots[index]=alternative.p.id;
@@ -1269,7 +1281,7 @@ function swapOpportunity(id){
  save();
  const grid=document.querySelector(".growth-rec-grid");
  if(grid)grid.innerHTML=renderRecommendationCards(opportunityRecommendations(result));
- if(msg)msg.textContent="החלפנו את ההמלצה בתוכנית נוספת שמתאימה לשכבת הגיל, למגמה ולהעדפות שסימנת. תנאי קבלה נוספים ייבדקו מול רכז התוכנית.";
+ if(msg)msg.textContent="מצאנו תוכנית נוספת שעומדת בתנאי הגיל, המגמה וההעדפות שסימנת. אפשר לבדוק את פרטי הפעילות בכרטיסייה.";
 }
 function renderRecommendationCards(rec){
  const esc=escapeHtml;
