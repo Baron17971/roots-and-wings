@@ -1130,47 +1130,57 @@ function currentFeedback(){
  if(state.recommendationFeedbackSignature!==signature){
   state.recommendationFeedbackSignature=signature;
   state.recommendationFeedback={};
+  state.recommendationSwaps={};
  }
  return state.recommendationFeedback||(state.recommendationFeedback={});
 }
-function rateOpportunity(id,rating){
- const score=Number(rating);
- if(!Number.isInteger(score)||score<1||score>5)return;
- currentFeedback()[id]=score;
+function recommendationSwaps(){
+ currentFeedback();
+ return state.recommendationSwaps||(state.recommendationSwaps={});
+}
+function swapOpportunity(id){
+ const result=analyzeGrowth();
+ const current=opportunityRecommendations(result);
+ const visible=new Set(current.map(x=>x.p.id));
+ const available=opportunityCandidates(result).filter(x=>!visible.has(x.p.id));
+ const next=available[0];
+ const msg=document.querySelector(".growth-swap-note");
+ if(!next){
+  if(msg)msg.textContent="כרגע אין הצעה נוספת שמבוססת מספיק על התשובות שלך. ההמלצות הקיימות נשארות במקומן.";
+  return;
+ }
+ // Preserve the exact number of suggestions, and replace only the requested one.
+ recommendationSwaps()[id]=next.p.id;
  save();
  const grid=document.querySelector(".growth-rec-grid");
- if(grid)grid.innerHTML=renderRecommendationCards(opportunityRecommendations(analyzeGrowth()));
+ if(grid)grid.innerHTML=renderRecommendationCards(opportunityRecommendations(result));
+ if(msg)msg.textContent="מצאנו אפשרות אחרת והחלפנו רק את ההמלצה שביקשת.";
 }
 function renderRecommendationCards(rec){
- const esc=escapeHtml,feedback=currentFeedback();
+ const esc=escapeHtml;
  const reasons=x=>{
   const answers=x.evidence.slice(0,2).map(ref=>{const [q,i]=ref.split(":").map(Number);return Q[q][1].split("|")[i];});
   const lead=x.kind==="explore"?"עוד כיוון שכדאי להכיר":"האפשרות הזאת עלתה בעקבות הבחירות";
   return lead+(answers.length?": "+answers.map(a=>"״"+a+"״").join(" וגם ")+".":".")+(x.rule.note?" "+x.rule.note:"");
  };
- if(!rec.length)return '<p>לא מצאנו כרגע הצעה נוספת שיש לה קשר מספיק ברור לתשובות. אפשר לעיין במפת ההזדמנויות המלאה או לעדכן תשובות.</p>';
- return rec.map(x=>{
-  const rating=feedback[x.p.id]||0;
-  return '<article class="growth-opportunity"><span class="growth-label">'+(x.kind==="explore"?'לגלות עוד אפשרות':'מומלץ לפי הבחירות שלי')+'</span><h3>'+esc(x.p.name)+'</h3><p>'+esc(x.p.desc)+'</p><p class="growth-why">'+esc(reasons(x))+'</p><p class="muted">'+esc(x.p.audience||"")+' · תנאי ההצטרפות והזמינות דורשים בירור</p><div class="recommendation-feedback"><label for="rating-'+esc(x.p.id)+'">עד כמה ההמלצה הזו מתאימה לך?</label><select id="rating-'+esc(x.p.id)+'" onchange="rateOpportunity(\''+esc(x.p.id)+'\',this.value)"><option value="0" '+(!rating?'selected':'')+'>בחרו דירוג</option>'+[1,2,3,4,5].map(n=>'<option value="'+n+'" '+(rating===n?'selected':'')+'>'+n+' – '+(["","בכלל לא","מעט","אולי","מתאימה","מתאימה מאוד"][n])+'</option>').join("")+'</select><p class="muted">דירוג 1–2 יחליף את ההמלצה בהצעה אחרת, אם יש התאמה מבוססת.</p></div><button class="secondary" onclick="showProgram('+x.i+')">להכיר את ההזדמנות ←</button></article>';
- }).join("");
+ if(!rec.length)return '<p>לא מצאנו כרגע הצעות עם קשר מספיק ברור לתשובות. אפשר לעיין במפת ההזדמנויות המלאה.</p>';
+ return rec.map(x=>'<article class="growth-opportunity"><span class="growth-label">'+(x.kind==="explore"?'לגלות עוד אפשרות':'מומלץ לפי הבחירות שלי')+'</span><h3>'+esc(x.p.name)+'</h3><p>'+esc(x.p.desc)+'</p><p class="growth-why">'+esc(reasons(x))+'</p><p class="muted">'+esc(x.p.audience||"")+' · תנאי ההצטרפות והזמינות דורשים בירור</p><div class="recommendation-feedback"><button type="button" class="secondary" onclick="swapOpportunity(\''+esc(x.p.id)+'\')">הציעו לי אפשרות אחרת ↻</button></div><button class="secondary" onclick="showProgram('+x.i+')">להכיר את ההזדמנות ←</button></article>').join("");
 }
-function opportunityRecommendations(result){
- const feedback=currentFeedback();
- const candidates=programDetails.map((p,i)=>{
+function opportunityCandidates(result){
+ return programDetails.map((p,i)=>{
   const rule=PROGRAM_MATCH_RULES[p.id];
   if(!rule||!gradeEligibility(p)||["P003","P018"].includes(p.id))return null;
   const hits=rule.options.filter(optionWasChosen);
   const present=hits.filter(ref=>!FUTURE_QUESTION_IDS.has(Number(ref.split(":")[0])));
   const future=hits.filter(ref=>FUTURE_QUESTION_IDS.has(Number(ref.split(":")[0])));
-  // Subject-specific programs need evidence that the subject itself interests the learner.
-  const specialist=rule.strict;
-  const eligibleMatch=!specialist&&(present.length>=2||(present.length>=1&&future.length>=1));
-  // Advanced, selective and prerequisite-based tracks are for exploration, not assumed eligibility.
+  const eligibleMatch=!rule.strict&&(present.length>=2||(present.length>=1&&future.length>=1));
   const score=present.length*2+future.length*.85;
-  return {p,i,tags:PROGRAM_TAGS[p.id]||[],score,match:present.length,growth:future.length,
-   evidence:hits,rule,kind:eligibleMatch?"match":"explore",eligibleMatch};
- }).filter(Boolean).filter(x=>x.evidence.length>0&&!([1,2].includes(feedback[x.p.id])));
- candidates.sort((a,b)=>Number(b.eligibleMatch)-Number(a.eligibleMatch)||b.score-a.score||a.i-b.i);
+  return {p,i,tags:PROGRAM_TAGS[p.id]||[],score,match:present.length,growth:future.length,evidence:hits,rule,kind:eligibleMatch?"match":"explore",eligibleMatch};
+ }).filter(Boolean).filter(x=>x.evidence.length>0)
+ .sort((a,b)=>Number(b.eligibleMatch)-Number(a.eligibleMatch)||b.score-a.score||a.i-b.i);
+}
+function opportunityRecommendations(result){
+ const candidates=opportunityCandidates(result);
  const selected=[];
  for(const x of candidates.filter(x=>x.eligibleMatch)){
   if(selected.length===3)break;
@@ -1181,11 +1191,22 @@ function opportunityRecommendations(result){
   if(selected.length===3)break;
   if(!selected.some(y=>y.i===x.i))selected.push(x);
  }
- // Only one exploration option, and only with explicit questionnaire evidence.
  const explore=candidates.find(x=>x.growth>0&&!x.eligibleMatch&&!selected.some(y=>y.i===x.i))||
- candidates.find(x=>!x.eligibleMatch&&x.evidence.length>=1&&!selected.some(y=>y.i===x.i));
+ candidates.find(x=>!x.eligibleMatch&&!selected.some(y=>y.i===x.i));
  if(explore)selected.push({...explore,kind:"explore"});
- return selected;
+ const swaps=recommendationSwaps();
+ const used=new Set(selected.map(x=>x.p.id));
+ return selected.map(x=>{
+  let target=x.p.id,seen=new Set();
+  while(swaps[target]&&!seen.has(target)){
+   seen.add(target);
+   const replacement=candidates.find(y=>y.p.id===swaps[target]&&!used.has(y.p.id));
+   if(!replacement)break;
+   used.delete(target);used.add(replacement.p.id);
+   x=replacement;target=x.p.id;
+  }
+  return x;
+ });
 }
 const COMMON_FEMALE_NAMES=new Set("ענת,נועה,מיה,מאיה,יעל,רוני,שירה,תמר,דנה,דניאלית,ליה,ליאן,אגם,נויה,נוגה,איילה,אלה,אילה,אביגיל,אורית,הילה,הדרית,רחל,שרה,רבקה,רות,אסתר,אפרת,טליה,יובלית,ליאורית,יסמין,מורן,שני,סתיוית,עדיָה,אדוה,אדווה,רעות,אביטל,שחרית,מיכל,מירב,מירה,מיכאלה,מיכאלה,נטלי,נטע,נגה,סיון,סיוון,אורלי,אורטל,לירוןית,מיטל,יפעת,יפית,אביבה,רותםית,אלינור,אליה,אלינע,לינוי,ליטל,בר,ברית,גאיה,גילי,גלית,אלונה,מיקה,תהל,תהילה,הודיה,מרים,מלכה,נעמה,רונה,אמה,אמילי,אדל,אופירית,אופירה,אלמוגית,אבישג,שילת,שי-לי,שירלי,שיר,רותי,אורנה,יפה,דפנה,הדס,עדןית,מירית,נורית".split(","));
 const COMMON_MALE_NAMES=new Set("איתי,אורי,דוד,דניאל,יונתן,יואב,יוסף,משה,אברהם,יצחק,ישראל,עמית,אמיר,איתן,עומר,עידו,גיא,רועי,רון,אילן,אלון,אריאל,נועם,עילאי,מתן,אופק,נבו,אדם,אורן,רפאל,שמואל,ניר,אביב,ברק,אבי,אריק,יובל,מיכאל,מנחם,יהונתן,טל,תומר,ישי,יהודה,אופיר,עוז,יובל,שלומי,שלמה,חיים,מאור,דביר,עידן,דור,אור,אייל,יוסף,איליי,אליהו".split(","));
@@ -1234,7 +1255,7 @@ function profile(){
  '<section class="growth-story-section"><span class="growth-label">02 · מה כבר מסקרן אותי?</span><h2>התחומים שמעניינים אותך</h2><div class="growth-story-grid">'+pillars+'</div></section>'+
  '<div class="growth-pair"><section class="growth-panel"><span class="growth-label">03 · החיבור המיוחד שלי</span><h3>כשעולמות נפגשים</h3><p>'+esc(link)+'</p></section><section class="growth-panel"><span class="growth-label">04 · הדלת שאני רוצה לפתוח</span><h3>מה הייתי רוצה לפתח?</h3><p>'+esc(aspirationText)+'</p></section></div>'+
  socialText+
- '<section class="growth-recs"><span class="growth-label">05 · הזדמנויות בשבילי</span><h2>מה אפשר לנסות מכאן?</h2><p>מצאנו כמה אפשרויות שיכולות להתאים לתשובות שלך. כדאי להכיר אותן, לשאול שאלות ולבחור את מה שמסקרן אותך באמת.</p><div class="growth-rec-grid">'+cards+'</div></section>'+
+ '<section class="growth-recs"><span class="growth-label">05 · הזדמנויות בשבילי</span><h2>מה אפשר לנסות מכאן?</h2><p>מצאנו כמה אפשרויות שיכולות להתאים לתשובות שלך. כדאי להכיר אותן, לשאול שאלות ולבחור את מה שמסקרן אותך באמת.</p><p class="growth-swap-note" aria-live="polite"></p><div class="growth-rec-grid">'+cards+'</div></section>'+
  '<section class="growth-path"><span class="growth-label">06 · מהסקרנות לצעד הראשון</span><h2>ארבעה צעדים קטנים להמשך הדרך</h2><ol>'+steps.map(t=>'<li>'+esc(t)+'</li>').join("")+'</ol></section>'+
  '<section class="growth-print-reflection"><h3>לקראת שיחה עם המחנכת</h3><p>מה גיליתי על עצמי? איזו הזדמנות מסקרנת אותי? במה ארצה להתנסות השנה?</p><div class="growth-reflection-lines" aria-hidden="true"></div></section>'+
  
