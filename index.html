@@ -1251,10 +1251,17 @@ function swapOpportunity(id){
  if(index<0)return;
  const blocked=new Set([...history.original,...history.seen,...history.slots]);
  // Only genuine, not-previously-shown alternatives grounded in specific answers.
- const alternative=opportunityCandidates(result).find(x=>!blocked.has(x.p.id) && (x.eligibleMatch||x.growth>0||x.match>=2));
+ const alternative=opportunityCandidates(result).find(x=>{
+  if(blocked.has(x.p.id))return false;
+  // Re-check eligibility at the moment of swapping, not only during the initial profile.
+  if(!participation(x.p,"current").ok)return false;
+  // A replacement must have a clear connection to choices about present interests;
+  // aspirations alone are not enough to replace a recommendation.
+  return x.match>=2 || (x.match>=1 && x.growth>=1);
+ });
  const msg=document.querySelector(".growth-swap-note");
  if(!alternative){
-  if(msg)msg.textContent="לא מצאנו כרגע אפשרות חדשה שמתאימה מספיק לתשובות שלך. ההמלצות הקיימות נשארו ללא שינוי.";
+  if(msg)msg.textContent="לא מצאנו כרגע אפשרות חדשה שעומדת גם בהעדפות שסימנת וגם בתנאי השכבה והמגמה שלך. ההמלצה הקיימת נשארה ללא שינוי.";
   return;
  }
  history.slots[index]=alternative.p.id;
@@ -1262,7 +1269,7 @@ function swapOpportunity(id){
  save();
  const grid=document.querySelector(".growth-rec-grid");
  if(grid)grid.innerHTML=renderRecommendationCards(opportunityRecommendations(result));
- if(msg)msg.textContent="החלפנו רק את ההמלצה שביקשת, בתוכנית חדשה שקשורה לבחירות שלך.";
+ if(msg)msg.textContent="החלפנו את ההמלצה בתוכנית נוספת שמתאימה לשכבת הגיל, למגמה ולהעדפות שסימנת. תנאי קבלה נוספים ייבדקו מול רכז התוכנית.";
 }
 function renderRecommendationCards(rec){
  const esc=escapeHtml;
