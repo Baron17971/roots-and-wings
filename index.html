@@ -1418,7 +1418,7 @@ function profile(){
  const socialText=social?'<section class="growth-social"><span class="growth-label">העשייה שלי יכולה להשפיע</span><h3>מעניין אותך לעזור לאחרים? יש לזה מקום אמיתי בבית הספר.</h3><p>חזרת בכמה תשובות אל עזרה, הקשבה או שיתוף פעולה. אלה בחירות שכדאי להפוך להתנסות: אפשר לפנות לרכזת המעורבות החברתית, להכיר אפיקי התנדבות ולהציע יוזמה משלך. בית הספר מברך על יוזמות של תלמידים.</p><p>בכיתות י׳–י״ב המעורבות החברתית היא גם חלק מחובות הלימודים. עשייה משמעותית ומתמשכת עשויה לתרום לעמידה בקריטריונים לתעודת בגרות חברתית מצטיינת.</p><p><strong>רעיון לצעד ראשון:</strong> לבחור צורך קטן בקהילה או בבית הספר ולשאול את רכזת המעורבות החברתית איך אפשר לפעול.</p></section>':'';
  const steps=[
  'להתבונן: לבחור מתוך הפרופיל נושא אחד שמעניין אותך ולדייק מה היית רוצה לגלות בו.',
- 'להתנסות: להשתתף בפעילות או לשוחח עם מי שכבר מכיר אותה, לפני שמתחייבים למסלול.',
+ 'להתנסות: לשוחח עם המחנכת על פעילות מסקרנת ולבדוק יחד אם ואיך אפשר להשתלב בה.',
  social?'להשפיע: להציע יוזמה קטנה או להצטרף לעשייה קהילתית בתיאום רכזת המעורבות החברתית.':'להרחיב: להתנסות גם בתחום נוסף, שלא נמצא בראש הבחירות שלך.',
  'לחזור ולבחור: אחרי ההתנסות לשאול מה עורר סקרנות, מה היה משמעותי ומה תרצה להמשיך לפתח.'
  ];
@@ -1428,7 +1428,7 @@ function profile(){
  '<section class="growth-story-section"><span class="growth-label">02 · מה כבר מסקרן אותי?</span><h2>התחומים שמעניינים אותך</h2><div class="growth-story-grid">'+pillars+'</div></section>'+
  '<div class="growth-pair"><section class="growth-panel"><span class="growth-label">03 · החיבור המיוחד שלי</span><h3>כשעולמות נפגשים</h3><p>'+esc(link)+'</p></section><section class="growth-panel"><span class="growth-label">04 · הדלת שאני רוצה לפתוח</span><h3>מה הייתי רוצה לפתח?</h3><p>'+esc(aspirationText)+'</p></section></div>'+
  socialText+initiativeText+
- '<section class="growth-recs"><span class="growth-label">05 · הזדמנויות בשבילי</span><h2>מה אפשר לנסות מכאן?</h2><p>מצאנו כמה אפשרויות שיכולות להתאים לתשובות שלך. כדאי להכיר אותן, לשאול שאלות ולבחור את מה שמסקרן אותך באמת.</p><p class="growth-swap-note" aria-live="polite"></p><div class="growth-rec-grid">'+cards+'</div></section>'+
+ '<section class="growth-recs"><span class="growth-label">05 · הזדמנויות בשבילי השנה</span><h2>מה אפשר לנסות השנה?</h2><p>אלה אפשרויות לשנת הלימודים הנוכחית, בהתאם לשכבה ולמגמות. אפשר לבחור אחת או שתיים לשיחה עם המחנכת; זו אינה הרשמה, התחייבות או הבטחת קבלה.</p><p class="growth-swap-note" aria-live="polite"></p><div class="growth-rec-grid">'+cards+'</div></section>'+
  futureCards+
  '<section class="growth-path"><span class="growth-label">06 · מהסקרנות לצעד הראשון</span><h2>ארבעה צעדים קטנים להמשך הדרך</h2><ol>'+steps.map(t=>'<li>'+esc(t)+'</li>').join("")+'</ol></section>'+
  '<section class="growth-print-reflection"><h3>לקראת שיחה עם המחנכת</h3><p>מה גיליתי על עצמי? איזו הזדמנות מסקרנת אותי? במה ארצה להתנסות השנה?</p><div class="growth-reflection-lines" aria-hidden="true"></div></section>'+
@@ -1443,23 +1443,23 @@ function choiceCategories(key){
  const esc=escapeHtml;
  return Object.entries(groups).map(([cat,entries])=>{
   const selected=entries.filter(x=>state[key].includes(x.i)).length;
-  const choices=entries.map(({p,i,fit})=>'<label class="choice choose-option"><input type="checkbox" '+(state[key].includes(i)?'checked':'')+(key==='future'&&state.future.length>=futureChoiceTarget()&&!state.future.includes(i)?' disabled':'')+' onchange="pick('+i+',\''+key+'\')"><span>'+esc(p.name)+'</span></label>').join('');
+  const choices=entries.map(({p,i,fit})=>'<label class="choice choose-option"><input type="checkbox" '+(state[key].includes(i)?'checked':'')+(((key==='future'&&state.future.length>=futureChoiceTarget())||(key==='current'&&state.current.length>=2))&&!state[key].includes(i)?' disabled':'')+' onchange="pick('+i+',\''+key+'\')"><span>'+esc(p.name)+'</span></label>').join('');
   return '<details class="choose-group" data-choice-group="'+key+'|'+esc(cat)+'"><summary><span>'+esc(cat)+'</span><span class="choose-group-meta">'+(selected?selected+' נבחרו · ':'')+entries.length+' אפשרויות <span class="choose-chevron">⌄</span></span></summary><div class="choose-options">'+choices+'</div></details>';
  }).join('');
 }
 function choose(){
- state.current=(state.current||[]).filter(i=>programDetails[i]&&participation(programDetails[i],'current').ok);
- state.future=(state.future||[]).filter(i=>programDetails[i]&&participation(programDetails[i],'future').ok);
+ state.current=(state.current||[]).filter(i=>programDetails[i]&&participation(programDetails[i],'current').ok).slice(0,2);
+ state.future=(state.future||[]).filter(i=>programDetails[i]&&participation(programDetails[i],'future').ok).slice(0,2);
  save();
  if(!hasIntroduction()){location.hash='#start';return;}
  if(!Q.every((_,i)=>Array.isArray(state.answers[i])&&state.answers[i].length>0)){location.hash='#quiz';return;}
- view('<div class="shell choose-page">'+stepper(4)+'<h2>הבחירות שלי</h2><p>מוצגות תוכניות שמתאימות לשכבת הגיל ולמגמות שציינת; הבחירות לעתיד מיועדות לשנת הלימודים הבאה בלבד, והצטרפות אליהן עשויה לדרוש בחירת מגמה או מיון. תנאי קבלה נוספים דורשים אישור.</p><section class="choose-section"><h3>השנה אני רוצה...</h3><p class="muted">'+state.current.length+' תוכניות נבחרו · יש לבחור לפחות אחת</p>'+choiceCategories('current')+'</section><section class="choose-section"><h3>בשנת הלימודים הבאה...</h3><p class="muted">'+state.future.length+' מתוך '+futureChoiceTarget()+' תוכניות נבחרו</p>'+choiceCategories('future')+'</section><div class="actions"><button '+(!state.current.length||state.future.length!==futureChoiceTarget()?'disabled':'')+' onclick="location.hash=\'#journey\'">לסיכום הבחירות ←</button></div></div>');
+ view('<div class="shell choose-page">'+stepper(4)+'<h2>הבחירות שלי</h2><p>מוצגות תוכניות שמתאימות לשכבת הגיל ולמגמות שציינת; הפרופיל מציג אפשרויות לשנה הנוכחית בלבד. בוחרים אחת או שתיים לשיחה עם המחנכת, ועוד שתי אפשרויות למחשבה לקראת שנת הלימודים הבאה בלבד. הבחירות אינן הרשמה או התחייבות, והצטרפות לתוכנית מותנית בתנאיה.</p><section class="choose-section"><h3>השנה מסקרן אותי לנסות...</h3><p class="muted">'+state.current.length+' מתוך 2 אפשרויות לשיחה עם המחנכת · בוחרים אחת או שתיים</p>'+choiceCategories('current')+'</section><section class="choose-section"><h3>אולי בשנה הבאה...</h3><p class="muted">'+state.future.length+' מתוך '+futureChoiceTarget()+' תוכניות נבחרו</p>'+choiceCategories('future')+'</section><div class="actions"><button '+(!state.current.length||state.future.length!==futureChoiceTarget()?'disabled':'')+' onclick="location.hash=\'#journey\'">לסיכום הבחירות ←</button></div></div>');
  document.querySelectorAll('.choose-group').forEach(el=>{el.open=(window.rwOpenChoiceGroups||[]).includes(el.dataset.choiceGroup);el.addEventListener('toggle',()=>{const key=el.dataset.choiceGroup;const opened=new Set(window.rwOpenChoiceGroups||[]);if(el.open)opened.add(key);else opened.delete(key);window.rwOpenChoiceGroups=[...opened];});});
 }
 function pick(i,key){
  let a=state[key];
  if(!programDetails[i]||!participation(programDetails[i],key).ok)return;
- state[key]=a.includes(i)?a.filter(x=>x!==i):key==="future"&&a.length>=futureChoiceTarget()?a:[...a,i];
+ state[key]=a.includes(i)?a.filter(x=>x!==i):((key==="future"&&a.length>=futureChoiceTarget())||(key==="current"&&a.length>=2))?a:[...a,i];
  save();
  const currentCount=document.getElementById("choose-current-count");
  const futureCount=document.getElementById("choose-future-count");
@@ -1471,7 +1471,7 @@ function pick(i,key){
   const total=group.querySelectorAll('input[type="checkbox"]').length;
   const meta=group.querySelector(".choose-group-meta");
   if(meta)meta.innerHTML=(chosen?chosen+" נבחרו · ":"")+total+' אפשרויות <span class="choose-chevron">⌄</span>';
-  if(kind==="future")group.querySelectorAll('input[type="checkbox"]').forEach(box=>{box.disabled=state.future.length>=futureChoiceTarget()&&!box.checked;});
+  group.querySelectorAll('input[type="checkbox"]').forEach(box=>{box.disabled=(kind==="future"?state.future.length>=futureChoiceTarget():state.current.length>=2)&&!box.checked;});
  });
  const finish=document.querySelector(".choose-page .actions button");
  if(finish)finish.disabled=!state.current.length||state.future.length!==futureChoiceTarget();
@@ -1559,7 +1559,7 @@ async function downloadJourneyPdf(button){
    for(const i of indices){const program=programDetails[i];if(program)write("• "+program.name+" — "+program.category);}
   }
   section("השנה אני רוצה...",state.current);
-  section("בשנים הבאות...",state.future);
+  section("אולי בשנה הבאה...",state.future);
   write("אפשר להביא את המפה לשיחה עם המחנכת ולבחור יחד איך להמשיך.");
   commit();
   const safeName=String(state.name||"תלמיד").replace(/[\\/:*?"<>|]/g,"").trim()||"תלמיד";
