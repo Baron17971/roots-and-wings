@@ -1194,7 +1194,9 @@ function participation(p,when="current"){
  const matched=target.filter(x=>years.includes(x));
  if(!matched.length)return {ok:false,status:"grade",reason:"התוכנית אינה מיועדת לשכבת הגיל הרלוונטית"};
  const required=c.majors||[],actual=studentMajors();
- const majorMatch=!required.length||required.some(m=>actual.some(x=>x===m||x.includes(m+" ")||x.startsWith(m+"־")||x.startsWith(m+"-")));
+ // A student's major limits only programs that explicitly require that major.
+ // All other interests, including music, Bible, humanities and culture, remain eligible.
+ const majorMatch=!required.length||required.some(m=>actual.some(x=>x===m||x.startsWith(m+"־")||x.startsWith(m+"-")));
  if(!majorMatch)return {ok:false,status:"major",reason:"נדרשת מגמת "+required.join("/")};
  const futureMajor=false;
  const pending=!!c.verify||futureMajor;
@@ -1453,7 +1455,7 @@ function choose(){
  save();
  if(!hasIntroduction()){location.hash='#start';return;}
  if(!Q.every((_,i)=>Array.isArray(state.answers[i])&&state.answers[i].length>0)){location.hash='#quiz';return;}
- view('<div class="shell choose-page">'+stepper(4)+'<h2>הבחירות שלי</h2><p>מוצגות תוכניות שמתאימות לשכבת הגיל ולמגמות שציינת; הפרופיל מציג אפשרויות לשנה הנוכחית בלבד. בוחרים אחת או שתיים לשיחה עם המחנכת, ועוד שתי אפשרויות למחשבה לקראת שנת הלימודים הבאה בלבד. הבחירות אינן הרשמה או התחייבות, והצטרפות לתוכנית מותנית בתנאיה.</p><section class="choose-section"><h3>השנה מסקרן אותי לנסות...</h3><p class="muted">'+state.current.length+' מתוך 2 אפשרויות לשיחה עם המחנכת · בוחרים אחת או שתיים</p>'+choiceCategories('current')+'</section><section class="choose-section"><h3>אולי בשנה הבאה...</h3><p class="muted">'+state.future.length+' מתוך '+futureChoiceTarget()+' תוכניות נבחרו</p>'+choiceCategories('future')+'</section><div class="actions"><button '+(!state.current.length||state.future.length!==futureChoiceTarget()?'disabled':'')+' onclick="location.hash=\'#journey\'">לסיכום הבחירות ←</button></div></div>');
+ view('<div class="shell choose-page">'+stepper(4)+'<h2>הבחירות שלי</h2><p>מוצגות תוכניות לפי שכבת הגיל ותנאי ההצטרפות. המגמה מגבילה רק תוכניות שדורשות אותה במפורש; אפשר לבחור גם בתחומים נוספים שמסקרנים אותך. הפרופיל מציג אפשרויות לשנה הנוכחית בלבד. בוחרים אחת או שתיים לשיחה עם המחנכת, ועוד שתי אפשרויות למחשבה לקראת שנת הלימודים הבאה בלבד. הבחירות אינן הרשמה או התחייבות, והצטרפות לתוכנית מותנית בתנאיה.</p><section class="choose-section"><h3>השנה מסקרן אותי לנסות...</h3><p class="muted">'+state.current.length+' מתוך 2 אפשרויות לשיחה עם המחנכת · בוחרים אחת או שתיים</p>'+choiceCategories('current')+'</section><section class="choose-section"><h3>אולי בשנה הבאה...</h3><p class="muted">'+state.future.length+' מתוך '+futureChoiceTarget()+' תוכניות נבחרו</p>'+choiceCategories('future')+'</section><div class="actions"><button '+(!state.current.length||state.future.length!==futureChoiceTarget()?'disabled':'')+' onclick="location.hash=\'#journey\'">לסיכום הבחירות ←</button></div></div>');
  document.querySelectorAll('.choose-group').forEach(el=>{el.open=(window.rwOpenChoiceGroups||[]).includes(el.dataset.choiceGroup);el.addEventListener('toggle',()=>{const key=el.dataset.choiceGroup;const opened=new Set(window.rwOpenChoiceGroups||[]);if(el.open)opened.add(key);else opened.delete(key);window.rwOpenChoiceGroups=[...opened];});});
 }
 function pick(i,key){
