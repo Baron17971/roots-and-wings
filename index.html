@@ -964,15 +964,29 @@ body{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
 #about-principles .ap-carousel-stage .ap-carousel-btn{box-shadow:0 3px 14px rgba(6,47,75,.14);background:rgba(255,255,255,.94)}
 @media(max-width:650px){#about-principles .ap-carousel-stage .ap-chapter{padding-bottom:105px}#about-principles .ap-carousel-stage>.ap-carousel-buttons{bottom:22px;left:auto;right:22px;transform:none;justify-content:flex-start;gap:12px}}
 
-/* Restore original pre-shortening proportions of the mobile watercolor principle cards. */
+/* Mobile principles: content-led height with reserved watercolor artwork space. */
 @media(max-width:849px){
- #about-principles .ap-carousel-stage .ap-chapter{height:auto!important;min-height:610px!important;padding-bottom:30px!important}
- #about-principles .ap-carousel-stage .ap-chapter::after{content:none!important}
- #about-principles .ap-carousel-stage .ap-chapter:first-child{min-height:775px!important;padding-bottom:345px!important}
+ #about-principles .ap-carousel-stage .ap-chapter,
+ #about-principles .ap-carousel-stage .ap-chapter:first-child{
+  box-sizing:border-box!important;display:block!important;
+  height:auto!important;min-height:0!important;
+  padding:22px 20px 165px!important;
+  background-image:linear-gradient(180deg,#effafb,#edfafa)!important;
+  background-color:#effafb!important;
+ }
+ #about-principles .ap-carousel-stage .ap-chapter::after{
+  content:""!important;position:absolute;left:0;right:0;bottom:0;
+  height:148px;z-index:0;pointer-events:none;
+  background:var(--principle-art) center bottom / 100% auto no-repeat!important;
+  -webkit-mask-image:linear-gradient(to bottom,transparent,black 30%)!important;
+  mask-image:linear-gradient(to bottom,transparent,black 30%)!important;
+ }
+ #about-principles .ap-carousel-stage .ap-chapter-body{position:relative;z-index:1}
 }
 @media(max-width:540px){
- #about-principles .ap-carousel-stage .ap-chapter{min-height:590px!important;padding-bottom:25px!important}
- #about-principles .ap-carousel-stage .ap-chapter:first-child{min-height:775px!important;padding-bottom:345px!important}
+ #about-principles .ap-carousel-stage .ap-chapter,
+ #about-principles .ap-carousel-stage .ap-chapter:first-child{padding:20px 18px 152px!important}
+ #about-principles .ap-carousel-stage .ap-chapter::after{height:138px}
 }
 
 /* Expanded opportunity content appears only inside the detail dialog */
