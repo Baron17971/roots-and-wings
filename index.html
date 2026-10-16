@@ -1178,12 +1178,12 @@ body.home-page footer{display:block!important;flex:none!important;min-height:0!i
 }
 /* Mobile landing: full-screen artwork only; navigation appears after entering. */
 @media(max-width:720px){
- html:has(body.home-page),body.home-page{height:100%;overflow:hidden!important;overscroll-behavior:none}
+ html:has(body.home-page),body.home-page{height:auto;min-height:100%;overflow-x:clip!important;overflow-y:auto!important;overscroll-behavior-x:none}
  body.home-page>.site-header,body.home-page>header.site-header,body.home-page>footer{display:none!important}
- body.home-page #app{height:100dvh;min-height:100dvh;overflow:hidden!important;background:#062f4b;display:flex;align-items:center;justify-content:center}
- body.home-page .approved-hero{height:min(177.7778vw,100dvh);width:min(100vw,56.25dvh);margin:0!important;padding:0!important;overflow:hidden!important;display:block;background:#062f4b!important}
- body.home-page .approved-hero>picture{display:block;position:relative;width:min(100vw,56.25dvh);height:min(177.7778vw,100dvh);max-width:100%;max-height:100dvh;margin:auto}
- body.home-page .approved-hero picture img{display:block;width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important}
+ body.home-page #app{width:100%;height:auto;min-height:100dvh;overflow-x:clip!important;overflow-y:visible!important;background:#062f4b;display:block}
+ body.home-page .approved-hero{height:auto;width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;overflow:hidden!important;display:block;background:#062f4b!important}
+ body.home-page .approved-hero>picture{display:block;position:relative;width:100%!important;height:auto!important;max-width:100%!important;max-height:none!important;margin:0!important}
+ body.home-page .approved-hero picture img{display:block;width:100%!important;height:auto!important;max-width:100%!important;object-fit:contain!important;object-position:center!important}
  body.home-page .approved-hero .hs-start{left:28%!important;top:40%!important;width:45%!important;height:7%!important;border-radius:999px;display:block!important}
  body.home-page .approved-hero .hs-discover{display:none!important}
 }
