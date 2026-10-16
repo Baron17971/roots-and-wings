@@ -1046,6 +1046,39 @@ body{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
 .growth-initiative-card p:last-child{margin-bottom:0}
 @media(max-width:720px){.growth-initiative-card{padding:23px 20px!important;border-radius:17px!important;margin:22px 0 28px!important}.growth-initiative-card p{font-size:15px}}
 @media print{.growth-initiative-card{background:#fff!important;box-shadow:none!important;border:1px solid #8cbac0!important;border-right:4px solid #1596a3!important;break-inside:avoid;page-break-inside:avoid}.growth-initiative-card .growth-label{background:#e7f5f3!important}}
+
+/* Refined navigation — coordinated with the dark teal hero, RTL, spacious and responsive. */
+.site-header{
+  --rw-header-ink:#063c53;
+  background:linear-gradient(100deg,#073f55 0%,#07576a 53%,#076678 100%)!important;
+  border:0!important;
+  box-shadow:0 5px 20px rgba(3,43,56,.15);
+  display:grid!important;
+  grid-template-columns:minmax(205px,1fr) minmax(0,3.4fr) minmax(205px,1fr);
+  align-items:center!important;
+  gap:18px!important;
+  padding:18px clamp(22px,4.5vw,86px)!important;
+  min-height:88px;
+}
+.site-header .logo{grid-column:1;grid-row:1;justify-self:start;white-space:nowrap;font-size:clamp(21px,1.75vw,27px)!important;line-height:1.3;font-weight:850;letter-spacing:-.35px;color:#fff!important}
+.site-header nav{grid-column:2;grid-row:1;display:flex!important;justify-content:center!important;align-items:center;flex-wrap:nowrap!important;gap:clamp(15px,1.8vw,34px)!important;padding:0!important;margin:0!important;min-width:0}
+.site-header nav a{display:inline-flex;align-items:center;justify-content:center;min-height:43px;padding:7px 1px!important;border-bottom:2px solid transparent;text-decoration:none;color:#edfafd!important;font-size:clamp(15px,1.14vw,18px)!important;font-weight:700!important;line-height:1.4;white-space:nowrap;transition:color .18s ease,border-color .18s ease}
+.site-header nav a:hover,.site-header nav a:focus-visible{color:#fff!important;border-bottom-color:#84d9d7;outline-offset:5px}
+@media(min-width:1101px){.site-header::after{content:"";grid-column:3;grid-row:1}}
+@media(min-width:721px) and (max-width:1100px){
+ .site-header{grid-template-columns:1fr!important;gap:13px!important;padding:17px 28px 14px!important}
+ .site-header .logo{grid-column:1;grid-row:1;justify-self:center!important}
+ .site-header nav{grid-column:1;grid-row:2;gap:clamp(15px,2vw,27px)!important;width:100%;justify-content:center!important}
+ .site-header nav a{font-size:16px!important}
+ .site-header::after{display:none}
+}
+@media(max-width:720px){
+ .site-header{display:flex!important;flex-direction:column;align-items:stretch!important;gap:11px!important;padding:15px 0 10px!important;min-height:unset}
+ .site-header .logo{display:block;align-self:center!important;text-align:center;font-size:23px!important;padding:0 18px}
+ .site-header nav{order:2!important;flex:0 0 auto!important;display:flex!important;flex-wrap:nowrap!important;justify-content:flex-start!important;gap:12px!important;overflow-x:auto!important;overflow-y:hidden;padding:2px 17px 7px!important;width:100%;scrollbar-width:thin;scrollbar-color:#83cdce transparent;scroll-snap-type:x proximity}
+ .site-header nav a{flex:none;scroll-snap-align:start;font-size:15px!important;min-height:41px;padding:8px 10px!important;border:1px solid rgba(192,235,234,.22);border-radius:10px;background:rgba(255,255,255,.065)}
+ .site-header nav a:hover,.site-header nav a:focus-visible{background:rgba(255,255,255,.16);border-color:#86dcda}
+}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#choose">הבחירות שלי</a></nav></header><main id="app"></main><footer>מקיף ז׳ אשדוד | פיתוח: ענת ברון לוביש | ייעוץ פדגוגי: ענת ברון לוביש ואתי נייברג</footer><script src="/programs-rich.js"></script><script>
 const Q=[["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיזיקה, הנדסה וניסויים|סטודיו לשירה ולמוזיקה|מועדון תכנות, AI ופיתוח משחקים|מגרש לכדורסל או לכדורגל|חדר דיונים ומנהיגות|מסע לארכאולוגיה, היסטוריה ותרבויות|סטודיו למחול ולתנועה",3],["חברים מתכננים פרויקט גדול. איזה תפקיד טבעי לך?","להציע רעיונות|לארגן משימות|לעזור לאנשים לשתף פעולה|לפתור בעיות טכניות|לעצב תוצר|להציג מול קהל",2],["מה יכול לגרום לך לשכוח מהשעה?","בניית דברים|לשיר או לנגן בהרכב מוזיקלי|שיחות עמוקות|אימונים, משחקי כדור או ריצה|כתיבה|ניסויים בביולוגיה ובחקר החיים|עזרה לאחרים",3],["נתקלת בבעיה קשה. מה תהיה התגובה הראשונה?","לנסות בדרך אחרת|לחקור את הבעיה|להתייעץ עם אחרים|לתכנן פתרון|לבדוק באופן מעשי|להבין את ההקשר",1],["אם היית יכול ליזום משהו חדש בבית הספר, במה היית בוחר?","לפתח המצאה או לערוך ניסוי שיעזור לפתור בעיה בבית הספר|ליצור אפליקציה, משחק אינטראקטיבי או כלי דיגיטלי שיעזור לתלמידים ללמוד|להקים הרכב מוזיקלי, להפיק מופע או ליצור מרחב לאמנות ולמחול|לארגן תחרות ריצה, אתלטיקה או אתגר ספורטיבי|להוביל יוזמה שבה תלמידים עוזרים זה לזה ומרגישים שייכים|ליזום פרויקט לשמירה על הסביבה, החופים או המרחבים בבית הספר|להקים מועדון לחקר ההיסטוריה, התרבויות והרעיונות שמעצבים את עולמנו",2],["איזו מחמאה תשמח אותך במיוחד?","יש לך רעיונות|אפשר לסמוך עליך|אתה יודע להקשיב|אתה לא מוותר|אתה מסביר מצוין|אתה חושב לעומק",2],["נכנסת למקום חדש. מה סביר שתעשה?","אתחיל שיחה|אתבונן ואלמד|אחפש פעילות|אתחבר לאדם אחד|אשאל שאלות|אתחיל ממשימה",1],["איזה סוג אתגר היה מסקרן אותך?","לתכנת רובוט|ליצור מופע מחול או סרט|להוביל יוזמה חברתית|לחקור תעלומה מדעית|להשתתף בדיבייט|לחקור אירוע היסטורי|להתחרות בריצה או באתלטיקה",3],["מתי אתה מרגיש שיצא ממך משהו טוב?","כשהבנתי משהו קשה|כשעזרתי למישהו|כששרתי או יצרתי מוזיקה|כששיפרתי שיא בספורט או בריצה|כשהצגתי בפני קהל|כשעבדתי עם קבוצה",2],["איזה סרטון יעצור אותך בגלילה?","תגלית בכימיה, פיזיקה או מדעי החיים|סיפור אנושי|המצאה|שירה ומוזיקה|משחק כדורגל מקצועי|אירוע היסטורי|דיון על סוגיה חברתית",3],["קיבלת קופסה עם חומרים בלי הוראות. מה תעשה?","אבנה ואגלה|אתכנן מראש|אחפש השראה|אעבוד עם חברים|אנסה משהו נועז|אחקור את החומרים",1],["אילו יכולות היית שמח לקבל?","ביטחון מול קהל|חשיבה יצירתית|מנהיגות|תכנות|כתיבה|לרקוד ולנוע על במה|הקשבה",3],["איזו שאלה היית רוצה לפצח?","איך המוח עובד|איך בונים משחק|איך משנים דעות|למה אנשים מתנהגים אחרת|איך בונים עסק|איך חוקרים תרבויות וממצאים מהעבר",2],["מה נותן לך אנרגיה במשימה מאתגרת?","לראות התקדמות|להתחרות בעצמי|לעבוד עם חברים|לגלות הפתעה|לעזור למישהו|לנסות בחופשיות|להגיע לדיוק",2],["למי היית מצטרף ליום עבודה?","חוקרת חלל|מעצב משחקים|רופאה|רקדן, כוריאוגרפית או יוצרת קולנוע|מהנדסת|פעיל חברתי|היסטוריון",3],["איזה משפט מתאר אותך?","אני מבחין בפרטים|יש לי רעיונות|אני מחבר בין אנשים|אני אוהב להבין מערכות|אני עובד בידיים|אני אוהב לעזור|אני אוהב להביע עמדה",2],["איזו קבוצה היית רוצה להקים או להצטרף אליה?","מעבדת מדע וממציאים|הרכב של שירה ונגינה|קבוצת לימוד בחברותא על דמויות, סיפורים ודילמות מהתנ״ך|נבחרת כדורסל|צוות התנדבות ומנהיגות|מועדון תכנות, רובוטיקה וסייבר|מועדון תרבויות, ארכאולוגיה וחקר העבר",3],["איך הכי נוח לך להתחיל ללמוד עולם חדש?","להתנסות|לצפות בהדגמה|לקרוא ולחקור|ללמוד עם חבר|לשמוע הסבר|לבנות תוצר",2],["איזה הישג בעוד שנה יגרום לך להתגאות?","למדתי מיומנות|יזמתי שינוי|העזתי לשיר ולהופיע מול קהל|הצלחתי בתחרות|יצרתי יצירה|התמדתי|העמקתי בנושא שחשוב לי",3],["איזו דלת היית רוצה לפתוח?","מדע ומחקר|טכנולוגיה|מחול ואמנות התנועה|מנהיגות|חברה וקהילה|ספורט, נבחרות ואתלטיקה|היסטוריה, תנ״ך ותרבויות",3]];
 const dims=["מדע וחקר","טכנולוגיה וחדשנות","חברה ורוח","אמנות ויצירה","מנהיגות ויוזמה","ספורט ואתגר"];
