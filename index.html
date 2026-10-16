@@ -1316,6 +1316,33 @@ body.home-page .rw-open-catalog{display:flex;direction:rtl;align-items:center;ga
 @media(max-width:650px){
  #programDialog .modal-panel{border-radius:25px;max-height:calc(100dvh - 28px);padding:28px 23px}
 }
+
+/* Editorial category identity and restrained feedback for opportunity cards. */
+.catalogue .opportunity-card{--cat:#138998;--cat-soft:#e8f6f4;--cat-border:#cfeae8;isolation:isolate;border-color:var(--cat-border);background:linear-gradient(155deg,#fff 60%,var(--cat-soft) 180%);transition:transform .24s cubic-bezier(.2,.8,.2,1),box-shadow .24s ease,border-color .24s ease}
+.catalogue .opportunity-card:before{height:4px;background:var(--cat)}
+.catalogue .opportunity-card.category-science{--cat:#158d9d;--cat-soft:#dff4f4;--cat-border:#c9e8e9}
+.catalogue .opportunity-card.category-humanities{--cat:#779b83;--cat-soft:#eaf3e9;--cat-border:#d9e8dc}
+.catalogue .opportunity-card.category-leadership{--cat:#267a82;--cat-soft:#e1f0ed;--cat-border:#cfe4e0}
+.catalogue .opportunity-card.category-arts{--cat:#b58b4d;--cat-soft:#f8f1e4;--cat-border:#ebdec8}
+.catalogue .opportunity-card.category-sport{--cat:#238da6;--cat-soft:#e3f3f8;--cat-border:#cde5ee}
+.catalogue .opportunity-card.category-excellence{--cat:#a28c62;--cat-soft:#f5f1e8;--cat-border:#e9e1d1}
+.catalogue .opportunity-card .program-symbol{background:var(--cat-soft);color:var(--cat);border:1px solid var(--cat-border);transition:transform .26s ease;background-clip:padding-box}
+.catalogue .opportunity-card .program-symbol svg{width:33px;height:33px;display:block}
+.catalogue .opportunity-card .category-caption{color:var(--cat)}
+.catalogue .opportunity-card .scope-pill{background:var(--cat-soft);border-color:var(--cat-border)}
+.catalogue .opportunity-card .audience{background:color-mix(in srgb,var(--cat-soft) 62%,white)}
+.catalogue .opportunity-card .details-link{color:var(--cat);transition:color .2s ease,transform .2s ease}
+.catalogue .opportunity-card:hover{transform:translateY(-4px);box-shadow:0 16px 36px rgba(7,55,76,.11)}
+.catalogue .opportunity-card:hover .program-symbol{transform:rotate(-5deg) scale(1.045)}
+.catalogue .opportunity-card:focus-within{outline:2px solid var(--cat);outline-offset:3px}
+.catalogue .filter-btn{transition:background-color .2s ease,transform .2s ease,border-color .2s ease}
+.catalogue .filter-btn:hover{transform:translateY(-1px)}
+#programDialog{animation:rw-overlay-in .2s ease-out both}
+#programDialog .modal-panel{animation:rw-dialog-in .24s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rw-overlay-in{from{opacity:0}to{opacity:1}}
+@keyframes rw-dialog-in{from{opacity:0;transform:translateY(10px) scale(.987)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(hover:none){.catalogue .opportunity-card:hover{transform:none}.catalogue .opportunity-card:hover .program-symbol{transform:none}.catalogue .opportunity-card:active{border-color:var(--cat);box-shadow:0 6px 24px rgba(7,55,76,.12)}}
+@media(prefers-reduced-motion:reduce){.catalogue .opportunity-card,.catalogue .opportunity-card .program-symbol,.catalogue .filter-btn,#programDialog,#programDialog .modal-panel{animation:none!important;transition:none!important;transform:none!important}}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><button class="rw-mobile-menu-toggle" type="button" aria-label="פתיחת תפריט ניווט" aria-controls="rw-main-navigation" aria-expanded="false" onclick="rwToggleMobileMenu(this)"><span aria-hidden="true">☰</span><span>תפריט</span></button><nav id="rw-main-navigation" aria-label="ניווט ראשי" onclick="if(event.target.closest('a'))rwCloseMobileMenu()"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog" class="rw-catalog-nav-link">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#choose">הבחירות שלי</a></nav><div class="rw-menu-backdrop" aria-hidden="true" onclick="rwCloseMobileMenu()"></div></header><main id="app"></main><footer class="rw-site-credits"><span class="rw-school-credit">מקיף ז׳ אשדוד</span><span class="rw-credit-details"><span class="rw-credit-separator"> | </span><span class="rw-credit-development">פיתוח: ענת ברון לוביש</span><span class="rw-credit-middle-separator"> | </span><span class="rw-credit-pedagogy">ייעוץ פדגוגי: ענת ברון לוביש ואתי נייברג</span></span></footer><script src="/programs-rich.js"></script><script>
 function rwToggleMobileMenu(button){const header=button.closest(".site-header");if(header.classList.contains("rw-menu-open")){rwCloseMobileMenu();return}header.classList.add("rw-menu-open");document.body.classList.add("rw-mobile-nav-lock");button.setAttribute("aria-expanded","true");button.setAttribute("aria-label","סגירת תפריט ניווט");button.querySelector("[aria-hidden]").textContent="✕";}
 function rwCloseMobileMenu(){const header=document.querySelector(".site-header");if(!header)return;header.classList.remove("rw-menu-open");document.body.classList.remove("rw-mobile-nav-lock");const button=header.querySelector(".rw-mobile-menu-toggle");if(button){button.setAttribute("aria-expanded","false");button.setAttribute("aria-label","פתיחת תפריט ניווט");button.querySelector("[aria-hidden]").textContent="☰";}}
@@ -1865,7 +1892,14 @@ function journey(){
  const visible='<div class="shell journey-screen">'+stepper(4)+'<h2>הבחירות שלי</h2>'+selections+'<div class="journey-export"><p>סיימת לבחור. אפשר להדפיס או לשמור מסמך הכולל את הפרופיל האישי ואת הבחירות שלך.</p><div class="journey-export-buttons"><button type="button" onclick="downloadJourneyPdf(this)">הורדת המפה שלי כ־PDF ↓</button><button class="secondary" type="button" onclick="window.print()">הדפסה <span class="rw-arrow-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M26 16H7m8-8-8 8 8 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button></div><p class="muted">הקובץ נשמר במכשיר שלך ואינו נשלח לבית הספר.</p></div></div>';
  view(visible+'<div class="print-only-growth">'+printProfile.outerHTML+selections+'</div>');
 }
-function programCard(p,i,compact=false){const marks={"מדע וטכנולוגיה":"⚛","חברה ורוח":"✦","חברה ומנהיגות":"♧","אמנות ויצירה":"♫","ספורט ואתגר":"↗","מצוינות אישית":"◇"};return '<article class="opportunity-card"><div class="opportunity-top"><div class="program-symbol">'+(marks[p.category]||'✦')+'</div><span class="scope-pill">'+escapeHtml(p.scope)+'</span></div><span class="category-caption">'+escapeHtml(p.category)+'</span><h3>'+escapeHtml(p.name)+'</h3><p class="program-description">'+escapeHtml(p.desc)+'</p><div class="audience"><strong>למי זה מתאים?</strong><p>'+escapeHtml(p.audience)+'</p></div><div class="program-foot"><span>תנאי ההצטרפות ומועדים באימות</span><button class="details-link" onclick="showProgram('+i+')">פרטים נוספים <span class="rw-arrow-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M26 16H7m8-8-8 8 8 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button></div></article>'}
+function programCard(p,i,compact=false){const themes={
+"מדע וטכנולוגיה":['science','<circle cx="12" cy="12" r="2"/><ellipse cx="12" cy="12" rx="9" ry="3.7"/><ellipse cx="12" cy="12" rx="9" ry="3.7" transform="rotate(60 12 12)"/><ellipse cx="12" cy="12" rx="9" ry="3.7" transform="rotate(120 12 12)"/>'],
+"חברה ורוח":['humanities','<path d="M12 6.5c-2.5-1.8-5.5-1.7-8-1v13c3-.8 5.5-.6 8 1 2.5-1.6 5-1.8 8-1v-13c-2.5-.7-5.5-.8-8 1Zm0 0v13"/>'],
+"חברה ומנהיגות":['leadership','<circle cx="12" cy="6" r="2.2"/><circle cx="5" cy="16" r="2.2"/><circle cx="19" cy="16" r="2.2"/><path d="M10 8 6.5 13.5M14 8l3.5 5.5M8 16h8"/>'],
+"אמנות ויצירה":['arts','<path d="M12 3a9 9 0 1 0 0 18h1.4a2 2 0 0 0 1.4-3.4 1.8 1.8 0 0 1 1.2-3.1H18A3 3 0 0 0 21 12 9 9 0 0 0 12 3Z"/><circle cx="7.5" cy="11" r=".8"/><circle cx="10" cy="7.5" r=".8"/><circle cx="15" cy="7.5" r=".8"/>'],
+"ספורט ואתגר":['sport','<circle cx="15.5" cy="4.5" r="2"/><path d="m10 10 4-2 3 3 3 1M14 8l-2 6-4 3m4-3 4 5m-8-2-4 3"/>'],
+"מצוינות אישית":['excellence','<path d="m12 2 2.9 6.8L22 12l-7.1 3.2L12 22l-2.9-6.8L2 12l7.1-3.2L12 2Z"/><path d="M12 8v8m-4-4h8"/>']
+};const theme=themes[p.category]||themes["מצוינות אישית"];return '<article class="opportunity-card category-'+theme[0]+'"><div class="opportunity-top"><div class="program-symbol" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round">'+theme[1]+'</svg></div><span class="scope-pill">'+escapeHtml(p.scope)+'</span></div><span class="category-caption">'+escapeHtml(p.category)+'</span><h3>'+escapeHtml(p.name)+'</h3><p class="program-description">'+escapeHtml(p.desc)+'</p><div class="audience"><strong>למי זה מתאים?</strong><p>'+escapeHtml(p.audience)+'</p></div><div class="program-foot"><span>תנאי ההצטרפות ומועדים באימות</span><button class="details-link" onclick="showProgram('+i+')">פרטים נוספים <span class="rw-arrow-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M26 16H7m8-8-8 8 8 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></button></div></article>'}
 function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 const RICH_PROGRAM_DETAILS={
  P001:{
