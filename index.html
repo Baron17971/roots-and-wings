@@ -1136,6 +1136,19 @@ body.home-page #app{display:block!important;flex:none!important;min-height:0!imp
 body.home-page footer{margin:0!important;padding:22px 16px 26px!important}
 }
 @media(max-width:380px){.site-header .logo{font-size:18px!important}.rw-mobile-menu-toggle{padding:8px 10px;font-size:13px}}
+/* Final header alignment: navigation right, brand left (RTL desktop). */
+@media(min-width:1101px){
+ .site-header{grid-template-columns:minmax(0,1fr) auto!important;gap:clamp(20px,3vw,58px)!important}
+ .site-header nav{grid-column:1!important;grid-row:1!important;justify-content:flex-start!important;justify-self:stretch!important;gap:clamp(17px,1.9vw,34px)!important}
+ .site-header .logo{grid-column:2!important;grid-row:1!important;justify-self:end!important;text-align:left!important}
+ .site-header::after{display:none!important}
+}
+@media(min-width:721px) and (max-width:1100px){
+ .site-header{grid-template-columns:minmax(0,1fr) auto!important;gap:13px!important}
+ .site-header .logo{grid-column:2!important;grid-row:1!important;justify-self:end!important}
+ .site-header nav{grid-column:1 / -1!important;grid-row:2!important;justify-content:flex-start!important;justify-self:stretch!important;gap:clamp(15px,2.2vw,28px)!important}
+ .site-header::after{display:none!important}
+}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><button class="rw-mobile-menu-toggle" type="button" aria-label="פתיחת תפריט ניווט" aria-controls="rw-main-navigation" aria-expanded="false" onclick="rwToggleMobileMenu(this)"><span aria-hidden="true">☰</span><span>תפריט</span></button><nav id="rw-main-navigation" aria-label="ניווט ראשי" onclick="if(event.target.closest('a'))rwCloseMobileMenu()"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#choose">הבחירות שלי</a></nav></header><main id="app"></main><footer>מקיף ז׳ אשדוד | פיתוח: ענת ברון לוביש | ייעוץ פדגוגי: ענת ברון לוביש ואתי נייברג</footer><script src="/programs-rich.js"></script><script>
 function rwToggleMobileMenu(button){const header=button.closest(".site-header");const open=header.classList.toggle("rw-menu-open");button.setAttribute("aria-expanded",String(open));button.setAttribute("aria-label",open?"סגירת תפריט ניווט":"פתיחת תפריט ניווט")}
 function rwCloseMobileMenu(){const header=document.querySelector(".site-header");if(!header)return;header.classList.remove("rw-menu-open");const button=header.querySelector(".rw-mobile-menu-toggle");if(button){button.setAttribute("aria-expanded","false");button.setAttribute("aria-label","פתיחת תפריט ניווט")}}
