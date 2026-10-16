@@ -1110,6 +1110,8 @@ body{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
  .site-header nav{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important}
  .site-header nav a{font-size:12.5px!important;min-height:40px!important}
 }
+/* Match the navigation to the actual hero artwork, not an approximated navy. */
+.site-header{background:var(--rw-hero-edge-blue,#0b5268)!important;background-image:none!important;border-bottom:1px solid rgba(255,255,255,.16)!important}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><nav aria-label="ניווט ראשי"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#choose">הבחירות שלי</a></nav></header><main id="app"></main><footer>מקיף ז׳ אשדוד | פיתוח: ענת ברון לוביש | ייעוץ פדגוגי: ענת ברון לוביש ואתי נייברג</footer><script src="/programs-rich.js"></script><script>
 const Q=[["קיבלת יום שלם שבו מותר לך ללמוד כל דבר שתרצה. לאן תלך?","מעבדה לפיזיקה, הנדסה וניסויים|סטודיו לשירה ולמוזיקה|מועדון תכנות, AI ופיתוח משחקים|מגרש לכדורסל או לכדורגל|חדר דיונים ומנהיגות|מסע לארכאולוגיה, היסטוריה ותרבויות|סטודיו למחול ולתנועה",3],["חברים מתכננים פרויקט גדול. איזה תפקיד טבעי לך?","להציע רעיונות|לארגן משימות|לעזור לאנשים לשתף פעולה|לפתור בעיות טכניות|לעצב תוצר|להציג מול קהל",2],["מה יכול לגרום לך לשכוח מהשעה?","בניית דברים|לשיר או לנגן בהרכב מוזיקלי|שיחות עמוקות|אימונים, משחקי כדור או ריצה|כתיבה|ניסויים בביולוגיה ובחקר החיים|עזרה לאחרים",3],["נתקלת בבעיה קשה. מה תהיה התגובה הראשונה?","לנסות בדרך אחרת|לחקור את הבעיה|להתייעץ עם אחרים|לתכנן פתרון|לבדוק באופן מעשי|להבין את ההקשר",1],["אם היית יכול ליזום משהו חדש בבית הספר, במה היית בוחר?","לפתח המצאה או לערוך ניסוי שיעזור לפתור בעיה בבית הספר|ליצור אפליקציה, משחק אינטראקטיבי או כלי דיגיטלי שיעזור לתלמידים ללמוד|להקים הרכב מוזיקלי, להפיק מופע או ליצור מרחב לאמנות ולמחול|לארגן תחרות ריצה, אתלטיקה או אתגר ספורטיבי|להוביל יוזמה שבה תלמידים עוזרים זה לזה ומרגישים שייכים|ליזום פרויקט לשמירה על הסביבה, החופים או המרחבים בבית הספר|להקים מועדון לחקר ההיסטוריה, התרבויות והרעיונות שמעצבים את עולמנו",2],["איזו מחמאה תשמח אותך במיוחד?","יש לך רעיונות|אפשר לסמוך עליך|אתה יודע להקשיב|אתה לא מוותר|אתה מסביר מצוין|אתה חושב לעומק",2],["נכנסת למקום חדש. מה סביר שתעשה?","אתחיל שיחה|אתבונן ואלמד|אחפש פעילות|אתחבר לאדם אחד|אשאל שאלות|אתחיל ממשימה",1],["איזה סוג אתגר היה מסקרן אותך?","לתכנת רובוט|ליצור מופע מחול או סרט|להוביל יוזמה חברתית|לחקור תעלומה מדעית|להשתתף בדיבייט|לחקור אירוע היסטורי|להתחרות בריצה או באתלטיקה",3],["מתי אתה מרגיש שיצא ממך משהו טוב?","כשהבנתי משהו קשה|כשעזרתי למישהו|כששרתי או יצרתי מוזיקה|כששיפרתי שיא בספורט או בריצה|כשהצגתי בפני קהל|כשעבדתי עם קבוצה",2],["איזה סרטון יעצור אותך בגלילה?","תגלית בכימיה, פיזיקה או מדעי החיים|סיפור אנושי|המצאה|שירה ומוזיקה|משחק כדורגל מקצועי|אירוע היסטורי|דיון על סוגיה חברתית",3],["קיבלת קופסה עם חומרים בלי הוראות. מה תעשה?","אבנה ואגלה|אתכנן מראש|אחפש השראה|אעבוד עם חברים|אנסה משהו נועז|אחקור את החומרים",1],["אילו יכולות היית שמח לקבל?","ביטחון מול קהל|חשיבה יצירתית|מנהיגות|תכנות|כתיבה|לרקוד ולנוע על במה|הקשבה",3],["איזו שאלה היית רוצה לפצח?","איך המוח עובד|איך בונים משחק|איך משנים דעות|למה אנשים מתנהגים אחרת|איך בונים עסק|איך חוקרים תרבויות וממצאים מהעבר",2],["מה נותן לך אנרגיה במשימה מאתגרת?","לראות התקדמות|להתחרות בעצמי|לעבוד עם חברים|לגלות הפתעה|לעזור למישהו|לנסות בחופשיות|להגיע לדיוק",2],["למי היית מצטרף ליום עבודה?","חוקרת חלל|מעצב משחקים|רופאה|רקדן, כוריאוגרפית או יוצרת קולנוע|מהנדסת|פעיל חברתי|היסטוריון",3],["איזה משפט מתאר אותך?","אני מבחין בפרטים|יש לי רעיונות|אני מחבר בין אנשים|אני אוהב להבין מערכות|אני עובד בידיים|אני אוהב לעזור|אני אוהב להביע עמדה",2],["איזו קבוצה היית רוצה להקים או להצטרף אליה?","מעבדת מדע וממציאים|הרכב של שירה ונגינה|קבוצת לימוד בחברותא על דמויות, סיפורים ודילמות מהתנ״ך|נבחרת כדורסל|צוות התנדבות ומנהיגות|מועדון תכנות, רובוטיקה וסייבר|מועדון תרבויות, ארכאולוגיה וחקר העבר",3],["איך הכי נוח לך להתחיל ללמוד עולם חדש?","להתנסות|לצפות בהדגמה|לקרוא ולחקור|ללמוד עם חבר|לשמוע הסבר|לבנות תוצר",2],["איזה הישג בעוד שנה יגרום לך להתגאות?","למדתי מיומנות|יזמתי שינוי|העזתי לשיר ולהופיע מול קהל|הצלחתי בתחרות|יצרתי יצירה|התמדתי|העמקתי בנושא שחשוב לי",3],["איזו דלת היית רוצה לפתוח?","מדע ומחקר|טכנולוגיה|מחול ואמנות התנועה|מנהיגות|חברה וקהילה|ספורט, נבחרות ואתלטיקה|היסטוריה, תנ״ך ותרבויות",3]];
 const dims=["מדע וחקר","טכנולוגיה וחדשנות","חברה ורוח","אמנות ויצירה","מנהיגות ויוזמה","ספורט ואתגר"];
@@ -1767,4 +1769,29 @@ function openJourneyStage(i){const d=journeyStageDetails[i];if(!d)return;documen
 function moveAboutCarousel(direction){const track=document.getElementById('ap-principles-carousel');if(!track)return;const items=[...track.querySelectorAll('.ap-chapter')];if(!items.length)return;const current=items.reduce((best,item,i)=>Math.abs(item.getBoundingClientRect().right-track.getBoundingClientRect().right)<Math.abs(items[best].getBoundingClientRect().right-track.getBoundingClientRect().right)?i:best,0);const next=Math.max(0,Math.min(items.length-1,current+direction));items[next].scrollIntoView({behavior:'smooth',inline:'start',block:'nearest'});const count=document.getElementById('ap-carousel-count');if(count)count.textContent=String(next+1).padStart(2,'0')+' / 06';}
 function infoPage(kind){if(kind==='about')return aboutStory();view('<div class="shell"><div class="catalogue-heading"><span class="eyebrow">שורשים וכנפיים</span><h2>איך עובד המסע?</h2><p>מתחילים בהיכרות קצרה, עונים על 20 שאלות, מגלים תחומי עניין ובוחרים הזדמנויות לשנה הקרובה ולעתיד.</p><div class="actions"><button onclick="location.hash=\'#start\'">לשאלון האישי ←</button><button class="secondary" onclick="location.hash=\'#catalog\'">מפת ההזדמנויות</button></div></div></div>')}
 function route(){let h=location.hash.slice(1);if(['quiz','profile','choose','journey'].includes(h)&&!hasIntroduction()){location.hash='#start';h='start';}document.body.classList.toggle('home-page',!h||h==='home');({start,quiz,profile,choose,journey,catalog,home,how:()=>infoPage('how'),about:()=>infoPage('about'),development:developmentPage}[h]||home)()}addEventListener("hashchange",route);route();
+
+/* Sample blue pixels at the upper outer edge of the site's actual hero artwork. */
+(function matchNavigationToHero(){
+ const hero=new Image();
+ hero.onload=function(){
+  try{
+   const c=document.createElement("canvas");c.width=160;c.height=90;
+   const cx=c.getContext("2d",{willReadFrequently:true});if(!cx)return;
+   cx.drawImage(hero,0,0,160,90);
+   const d=cx.getImageData(0,0,160,90).data;
+   const colors=[];
+   for(let y=0;y<11;y+=2)for(let x=0;x<160;x+=2){
+    if(x>32&&x<128)continue;
+    const p=(y*160+x)*4,r=d[p],g=d[p+1],b=d[p+2],a=d[p+3];
+    if(a<220||b<r+10||g<r+6||b<g-45||Math.max(r,g,b)>210||Math.max(r,g,b)<35)continue;
+    colors.push([r,g,b]);
+   }
+   if(colors.length<8)return;
+   const median=n=>{const sorted=colors.map(c=>c[n]).sort((a,b)=>a-b);return sorted[Math.floor(sorted.length/2)]};
+   const col="#"+[0,1,2].map(n=>median(n).toString(16).padStart(2,"0")).join("");
+   document.documentElement.style.setProperty("--rw-hero-edge-blue",col);
+  }catch(e){/* Keep CSS fallback if canvas sampling is restricted. */}
+ };
+ hero.src="/hero-home.png";
+})();
 </script></html>
