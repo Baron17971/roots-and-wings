@@ -1407,18 +1407,6 @@ body.home-page .rw-open-catalog{display:flex;direction:rtl;align-items:center;ga
 @media(max-width:650px){.stepper.rw-journey-track{padding:12px 6px 11px;gap:2px;border-radius:18px}.rw-journey-track:before{top:31px;right:calc(12.5% + 7px);left:calc(12.5% + 7px)}.rw-journey-track .rw-step-icon{height:38px;width:38px}.rw-journey-track .rw-step-icon svg{width:20px;height:20px}.rw-journey-track .rw-step-label{font-size:10.5px}}
 @media(prefers-reduced-motion:reduce){.rw-journey-track .rw-step-icon{transition:none}.rw-journey-track a.rw-journey-step:hover .rw-step-icon{transform:none}}
 
-/* About: full-width blue and gold waves in the visual language of the development page. */
-.ap-about:not(.ap-development-page) .ap-unified-intro,
-.ap-about:not(.ap-development-page) .ap-story{position:relative}
-.ap-about:not(.ap-development-page) .ap-unified-intro::after,
-.ap-about:not(.ap-development-page) .ap-story::after{
- content:"";pointer-events:none;position:absolute;display:block;z-index:2;
- left:0;right:0;bottom:-24px;width:100%;height:49px;
- background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='50' viewBox='0 0 1600 50' preserveAspectRatio='none'%3E%3Cpath d='M0 18 C180 0 330 36 535 20 S925 1 1110 17 S1410 34 1600 15' fill='none' stroke='%2373b9cc' stroke-opacity='.68' stroke-width='1.9'/%3E%3Cpath d='M0 31 C225 45 380 9 605 31 S1000 44 1210 26 S1455 12 1600 32' fill='none' stroke='%23c9ab6c' stroke-opacity='.62' stroke-width='1.5'/%3E%3C/svg%3E") no-repeat center / 100% 100%;
- animation:none!important;transform:none!important;
-}
-@media(max-width:650px){.ap-about:not(.ap-development-page) .ap-unified-intro::after,.ap-about:not(.ap-development-page) .ap-story::after{height:35px;bottom:-17px}}
-
 /* Six principles: quiet dots instead of arrows and a dragging scrollbar. */
 #about-principles .ap-carousel-controls,#about-principles .ap-carousel-buttons{display:none!important}
 #about-principles .ap-carousel-stage .ap-chapters{direction:rtl;scrollbar-width:none!important;-ms-overflow-style:none;padding-bottom:0!important}
