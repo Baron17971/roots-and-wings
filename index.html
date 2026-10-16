@@ -1349,6 +1349,19 @@ body.home-page .rw-open-catalog{display:flex;direction:rtl;align-items:center;ga
 .catalogue .opportunity-card .category-caption{display:block;margin:0 0 14px}
 .catalogue .opportunity-card h3{margin:0 0 6px}
 .catalogue .opportunity-card .program-description{margin:0 0 17px}
+
+/* A qualitative visual atlas; no numeric scores or misleading percentages. */
+.growth-results .rw-profile-atlas{direction:rtl;max-width:1120px;margin:16px auto 33px;padding:31px clamp(17px,3vw,38px);border:1px solid #d0e8e4;border-radius:28px;background:radial-gradient(circle at 83% 12%,rgba(103,199,203,.18),transparent 38%),linear-gradient(120deg,#fff,#edf8f6);box-shadow:0 12px 32px rgba(6,63,81,.05)}
+.rw-profile-atlas-heading{text-align:center;max-width:670px;margin:0 auto 25px}.rw-profile-atlas-heading h3{color:#083e56;font-size:clamp(23px,3vw,36px);margin:8px 0}.rw-profile-atlas-heading p{color:#50717c;font-size:clamp(14px,1.35vw,17px);line-height:1.7;margin:0}
+.rw-profile-atlas-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.rw-profile-focus{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:13px;padding:25px 13px;min-height:150px;border:1px solid #d7eae7;border-radius:22px;background:rgba(255,255,255,.87);transition:transform .25s ease,box-shadow .25s ease}
+.rw-profile-focus-mark{width:58px;height:58px;display:grid;place-items:center;border-radius:50%;background:#dff2ef;color:#0c8998;font-size:30px}
+.rw-profile-focus-1 .rw-profile-focus-mark{background:#e9f3e8;color:#769b83}.rw-profile-focus-2 .rw-profile-focus-mark{background:#f7efdf;color:#b18e54}
+.rw-profile-focus h4{color:#073e55;font-size:clamp(16px,1.7vw,21px);line-height:1.4;margin:0}
+@media(hover:hover){.rw-profile-focus:hover{transform:translateY(-3px);box-shadow:0 12px 25px rgba(6,63,81,.09)}}
+@media(max-width:600px){.growth-results .rw-profile-atlas{margin:13px 0 24px;padding:24px 17px;border-radius:24px}.rw-profile-atlas-grid{grid-template-columns:1fr;gap:9px}.rw-profile-focus{flex-direction:row;justify-content:flex-start;text-align:right;min-height:68px;gap:13px;padding:11px 14px}.rw-profile-focus-mark{flex:none;width:44px;height:44px;font-size:25px}.rw-profile-focus h4{font-size:17px}}
+@media(prefers-reduced-motion:reduce){.rw-profile-focus{transition:none}.rw-profile-focus:hover{transform:none}}
+@media print{.rw-profile-focus{break-inside:avoid}.rw-profile-atlas-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style><header class="site-header"><a class="logo" href="#home">✦ שורשים וכנפיים</a><button class="rw-mobile-menu-toggle" type="button" aria-label="פתיחת תפריט ניווט" aria-controls="rw-main-navigation" aria-expanded="false" onclick="rwToggleMobileMenu(this)"><span aria-hidden="true">☰</span><span>תפריט</span></button><nav id="rw-main-navigation" aria-label="ניווט ראשי" onclick="if(event.target.closest('a'))rwCloseMobileMenu()"><a href="#home">בית</a><a href="#about">התפיסה שלנו</a><a href="#development">מסע ההתפתחות</a><a href="#catalog" class="rw-catalog-nav-link">מפת ההזדמנויות</a><a href="#start">מתחילים במסע</a><a href="#choose">הבחירות שלי</a></nav><div class="rw-menu-backdrop" aria-hidden="true" onclick="rwCloseMobileMenu()"></div></header><main id="app"></main><footer class="rw-site-credits"><span class="rw-school-credit">מקיף ז׳ אשדוד</span><span class="rw-credit-details"><span class="rw-credit-separator"> | </span><span class="rw-credit-development">פיתוח: ענת ברון לוביש</span><span class="rw-credit-middle-separator"> | </span><span class="rw-credit-pedagogy">ייעוץ פדגוגי: ענת ברון לוביש ואתי נייברג</span></span></footer><script src="/programs-rich.js"></script><script>
 function rwToggleMobileMenu(button){const header=button.closest(".site-header");if(header.classList.contains("rw-menu-open")){rwCloseMobileMenu();return}header.classList.add("rw-menu-open");document.body.classList.add("rw-mobile-nav-lock");button.setAttribute("aria-expanded","true");button.setAttribute("aria-label","סגירת תפריט ניווט");button.querySelector("[aria-hidden]").textContent="✕";}
 function rwCloseMobileMenu(){const header=document.querySelector(".site-header");if(!header)return;header.classList.remove("rw-menu-open");document.body.classList.remove("rw-mobile-nav-lock");const button=header.querySelector(".rw-mobile-menu-toggle");if(button){button.setAttribute("aria-expanded","false");button.setAttribute("aria-label","פתיחת תפריט ניווט");button.querySelector("[aria-hidden]").textContent="☰";}}
@@ -1719,6 +1732,7 @@ function profile(){
   const evidenceText=proof.length?": "+proof.map(v=>"״"+v+"״").join(" וגם ")+".":".";
   return prefix+evidenceText+(x.rule.note?" "+x.rule.note:"");
  };
+ const profileAtlas=main.length?'<section class="rw-profile-atlas" aria-label="תחומי העניין המרכזיים"><div class="rw-profile-atlas-heading"><span class="growth-label">מפת הגילוי שלי</span><h3>שלושה כיוונים שמסקרנים אותי</h3><p>התחומים שעלו מתוך הבחירות שלך — הזמנה להתנסות ולגילוי, ולא דירוג של יכולות.</p></div><div class="rw-profile-atlas-grid">'+main.map((x,i)=>'<article class="rw-profile-focus rw-profile-focus-'+i+'"><span class="rw-profile-focus-mark" aria-hidden="true">'+['✦','◇','✧'][i]+'</span><h4>'+esc(x.name)+'</h4></article>').join('')+'</div></section>':'';
  const cards=renderRecommendationCards(rec);
  const futureCards=""; // Personal profile presents current opportunities only.
  const initiativeChoices=(Array.isArray(state.answers[4])?state.answers[4]:[]).filter(i=>Number.isInteger(i)&&i>=0&&i<Q[4][1].split("|").length);
@@ -1731,7 +1745,7 @@ function profile(){
  'לחזור ולבחור: אחרי ההתנסות לשאול מה עורר סקרנות, מה היה משמעותי ומה תרצה להמשיך לפתח.'
  ];
  const html='<div class="shell growth-results">'+stepper(3)+
- '<header class="growth-intro"><span class="growth-label">שורשים וכנפיים · מפת הצמיחה האישית</span><h2>'+esc(state.name)+', זו מפת הצמיחה האישית שלך!</h2><p>המפה נבנתה מתוך התשובות שבחרת. אפשר לחזור לשאלון בכל שלב, לשנות תשובות, לגלות כיוונים חדשים ולעדכן את המפה בהתאם.</p></header>'+
+ '<header class="growth-intro"><span class="growth-label">שורשים וכנפיים · מפת הצמיחה האישית</span><h2>'+esc(state.name)+', זו מפת הצמיחה האישית שלך!</h2><p>המפה נבנתה מתוך התשובות שבחרת. אפשר לחזור לשאלון בכל שלב, לשנות תשובות, לגלות כיוונים חדשים ולעדכן את המפה בהתאם.</p></header>'+profileAtlas+
  '<section class="growth-feature growth-story-feature"><div><span class="growth-label">01 · מה ניתן ללמוד מהבחירות שלך</span><h3>'+esc(title||"לגלות אפשרויות")+'</h3><p>'+esc(main.map(x=>profilePhrase(PROFILE_PHRASES[x.code])).join(" " ))+'</p></div><aside class="growth-proof"><h3>כך ענית בשאלון</h3><ul class="growth-proof-list">'+proofHtml+'</ul></aside></section>'+
  '<section class="growth-story-section"><span class="growth-label">02 · מה כבר מסקרן אותי?</span><h2>התחומים שמעניינים אותך</h2><div class="growth-story-grid">'+pillars+'</div></section>'+
  '<div class="growth-pair"><section class="growth-panel"><span class="growth-label">03 · החיבור המיוחד שלי</span><h3>כשעולמות נפגשים</h3><p>'+esc(link)+'</p></section><section class="growth-panel"><span class="growth-label">04 · הדלת שאני רוצה לפתוח</span><h3>מה הייתי רוצה לפתח?</h3><p>'+esc(aspirationText)+'</p></section></div>'+
